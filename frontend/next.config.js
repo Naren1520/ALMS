@@ -9,6 +9,18 @@ const nextConfig = {
       { protocol: 'https', hostname: 'pub-*.r2.dev' },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        // In production on Vercel, /api/v1/* is proxied to the backend service
+        // via the root vercel.json rewrite rule: /api/backend/* → backend service.
+        // The backend's global prefix is api/v1, so the full path becomes:
+        //   /api/backend/api/v1/:path*  →  backend service receives /api/v1/:path*
+        source: '/api/v1/:path*',
+        destination: '/api/backend/api/v1/:path*',
+      },
+    ];
+  },
   async headers() {
     return [
       {
