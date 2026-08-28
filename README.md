@@ -92,15 +92,17 @@ ALMS eliminates the typical 40% middleman commission, placing revenue directly i
 - **Inventory Management** — full batch history with delta tracking, low-stock alerts, and lead-time scheduling
 
 ### Discovery and Commerce
+- **ONDC Seller Node Integration** — Artisan catalogs are automatically formatted to ONDC retail specifications, making their inventory instantly discoverable across buyer apps like Paytm and PhonePe.
 - **Semantic Search** — 768-dimensional text embeddings (Google `text-embedding-004`) stored with pgvector HNSW index for sub-100ms approximate nearest-neighbour search
 - **Craft Atlas** — region-level map of craft traditions with GI tag registry (11 seeded crafts) and artisan density stats
 - **B2B RFQ System** — buyers submit structured requests; AI scores and matches artisans by capacity, trust score, and craft alignment; multi-round quoting with wholesale tiers
 
 ### Platform
+- **Government API Verification** — Direct integration with DigiLocker API to instantly validate Aadhaar, SC/ST/OBC Caste Certificates, and UDID (Disability) cards to ensure platform integrity.
+- **Dak Ghar Niryat Kendra Logistics** — India Post API integration allows artisans to auto-generate the Postal Bill of Export (PBE) for seamless international B2B shipping from any rural pin code.
 - **Trust Score Engine** — 0–100 explainable score built from 11 weighted event types (identity verification, on-time fulfilment, reviews, dispute outcomes); weights are admin-configurable at runtime
 - **Real-time Messaging** — WebSocket conversations between artisans and buyers with auto-translation and content moderation flags
-- **Dispute Resolution** — structured evidence upload, moderator assignment, resolution with mandatory rationale
-- **Admin Panel** — user verification queue, listing moderation, platform config, and audit log
+- **Dispute Resolution & Admin** — structured evidence upload, user verification queue, and platform audit logs
 
 ### Security
 - RS256 JWT access tokens (15-minute TTL) with rotating refresh tokens (SHA-256 hashed in DB)
