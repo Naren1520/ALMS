@@ -96,6 +96,7 @@ ALMS eliminates the typical 40% middleman commission, placing revenue directly i
 - **Semantic Search** — 768-dimensional text embeddings (Google `text-embedding-004`) stored with pgvector HNSW index for sub-100ms approximate nearest-neighbour search
 - **Craft Atlas** — region-level map of craft traditions with GI tag registry (11 seeded crafts) and artisan density stats
 - **B2B RFQ System** — buyers submit structured requests; AI scores and matches artisans by capacity, trust score, and craft alignment; multi-round quoting with wholesale tiers
+- **Escrow Milestone Payments** — To protect artisans from buyer default, funds are locked in a smart escrow node and released upon India Post (DNK) delivery verification, preventing raw-material investment losses.
 
 ### Platform
 - **Government API Verification** — Direct integration with DigiLocker API to instantly validate Aadhaar, SC/ST/OBC Caste Certificates, and UDID (Disability) cards to ensure platform integrity.
@@ -122,6 +123,11 @@ Before a national rollout, ALMS is structured for a controlled pilot deployment 
 * **Target Audience:** Partnering with local NGOs to onboard 500 regional artisans specializing in local crafts (e.g., Udupi handlooms, local woodwork).
 * **VLE Activation:** Training 50 Common Service Centre (CSC) operators in the district to use the VLE Onboarding Mode.
 * **Success Metrics:** Measuring the reduction in cataloging time (from hours to minutes) and the percentage increase in direct B2B inquiries over 90 days.
+
+  ## Phase 2: Future Scope & Global Scale
+- **Blockchain Provenance:** Implementing a lightweight immutable ledger to track the exact origin of GI-tagged products from raw material to final buyer, eliminating counterfeit claims.
+- **Bhashini Voice-to-Voice AI:** Upgrading the real-time websocket chat so a buyer can speak in French and the artisan hears the translation in Kannada instantly.
+- **Automated Customs Integration:** Expanding the DNK integration to auto-generate international commercial invoices based on HS Codes.
 
 ---
 
