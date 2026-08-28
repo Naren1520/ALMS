@@ -4,12 +4,12 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { ArrowRight } from 'lucide-react';
 
-/** Section 8 — Final CTA fade-in parallax (Req 27.3) */
 export default function FinalCTASection() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
+  const bgRef      = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
 
   useEffect(() => {
@@ -20,21 +20,20 @@ export default function FinalCTASection() {
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
       gsap.registerPlugin(ScrollTrigger);
       ctx = gsap.context(() => {
-        gsap.from(contentRef.current, {
-          opacity: 0,
-          y: 40,
-          duration: 0.9,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
-        });
+        if (contentRef.current) {
+          gsap.from(Array.from(contentRef.current.children), {
+            opacity: 0, y: 36, stagger: 0.12, duration: 0.9, ease: 'expo.out',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' },
+          });
+        }
         gsap.to(bgRef.current, {
-          y: '-10%',
+          y: '-8%',
           ease: 'none',
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 2,
+            scrub: 1.5,
           },
         });
       });
@@ -45,56 +44,80 @@ export default function FinalCTASection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-32 overflow-hidden"
+      className="relative overflow-hidden"
+      style={{ paddingBlock: '140px' }}
       aria-labelledby="cta-heading"
     >
-      <div ref={bgRef} className="absolute inset-0 z-0">
+      {/* Full-bleed background image */}
+      <div ref={bgRef} className="absolute inset-0 z-0 scale-110">
         <Image
-          src="/images/cta-background.jpg"
+          src="https://images.unsplash.com/photo-1504198266287-1659872e6590?w=2000&q=85&auto=format&fit=crop"
           alt=""
           fill
-          className="object-cover opacity-15"
+          className="object-cover object-center"
           aria-hidden="true"
           sizes="100vw"
+          unoptimized
         />
         <div
           className="absolute inset-0"
-          style={{ background: 'linear-gradient(135deg, #FAF7F2 0%, #F0EBE3 100%)' }}
+          style={{
+            background: 'linear-gradient(to bottom, rgba(26,26,26,0.7) 0%, rgba(26,26,26,0.82) 100%)',
+          }}
         />
       </div>
 
-      <div ref={contentRef} className="container relative z-10 text-center max-w-3xl mx-auto space-y-8">
-        <h2
-          id="cta-heading"
-          className="font-display text-5xl md:text-6xl font-light leading-tight"
-        >
-          Your craft deserves the world&apos;s attention.
-        </h2>
-        <p className="font-ui text-xl text-brand-muted leading-relaxed">
-          Join 12,000+ artisans already selling on ALMS. Start with just a photo.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-          <Link
-            href="/register?role=ARTISAN"
-            className="px-10 py-4 rounded-lg text-white font-ui font-medium text-lg hover:opacity-90
-              transition hover:-translate-y-1 duration-200"
-            style={{ background: 'var(--color-accent)' }}
+      <div className="container relative z-10 text-center">
+        <div ref={contentRef} className="max-w-3xl mx-auto space-y-10">
+
+          <div className="flex items-center justify-center gap-4">
+            <span className="block w-12 h-px bg-gold/60" />
+            <p className="overline text-gold/80" style={{ fontSize: '0.65rem' }}>
+              Join the movement
+            </p>
+            <span className="block w-12 h-px bg-gold/60" />
+          </div>
+
+          <h2
+            id="cta-heading"
+            className="font-serif text-ivory"
+            style={{ fontSize: 'clamp(2.5rem, 5.5vw, 5rem)', fontWeight: 300, lineHeight: 1.0 }}
           >
-            Start Selling Today
-          </Link>
-          <Link
-            href="/explore"
-            className="px-10 py-4 rounded-lg font-ui font-medium text-lg border-2 hover:-translate-y-1
-              transition duration-200"
-            style={{ borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}
-          >
-            Browse Products
-          </Link>
+            Your craft deserves<br />
+            <em className="text-gold-light" style={{ fontStyle: 'italic' }}>
+              the world's attention.
+            </em>
+          </h2>
+
+          <p className="text-stone-light leading-relaxed max-w-lg mx-auto" style={{ fontSize: '1.0625rem' }}>
+            Join 12,000+ artisans already selling on ALMS.
+            Start with just a photo — no e-commerce knowledge required.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <Link href="/register?role=ARTISAN"
+              className="btn-gold flex items-center justify-center gap-2 px-10 py-4"
+              style={{ fontSize: '0.8125rem' }}>
+              Start Selling Today
+              <ArrowRight size={15} aria-hidden="true" />
+            </Link>
+            <Link href="/explore"
+              className="btn-outline flex items-center justify-center gap-2 px-10 py-4"
+              style={{
+                borderColor: 'rgba(253,251,247,0.35)',
+                color: 'var(--ivory)',
+                fontSize: '0.8125rem',
+              }}>
+              Browse Products
+            </Link>
+          </div>
+
+          <p className="text-stone-light/70 text-xs">
+            Free to register. No listing fees. Powered by the Ministry of Social Justice &amp; Empowerment.
+          </p>
         </div>
-        <p className="font-ui text-sm text-brand-muted">
-          Free to register. No listing fees. Powered by the Ministry of Social Justice &amp; Empowerment.
-        </p>
       </div>
     </section>
   );
 }
+

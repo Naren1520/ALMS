@@ -1,60 +1,206 @@
-/* ALMS Design Tokens (Req 27.2) */
+/* ─── ALMS Luxury Design Tokens ─────────────────────────────── */
 :root {
-  --color-bg-primary: #FAF7F2;
-  --color-text-primary: #2C2C2C;
-  --color-accent: #C4602A;
-  --color-accent-dark: #A34E20;
-  --color-muted: #8B7355;
-  --color-surface: #F0EBE3;
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-ui: 'Inter', system-ui, sans-serif;
-  --transition-base: 200ms ease;
-  --border-radius: 8px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  /* Palette — clean ivory + deep charcoal + warm gold */
+  --ivory:        #FDFBF7;
+  --ivory-dark:   #F5F0E8;
+  --cream:        #EDE8DF;
+  --charcoal:     #1A1A1A;
+  --charcoal-mid: #2E2E2E;
+  --stone:        #6B6560;
+  --stone-light:  #9E9890;
+  --gold:         #B8965A;
+  --gold-dark:    #9A7A42;
+  --gold-light:   #D4B47A;
+  --white:        #FFFFFF;
+  --border:       #E2DDD6;
+  --border-light: #EDEAE4;
+
+  /* Typography */
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Spacing & layout */
+  --section-gap: 120px;
+  --container:   1320px;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* Shadows — subtle, no glow */
+  --shadow-xs: 0 1px 2px rgba(26,26,26,0.04);
+  --shadow-sm: 0 2px 8px rgba(26,26,26,0.06);
+  --shadow-md: 0 4px 20px rgba(26,26,26,0.08);
+  --shadow-lg: 0 12px 40px rgba(26,26,26,0.10);
+  --shadow-xl: 0 24px 64px rgba(26,26,26,0.12);
 }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* WCAG 2.1 AA — focus visibility for all interactive elements */
-:focus-visible {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 2px;
+/* ─── Base Reset ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-/* CSS logical properties for RTL readiness (Req 30.6) */
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--ivory);
+  color: var(--charcoal);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ─── Typography scale ────────────────────────────────────────── */
+h1, h2, h3, h4, .serif {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+/* ─── Container ───────────────────────────────────────────────── */
 .container {
   margin-inline: auto;
-  padding-inline: 1.5rem;
-  max-inline-size: 1280px;
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+  max-width: var(--container);
+  width: 100%;
 }
 
-/* Smooth scrolling with respect for reduced motion */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
+/* ─── Dividers ────────────────────────────────────────────────── */
+.divider {
+  width: 48px;
+  height: 1px;
+  background: var(--gold);
 }
 
-/* Typography */
-h1, h2, h3, .font-display {
-  font-family: var(--font-display);
+/* ─── Buttons ─────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: var(--charcoal);
+  color: var(--ivory);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--charcoal);
+  cursor: pointer;
+  transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out),
+              transform 0.2s var(--ease-out);
+}
+.btn-primary:hover {
+  background: var(--charcoal-mid);
+  transform: translateY(-1px);
 }
 
-/* Accessible skip link */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: transparent;
+  color: var(--charcoal);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--charcoal);
+  cursor: pointer;
+  transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out),
+              transform 0.2s var(--ease-out);
+}
+.btn-outline:hover {
+  background: var(--charcoal);
+  color: var(--ivory);
+  transform: translateY(-1px);
+}
+
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: var(--gold);
+  color: var(--ivory);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--gold);
+  cursor: pointer;
+  transition: background 0.3s var(--ease-out), transform 0.2s var(--ease-out);
+}
+.btn-gold:hover {
+  background: var(--gold-dark);
+  transform: translateY(-1px);
+}
+
+/* ─── Overline label ──────────────────────────────────────────── */
+.overline {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+/* ─── Section padding ─────────────────────────────────────────── */
+.section-pad {
+  padding-block: var(--section-gap);
+}
+
+/* ─── Accessibility ───────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
 .skip-to-main {
   position: absolute;
   inset-inline-start: -9999px;
   top: 0.5rem;
-  background: var(--color-accent);
-  color: white;
+  background: var(--charcoal);
+  color: var(--ivory);
   padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
+  font-size: 0.875rem;
   z-index: 9999;
 }
-.skip-to-main:focus {
-  inset-inline-start: 0.5rem;
+.skip-to-main:focus { inset-inline-start: 0.5rem; }
+
+/* ─── Smooth scroll (Lenis) ───────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ─── Image utility ───────────────────────────────────────────── */
+img { display: block; }
+
+/* ─── Thin horizontal rule ────────────────────────────────────── */
+hr.luxury {
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── Card hover lift ─────────────────────────────────────────── */
+.card-lift {
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }

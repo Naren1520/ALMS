@@ -4,180 +4,152 @@ import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { ArrowRight } from 'lucide-react';
 
 /**
- * Hero Section — 100vh, GSAP character reveal without SplitText premium plugin (Req 27.1, 27.3)
- * Characters are split manually via React spans so no Club GSAP license is required.
- * LCP ≤3s: hero image uses priority={true} (Req 27.6)
+ * Hero — full-viewport, editorial luxury layout.
+ * Background: Unsplash artisan photo (online, no download needed).
+ * Layout: Left-aligned large serif headline over a richly textured warm scene.
  */
-
-/** Wrap every character in a <span> so GSAP can stagger them. */
-function SplitChars({ text, className }: { text: string; className?: string }) {
-  return (
-    <>
-      {text.split('').map((char, i) => (
-        <span
-          key={i}
-          className={className}
-          style={{ display: 'inline-block', whiteSpace: char === ' ' ? 'pre' : undefined }}
-          aria-hidden="true"
-        >
-          {char}
-        </span>
-      ))}
-    </>
-  );
-}
-
 export default function HeroSection() {
   const prefersReduced = useReducedMotion();
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const subRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const headingRef  = useRef<HTMLHeadingElement>(null);
+  const subRef      = useRef<HTMLParagraphElement>(null);
+  const ctaRef      = useRef<HTMLDivElement>(null);
+  const metaRef     = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (prefersReduced) return;
-
     let ctx: any;
     (async () => {
-      const { gsap } = await import('gsap');
-
-      ctx = gsap.context(() => {
-        if (!headingRef.current) return;
-
-        // Target every inline-block char span inside the heading
-        const chars = headingRef.current.querySelectorAll<HTMLSpanElement>('span[aria-hidden="true"]');
-
-        gsap.from(chars, {
-          opacity: 0,
-          y: 40,
-          rotationX: -90,
-          stagger: 0.02,
-          duration: 0.8,
-          ease: 'back.out(1.7)',
+      try {
+        const { gsap } = await import('gsap');
+        ctx = gsap.context(() => {
+          const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+          tl.from(metaRef.current, { opacity: 0, y: 16, duration: 0.8, delay: 0.2 })
+            .from(headingRef.current, { opacity: 0, y: 40, duration: 1.1 }, '-=0.4')
+            .from(subRef.current,    { opacity: 0, y: 24, duration: 0.8 }, '-=0.5')
+            .from(ctaRef.current,    { opacity: 0, y: 20, duration: 0.7 }, '-=0.4');
         });
-
-        gsap.from(subRef.current, {
-          opacity: 0,
-          y: 20,
-          duration: 0.6,
-          delay: 0.8,
-          ease: 'power2.out',
-        });
-
-        gsap.from(ctaRef.current, {
-          opacity: 0,
-          y: 20,
-          duration: 0.5,
-          delay: 1.2,
-          ease: 'power2.out',
-        });
-      });
+      } catch (e) {
+        // animations unavailable — content still visible
+      }
     })();
-
     return () => ctx?.revert();
   }, [prefersReduced]);
 
   return (
     <section
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ background: 'var(--color-bg-primary)' }}
+      className="relative min-h-screen flex items-end overflow-hidden bg-charcoal"
       aria-label="Hero — ALMS Artisan Marketplace"
     >
-      {/* Background image — priority for LCP */}
+      {/* ── Background image from Unsplash (artisan weaving, warm tones) ── */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/hero-artisan.jpg"
-          alt="Indian artisan weaving a traditional textile"
+          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2000&q=85&auto=format&fit=crop"
+          alt="Indian artisan weaving a traditional textile by hand"
           fill
           priority
-          className="object-cover object-center opacity-20"
+          className="object-cover object-center"
           sizes="100vw"
+          unoptimized
         />
+        {/* Gradient overlay — dark bottom, lighter top-left for text readability */}
         <div
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(135deg, rgba(250,247,242,0.95) 0%, rgba(250,247,242,0.7) 100%)',
+            background: `
+              linear-gradient(
+                to bottom,
+                rgba(26,26,26,0.15) 0%,
+                rgba(26,26,26,0.2) 30%,
+                rgba(26,26,26,0.65) 70%,
+                rgba(26,26,26,0.88) 100%
+              )
+            `,
           }}
         />
       </div>
 
-      <div className="container relative z-10 text-center py-20">
-        <p className="text-sm uppercase tracking-[0.3em] text-brand-accent mb-6 font-ui">
-          Ministry of Social Justice & Empowerment
-        </p>
+      {/* ── Content — bottom aligned, editorial feel ── */}
+      <div className="container relative z-10 pb-20 md:pb-28 pt-32">
+        <div className="max-w-4xl">
 
-        <h1
-          ref={headingRef}
-          className="font-display text-5xl md:text-7xl lg:text-8xl font-light leading-tight text-brand-text mb-8"
-        >
-          {/* Screen-reader text — hidden visually but readable by AT */}
-          <span className="sr-only">Crafted by India. Discovered by the World.</span>
+          {/* Overline */}
+          <div ref={metaRef} className="flex items-center gap-3 mb-8">
+            <span className="block w-8 h-px bg-gold" />
+            <span className="overline text-stone-light">
+              Ministry of Social Justice &amp; Empowerment
+            </span>
+          </div>
 
-          {/* Animated char spans — hidden from screen readers via aria-hidden on each span */}
-          <span aria-hidden="true">
-            <SplitChars text="Crafted by India." />
-          </span>
-          <br />
-          <span aria-hidden="true" style={{ color: 'var(--color-accent)' }}>
-            <SplitChars text="Discovered by the World." />
-          </span>
-        </h1>
-
-        <p
-          ref={subRef}
-          className="font-ui text-lg md:text-xl text-brand-muted max-w-2xl mx-auto mb-12 leading-relaxed"
-        >
-          ALMS connects marginalized artisans with domestic consumers and global B2B buyers
-          through zero-friction AI-powered tools — upload a photo, speak your language,
-          and let the platform handle the rest.
-        </p>
-
-        <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href="/register?role=ARTISAN"
-            className="px-8 py-4 rounded-lg font-ui font-medium text-white transition-all duration-200
-              hover:opacity-90 hover:-translate-y-0.5 focus-visible:outline-2"
-            style={{ background: 'var(--color-accent)' }}
-          >
-            I&apos;m an Artisan
-          </Link>
-          <Link
-            href="/register?role=BUYER"
-            className="px-8 py-4 rounded-lg font-ui font-medium border-2 transition-all duration-200
-              hover:-translate-y-0.5 focus-visible:outline-2"
+          {/* Headline */}
+          <h1
+            ref={headingRef}
+            className="font-serif text-ivory mb-8"
             style={{
-              borderColor: 'var(--color-accent)',
-              color: 'var(--color-accent)',
+              fontSize: 'clamp(3rem, 7vw, 6.5rem)',
+              lineHeight: 1.0,
+              letterSpacing: '-0.02em',
+              fontWeight: 300,
             }}
           >
-            I&apos;m a Buyer
-          </Link>
-          <Link
-            href="/explore"
-            className="px-8 py-4 rounded-lg font-ui font-medium transition-all duration-200
-              hover:-translate-y-0.5 focus-visible:outline-2"
-            style={{
-              background: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
-            }}
+            <span className="sr-only">Crafted by India. Discovered by the World.</span>
+            <span aria-hidden="true">
+              Crafted by India.<br />
+              <em className="italic not-italic" style={{ color: 'var(--gold-light)' }}>
+                Discovered by the World.
+              </em>
+            </span>
+          </h1>
+
+          {/* Sub */}
+          <p
+            ref={subRef}
+            className="text-stone-light font-sans mb-12 max-w-xl leading-relaxed"
+            style={{ fontSize: 'clamp(1rem, 1.5vw, 1.125rem)' }}
           >
-            Explore Crafts
-          </Link>
+            ALMS connects India's 7 million artisans with domestic consumers and global buyers
+            through zero-friction, AI-powered tools. Upload a photo, speak your language —
+            the platform does the rest.
+          </p>
+
+          {/* CTA row */}
+          <div ref={ctaRef} className="flex flex-wrap gap-4 items-center">
+            <Link href="/register?role=ARTISAN" className="btn-gold flex items-center gap-2">
+              I&apos;m an Artisan
+              <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+            <Link href="/register?role=BUYER"
+              className="btn-outline flex items-center gap-2"
+              style={{ borderColor: 'rgba(253,251,247,0.4)', color: 'var(--ivory)' }}
+            >
+              I&apos;m a Buyer
+            </Link>
+            <Link
+              href="/explore"
+              className="overline text-stone-light hover:text-ivory transition-colors duration-300
+                flex items-center gap-2"
+              style={{ fontSize: '0.7rem' }}
+            >
+              Explore Crafts
+              <ArrowRight size={11} aria-hidden="true" />
+            </Link>
+          </div>
         </div>
-      </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
-        <div
-          className="w-6 h-10 rounded-full border-2 flex items-start justify-center p-1"
-          style={{ borderColor: 'var(--color-muted)' }}
-          aria-hidden="true"
-        >
-          <div
-            className="w-1.5 h-3 rounded-full"
-            style={{ background: 'var(--color-muted)' }}
-          />
+        {/* ── Bottom meta strip ── */}
+        <div className="flex flex-wrap gap-8 mt-16 pt-8 border-t border-white/10">
+          {[
+            { n: '7M+',       l: 'Artisans' },
+            { n: '3,000+',    l: 'Craft Traditions' },
+            { n: '₹26,000 Cr',l: 'Export Potential' },
+          ].map(({ n, l }) => (
+            <div key={l}>
+              <p className="font-serif text-gold-light text-2xl font-light">{n}</p>
+              <p className="overline text-stone-light mt-0.5" style={{ fontSize: '0.6rem' }}>{l}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
