@@ -26,7 +26,7 @@ ALMS eliminates the typical 40% middleman commission, placing revenue directly i
 
 ---
 
----
+
 
 ## Tech Stack
 
