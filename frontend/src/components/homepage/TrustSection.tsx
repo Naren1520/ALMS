@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { BadgeCheck, Clock, Star, Package } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 /** Section 7 — Trust score text + badge reveal (Req 27.3) */
@@ -31,10 +32,10 @@ export default function TrustSection() {
   }, [prefersReduced]);
 
   const TRUST_EVENTS = [
-    { event: 'Identity Verified', weight: '+20', icon: '✓' },
-    { event: 'Order Fulfilled On Time', weight: '+5', icon: '⏰' },
-    { event: 'Positive Review (4–5★)', weight: '+3', icon: '⭐' },
-    { event: 'RFQ Fulfilled', weight: '+8', icon: '📦' },
+    { event: 'Identity Verified',        weight: '+20', Icon: BadgeCheck },
+    { event: 'Order Fulfilled On Time',  weight: '+5',  Icon: Clock      },
+    { event: 'Positive Review (4–5★)',   weight: '+3',  Icon: Star       },
+    { event: 'RFQ Fulfilled',            weight: '+8',  Icon: Package    },
   ];
 
   return (
@@ -65,7 +66,11 @@ export default function TrustSection() {
               style={{ background: 'var(--color-bg-primary)' }}
             >
               <div className="flex items-center gap-3">
-                <span className="text-2xl" aria-hidden="true">{item.icon}</span>
+                <item.Icon
+                  size={20}
+                  aria-hidden="true"
+                  style={{ color: 'var(--color-accent)' }}
+                />
                 <span className="font-ui text-brand-text">{item.event}</span>
               </div>
               <span

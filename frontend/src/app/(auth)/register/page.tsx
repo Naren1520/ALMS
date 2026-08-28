@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { MailCheck } from 'lucide-react';
 
 const registerSchema = z.object({
   email: z.string().email('Must be a valid email address'),
@@ -67,7 +68,9 @@ function RegisterForm() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg-primary)' }}>
         <div className="text-center max-w-md p-8">
-          <div className="text-5xl mb-4">✅</div>
+          <div className="flex justify-center mb-4">
+            <MailCheck size={56} aria-hidden="true" style={{ color: 'var(--color-accent)' }} />
+          </div>
           <h1 className="font-display text-3xl mb-4">Check your email</h1>
           <p className="font-ui text-brand-muted">
             We&apos;ve sent a verification link to your email address. Please verify to activate your account.
