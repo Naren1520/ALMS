@@ -2,18 +2,24 @@
   "services": {
     "frontend": {
       "root": "frontend",
-      "framework": "nextjs"
+      "framework": "nextjs",
+      "buildCommand": "npm run build",
+      "installCommand": "npm install"
     },
     "backend": {
-      "root": "backend"
+      "root": "backend",
+      "entrypoint": "src/main.ts",
+      "buildCommand": "npm run build",
+      "installCommand": "npm install"
     }
   },
   "rewrites": [
     {
-      "source": "/api/backend(/.*)?",
+      "source": "/api/v1/(.*)",
       "destination": {
         "type": "service",
-        "service": "backend"
+        "service": "backend",
+        "path": "/api/v1/{1}"
       }
     },
     {
