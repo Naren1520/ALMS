@@ -1,0 +1,51 @@
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# venv
+.venv/
+venv/
+env/
+ENV/
+
+# build
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# test
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+
+# type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# jupyter
+.ipynb_checkpoints/
+
+# model weights
+*.bin
+*.pt
+*.ckpt
+*.safetensors
+
+# logs
+*.log
+logs/
+
+# os
+.DS_Store
+Thumbs.db

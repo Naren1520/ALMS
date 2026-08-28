@@ -1,0 +1,61 @@
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# keys
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+
+# os
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.vscode
+# logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# deps
+node_modules/
+.pnp
+.pnp.js
+
+# build
+dist/
+build/
+out/
+
+# docker
+docker-compose.override.yml
+
+# misc
+*.bak
+*.tmp
+*.orig
+.kiro

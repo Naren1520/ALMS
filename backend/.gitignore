@@ -1,0 +1,32 @@
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# keys
+*.pem
+*.key
+jwt_private.pem
+jwt_public.pem
+
+# build
+dist/
+
+# deps
+node_modules/
+
+# cache
+.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# test
+coverage/
+.nyc_output/
+
+# logs
+logs/
+*.log
+
+# os
+.DS_Store
+Thumbs.db

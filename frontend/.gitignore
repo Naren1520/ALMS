@@ -1,0 +1,33 @@
+# env & secrets
+.env
+.env.*
+!.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# build
+.next/
+out/
+
+# deps
+node_modules/
+
+# cache
+.tsbuildinfo
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# test
+coverage/
+
+# deploy
+.vercel
+
+# logs
+*.log
+
+# os
+.DS_Store
+Thumbs.db

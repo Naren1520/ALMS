@@ -1,0 +1,116 @@
+version: '3.9'
+
+services:
+  # ─── PostgreSQL with pgvector ───────────────────────────────────────────────
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: alms-db
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./supabase/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ─── Redis 7 ────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: alms-redis
+    ports:
+      - '6379:6379'
+    command: redis-server --save "" --loglevel warning
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ─── NestJS Backend ─────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: alms-backend
+    ports:
+      - '3001:3001'
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: postgres
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_SSL: 'false'
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      # Dev-only placeholder keys — replace with real keys in production
+      JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY:-placeholder}
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY:-placeholder}
+      JWT_ACCESS_TOKEN_TTL: 900
+      JWT_REFRESH_TOKEN_TTL: 604800
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa}
+      AI_SERVICE_URL: http://ai_service:8000
+      AI_SERVICE_TOKEN: dev-token
+      FRONTEND_URL: http://localhost:3000
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID:-}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
+      R2_BUCKET_NAME: alms-assets
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ─── FastAPI AI Service ──────────────────────────────────────────────────────
+  ai_service:
+    build:
+      context: ./ai_service
+      dockerfile: Dockerfile
+    container_name: alms-ai
+    ports:
+      - '8000:8000'
+    environment:
+      AI_SERVICE_TOKEN: dev-token
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
+      REDIS_URL: redis://redis:6379
+      BACKEND_URL: http://backend:3001
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID:-}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
+      R2_BUCKET_NAME: alms-assets
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ─── Next.js Frontend ───────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: alms-frontend
+    ports:
+      - '3000:3000'
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+      NEXT_PUBLIC_WS_URL: ws://localhost:3001
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  redisdata:

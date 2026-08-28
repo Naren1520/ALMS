@@ -1,0 +1,6 @@
+# env & secrets
+.env
+
+# supabase local dev
+.branches/
+.temp/
