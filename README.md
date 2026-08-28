@@ -6,6 +6,25 @@
 **Theme:** Heritage and Culture
 
 A full-stack platform that connects India's marginalized artisans with domestic consumers and global B2B buyers through AI-powered cataloging, semantic search, dynamic pricing, and zero-friction digital commerce.
+---
+
+##  Impact & Economic Value
+
+ALMS eliminates the typical 40% middleman commission, placing revenue directly into the hands of marginalized craftspeople. The system addresses three primary government priorities:
+1. **Targeted Upliftment:** Verification ensures MoSJE benefits reach genuine SC/ST/OBC and Divyang artisans.
+2. **Infinite Market Access:** Product listings syndicate automatically across the **ONDC (Open Network for Digital Commerce)** ecosystem.
+3. **Deep Rural Logistics:** Integration with **Dak Ghar Niryat Kendra (India Post)** allows seamless shipping from any local post office pin code.
+
+---
+
+##  User Personas & Workflows
+
+1. **The Artisan (Primary Beneficiary):** Interacts via a mobile-optimized PWA. Uses voice notes in regional languages to auto-generate catalogs, review dynamic pricing suggestions, and manage orders offline.
+2. **The Village Level Entrepreneur (VLE):** CSC operators who onboard elderly or digitally illiterate artisans, managing bulk media uploads and GI-tag documentation for a small transaction fee.
+3. **The Global B2B Buyer:** Uses the web portal to issue bulk RFQs, browse the Craft Atlas, and make milestone payments protected by escrow.
+4. **MoSJE Administrator:** Monitors verified onboarding rates, tracks economic growth metrics across regions, and moderates platform disputes.
+
+---
 
 ---
 
@@ -89,6 +108,18 @@ A full-stack platform that connects India's marginalized artisans with domestic 
 - Row-level security policies on all Supabase tables
 - CSRF protection, Helmet security headers, and global rate limiting via `@nestjs/throttler`
 - Argon2 password hashing
+
+## Infrastructure Economics & Scalability
+ALMS is designed for extreme cost-efficiency to ensure sustainability for MoSJE:
+* **Zero-Cost Pilot Infrastructure:** Utilizing Vercel Edge functions, Cloudflare R2 (zero egress fees), and Supabase free tiers allows the platform to support the first 10,000 artisans at near-zero hosting cost.
+* **Open-Source AI:** Instead of relying entirely on expensive proprietary APIs, the pipeline leverages open-source models (`rembg`, OpenCV, IndicBERT) hosted on our FastAPI microservice.
+* **Revenue Model for CSCs:** The VLE Mode introduces a micro-commission model (1-2% per bulk B2B order), incentivizing local tech-savvy youth to sustain the onboarding process without requiring direct government salaries.
+
+  ## Phase 1: Pilot Deployment 
+Before a national rollout, ALMS is structured for a controlled pilot deployment targeting the Dakshina Kannada district. 
+* **Target Audience:** Partnering with local NGOs to onboard 500 regional artisans specializing in local crafts (e.g., Udupi handlooms, local woodwork).
+* **VLE Activation:** Training 50 Common Service Centre (CSC) operators in the district to use the VLE Onboarding Mode.
+* **Success Metrics:** Measuring the reduction in cataloging time (from hours to minutes) and the percentage increase in direct B2B inquiries over 90 days.
 
 ---
 
