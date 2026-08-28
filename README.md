@@ -8,12 +8,22 @@
 A full-stack platform that connects India's marginalized artisans with domestic consumers and global B2B buyers through AI-powered cataloging, semantic search, dynamic pricing, and zero-friction digital commerce.
 ---
 
-##  Impact & Economic Value
+## Impact & Economic Value
 
 ALMS eliminates the typical 40% middleman commission, placing revenue directly into the hands of marginalized craftspeople. The system addresses three primary government priorities:
 1. **Targeted Upliftment:** Verification ensures MoSJE benefits reach genuine SC/ST/OBC and Divyang artisans.
 2. **Infinite Market Access:** Product listings syndicate automatically across the **ONDC (Open Network for Digital Commerce)** ecosystem.
 3. **Deep Rural Logistics:** Integration with **Dak Ghar Niryat Kendra (India Post)** allows seamless shipping from any local post office pin code.
+
+## Competitive Edge
+
+| Feature | Legacy E-Commerce (Etsy/Amazon) | Govt Portals (GeM/TRIFED) | ALMS (Our Solution) |
+| :--- | :--- | :--- | :--- |
+| **Onboarding Barrier** | High (Text/English forms) | Medium (Complex compliance) | **Zero-Literacy (Voice AI in Regional Dialects)** |
+| **Middleman Take** | 15% – 40% Commission | 3% – 10% Platform fees | **0% Commission (Direct Artisan Revenue)** |
+| **Pricing Safeguard** | None (Buyer-driven race to bottom) | Static manual pricing | **AI Artisan Protection Floor (Fair-Wage Guardrail)** |
+| **Logistics Reach** | Urban courier dependency | Standard postal | **Native India Post (DNK) Pin-Code Integration** |
+| **Syndication** | Siloed marketplace | Isolated govt catalog | **Automated ONDC Seller Node Broadcasting** |
 
 ---
 
