@@ -1,28 +1,258 @@
-# ALMS: Artisan Linkage & Market System
+# ALMS — Artisan Linkage and Market System
 
-## Problem Statement 
-- ID --> 26090
-- Title	--> AI-Driven Market Linkage and Smart Cataloging Mobile Application for Marginalized Artisans
-- Organization --> Ministry of Social Justice and Empowerment (MoSJE)
-- Department --> Department of Social Justice and Empowerment
-- Category --> Software
-- Theme --> Heritage & Culture
-## Description
+**Problem Statement ID:** 26090  
+**Organisation:** Ministry of Social Justice and Empowerment (MoSJE)  
+**Department:** Department of Social Justice and Empowerment  
+**Theme:** Heritage and Culture
+
+A full-stack platform that connects India's marginalized artisans with domestic consumers and global B2B buyers through AI-powered cataloging, semantic search, dynamic pricing, and zero-friction digital commerce.
+
 ---
-• Background The government actively supports the socio-economic upliftment of marginalized communities,particularly micro-entrepreneurs, artisans, and weavers. Financial assistance is provided to establish small-scale manufacturing and handicraft units. To help these beneficiaries sell their goods, market exposure is facilitated through periodic physical exhibitions, cluster development programs, and trade fairs (such as Shilp Samagam, Surajkund Mela, and Dilli Haat).While physical exhibitions provide a temporary boost in sales, these micro-entrepreneurs lack continuous, year-round access to broader digital markets. Transitioning to the digital economy is hindered by low digital literacy, language barriers, and a lack of technical skills required to professionally photograph, price, and catalog products for modern e-commerce.
-• Challenge There is a critical need to bridge the gap between traditional craftsmanship and modern digital commerce. Beneficiaries struggle to present their products competitively online. They often fail to capture high-quality images, write compelling product descriptions, or understand dynamic market pricing.The challenge is to build an intuitive, AI-driven mobile application that acts as a 'virtual business manager' for these artisans. The app must empower them to seamlessly digitize their inventory, optimize their listings using AI, and connect directly with larger B2B buyers or government e-marketplaces without requiring advanced technical knowledge.
-• Expected Solution Participants are expected to develop an AI-powered, cross-platform mobile application supported by a robust, scalable backend architecture. To ensure high adoption among low-literacy users, the application must feature a highly responsive, minimalist UI/UX design (incorporating modern, clean visual hierarchies and accessible layouts).
 
-Key features should include:
+## Tech Stack
 
-1. AI Image Enhancer & Studio: A built-in camera module that utilizes AI to automatically remove cluttered backgrounds, correct lighting, and format product photos (e.g., textiles,handicrafts) to professional e-commerce standards.
+### Frontend
+![Next.js](https://img.shields.io/badge/Next.js_14-000000?style=flat&logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+![GSAP](https://img.shields.io/badge/GSAP-88CE02?style=flat&logo=greensock&logoColor=black)
+![React Query](https://img.shields.io/badge/React_Query-FF4154?style=flat&logo=reactquery&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-000000?style=flat&logo=react&logoColor=white)
 
-2. Multilingual Auto-Cataloger: An NLP-based engine that allows artisans to describe their product via voice notes in regional languages. The AI should translate and generate SEO-friendly, professional product descriptions in English and Hindi.
+### Backend
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+![TypeORM](https://img.shields.io/badge/TypeORM-FE0803?style=flat&logo=typeorm&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=flat&logo=socketdotio&logoColor=white)
+![Bull](https://img.shields.io/badge/Bull_Queue-FF6384?style=flat&logo=redis&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT_RS256-000000?style=flat&logo=jsonwebtokens&logoColor=white)
 
-3. Dynamic Pricing Assistant: A machine learning algorithm that analyzes the uploaded product image and description to suggest an optimal, competitive selling price based on current market trends and raw material costs.
+### AI Service
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
+![Python](https://img.shields.io/badge/Python_3.11-3776AB?style=flat&logo=python&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Gemini_1.5_Pro-4285F4?style=flat&logo=google&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=flat&logo=opencv&logoColor=white)
 
-• Impact Goals
-• Provide marginalized micro-entrepreneurs with a continuous, year-round digital sales channel,reducing their dependency on periodic physical fairs.
-• Drastically lower the barrier to entry for digital commerce through intuitive AI automation.
-• Improve digital literacy and financial independence, ultimately increasing the average annual income of the target demographic
+### Infrastructure
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL_16-4169E1?style=flat&logo=postgresql&logoColor=white)
+![pgvector](https://img.shields.io/badge/pgvector-4169E1?style=flat&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis_7-DC382D?style=flat&logo=redis&logoColor=white)
+![Cloudflare R2](https://img.shields.io/badge/Cloudflare_R2-F38020?style=flat&logo=cloudflare&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)
+
 ---
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        Vercel Edge                          │
+│  /api/v1/*  ──────────────────────────────►  NestJS Service │
+│  /*         ──────────────────────────────►  Next.js Service│
+└─────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┼───────────────┐
+              ▼               ▼               ▼
+         PostgreSQL 16     Redis 7      Cloudflare R2
+          + pgvector     (Queue/Cache)  (Media Storage)
+                              │
+                              ▼
+                      FastAPI AI Service
+                   (Gemini · rembg · OpenCV)
+```
+
+---
+
+## Features
+
+### Artisan Tools
+- **AI Image Pipeline** — background removal (rembg), lighting correction, and upscaling via OpenCV; original and enhanced images stored separately in R2
+- **Multilingual Auto-Cataloger** — voice or text input in regional languages; Gemini 1.5 Pro generates SEO-ready English and Hindi product descriptions
+- **Dynamic Pricing Assistant** — market-trend analysis using category demand signals and a regional cost index to suggest optimal retail and wholesale prices
+- **Inventory Management** — full batch history with delta tracking, low-stock alerts, and lead-time scheduling
+
+### Discovery and Commerce
+- **Semantic Search** — 768-dimensional text embeddings (Google `text-embedding-004`) stored with pgvector HNSW index for sub-100ms approximate nearest-neighbour search
+- **Craft Atlas** — region-level map of craft traditions with GI tag registry (11 seeded crafts) and artisan density stats
+- **B2B RFQ System** — buyers submit structured requests; AI scores and matches artisans by capacity, trust score, and craft alignment; multi-round quoting with wholesale tiers
+
+### Platform
+- **Trust Score Engine** — 0–100 explainable score built from 11 weighted event types (identity verification, on-time fulfilment, reviews, dispute outcomes); weights are admin-configurable at runtime
+- **Real-time Messaging** — WebSocket conversations between artisans and buyers with auto-translation and content moderation flags
+- **Dispute Resolution** — structured evidence upload, moderator assignment, resolution with mandatory rationale
+- **Admin Panel** — user verification queue, listing moderation, platform config, and audit log
+
+### Security
+- RS256 JWT access tokens (15-minute TTL) with rotating refresh tokens (SHA-256 hashed in DB)
+- AES-256-GCM field-level encryption for PII (names, GST numbers, addresses)
+- Row-level security policies on all Supabase tables
+- CSRF protection, Helmet security headers, and global rate limiting via `@nestjs/throttler`
+- Argon2 password hashing
+
+---
+
+## Repository Structure
+
+```
+ALMS/
+├── frontend/          # Next.js 14 App Router
+│   ├── src/app/       # Pages and layouts
+│   ├── src/components/# UI components (homepage, auth, artisan)
+│   └── src/hooks/     # useReducedMotion, etc.
+├── backend/           # NestJS API
+│   └── src/
+│       ├── modules/   # Feature modules (auth, products, orders, ...)
+│       ├── common/    # Guards, filters, decorators, services
+│       └── config/    # Env validation and config factories
+├── ai_service/        # FastAPI
+│   └── routers/       # catalog, pricing, seo, embedding, image_pipeline,
+│                      # translation, moderation, health
+├── supabase/
+│   └── migrations/    # 7 ordered SQL migrations (extensions → seed data)
+├── docker-compose.yml # Full local stack
+└── vercel.json        # Monorepo services config
+```
+
+---
+
+## Local Development
+
+### Prerequisites
+
+- Node.js 20+
+- Python 3.11+
+- Docker and Docker Compose
+
+### Using Docker (recommended)
+
+```bash
+# Copy and fill in secrets
+cp backend/.env.example backend/.env
+
+# Start all services (PostgreSQL, Redis, backend, AI service, frontend)
+docker compose up --build
+```
+
+| Service     | URL                          |
+|-------------|------------------------------|
+| Frontend    | http://localhost:3000        |
+| Backend API | http://localhost:3001/api/v1 |
+| AI Service  | http://localhost:8000        |
+| Swagger     | http://localhost:3001/api    |
+
+### Manual Setup
+
+**Backend**
+```bash
+cd backend
+cp .env.example .env          # fill in DATABASE_HOST, JWT keys, etc.
+npm install
+npm run start:dev
+```
+
+**AI Service**
+```bash
+cd ai_service
+cp .env.example .env          # fill in GEMINI_API_KEY
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
+
+**Frontend**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Generate JWT Key Pair
+
+```bash
+openssl genrsa -out backend/jwt_private.pem 2048
+openssl rsa -in backend/jwt_private.pem -pubout -out backend/jwt_public.pem
+```
+
+Set the contents (with `\n` line endings) as `JWT_PRIVATE_KEY` and `JWT_PUBLIC_KEY` in `backend/.env`.
+
+### Generate Encryption Key
+
+```bash
+openssl rand -hex 32
+```
+
+Paste the output as `ENCRYPTION_KEY` in `backend/.env`.
+
+---
+
+## Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable | Description |
+|---|---|
+| `DATABASE_HOST` | PostgreSQL host (Supabase or local) |
+| `DATABASE_PASSWORD` | PostgreSQL password |
+| `REDIS_HOST` | Redis host |
+| `JWT_PRIVATE_KEY` | RS256 private key (PEM, `\n`-escaped) |
+| `JWT_PUBLIC_KEY` | RS256 public key (PEM, `\n`-escaped) |
+| `ENCRYPTION_KEY` | 64 hex chars (32 bytes) for AES-256-GCM |
+| `R2_ACCOUNT_ID` | Cloudflare R2 account ID |
+| `R2_ACCESS_KEY_ID` | R2 access key |
+| `R2_SECRET_ACCESS_KEY` | R2 secret key |
+| `AI_SERVICE_URL` | Internal URL of the FastAPI service |
+| `GEMINI_API_KEY` | Google Gemini API key |
+| `FRONTEND_URL` | Allowed CORS origin |
+
+See `backend/.env.example` for the full list.
+
+### AI Service (`ai_service/.env`)
+
+| Variable | Description |
+|---|---|
+| `GEMINI_API_KEY` | Google Gemini API key |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `REDIS_URL` | Redis connection string |
+| `R2_*` | Same R2 credentials as backend |
+
+---
+
+## Deployment
+
+The project deploys as a Vercel monorepo using the Services feature. The root `vercel.json` defines two services and routes all `/api/v1/*` traffic to the NestJS backend and everything else to the Next.js frontend.
+
+```
+Vercel project → Framework: Services
+```
+
+Set all backend environment variables in the Vercel dashboard under the `backend` service environment.
+
+The FastAPI AI service is not deployed to Vercel — host it separately (Cloud Run, Fly.io, or any container platform) and set `AI_SERVICE_URL` in the backend service environment.
+
+---
+
+## Database Migrations
+
+Migrations run automatically when using Docker Compose (mounted into `docker-entrypoint-initdb.d`). For Supabase, apply them in order via the Supabase SQL editor or CLI:
+
+```bash
+supabase db push
+```
+
+Migration order:
+
+| File | Description |
+|------|-------------|
+| `000001` | Extensions (pgvector, pg_trgm, uuid-ossp) |
+| `000002` | Enums |
+| `000003` | Core tables (31 tables) |
+| `000004` | Row-level security policies |
+| `000005` | Supporting indexes |
+| `000006` | Trust event weight seeds |
+| `000007` | Additional tables and seed data (GI tags, transit matrix, regional cost index) |
+
+---
+
+## License
+
+Unlicensed — built for SIH 2024, Problem Statement 26090.
