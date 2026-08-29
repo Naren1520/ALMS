@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ─── ALMS Material Design Tokens ─────────────────────────────── */
 :root {
   /* Palette — warm ivory + deep charcoal + warm gold */
@@ -52,10 +56,6 @@
   --radius-2xl: 48px;
   --radius-full: 9999px;
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* ─── Base Reset ──────────────────────────────────────────────── */
 *, *::before, *::after {

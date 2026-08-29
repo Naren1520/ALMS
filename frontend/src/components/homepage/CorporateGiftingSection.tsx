@@ -44,49 +44,50 @@ const GIFT_CATEGORIES = [
   },
 ];
 
+import FolkArtBanner from './FolkArtBanner';
+
 export default function CorporateGiftingSection() {
   const [selectedGift, setSelectedGift] = useState(GIFT_CATEGORIES[0]);
 
   return (
-    <section className="py-24 md:py-32 bg-ivory border-t border-border font-sans text-charcoal">
-      <div className="container">
+    <section className="relative bg-[#24130A] text-white font-sans overflow-hidden">
+      <div className="container py-20 md:py-28">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gold/10 border border-gold/25 mb-4" style={{ borderRadius: '9999px' }}>
-              <Gift size={13} className="text-gold" />
-              <span className="font-sans font-semibold text-gold-dark" style={{ fontSize: '0.72rem', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Sustainable Corporate &amp; Institutional Gifting</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 border border-white/20 mb-4 rounded-full">
+              <Gift size={13} className="text-[#FA7A21]" />
+              <span className="font-sans font-semibold text-amber-200 text-xs uppercase tracking-wider">Sustainable Corporate &amp; Institutional Gifting</span>
             </div>
-            <h2 className="font-serif text-3xl sm:text-5xl font-light text-charcoal leading-tight">
+            <h2 className="font-serif text-3xl sm:text-5xl font-light text-white leading-tight">
               Ethical Corporate Gifting<br />
-              <em className="text-gold" style={{ fontStyle: 'italic' }}>
+              <em className="text-amber-200" style={{ fontStyle: 'italic' }}>
                 With an Authentic Tribal Soul.
               </em>
             </h2>
-            <p className="text-stone text-sm sm:text-base leading-relaxed mt-3">
+            <p className="text-stone-300 text-sm sm:text-base leading-relaxed mt-3 font-light">
               Replace mass-produced plastic merchandise with bespoke handcrafted tribal art. Every gift box is customizable with your corporate logo and includes a verified maker story card.
             </p>
           </div>
 
           <Link
             href="/b2b/rfq"
-            className="btn-gold inline-flex items-center gap-2 text-xs py-3 px-6 shrink-0 font-semibold shadow-xs"
+            className="px-7 py-3.5 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs rounded-full font-semibold shadow-lg hover:shadow-orange-500/30 transition-all duration-200 inline-flex items-center gap-2 shrink-0"
           >
             <Building2 size={14} /> Request Custom Corporate Hamper Quote
           </Link>
         </div>
 
-        {/* 4 Cards Grid */}
+        {/* 4 Cards Grid Matching Screenshot 1 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
           {GIFT_CATEGORIES.map((gift) => (
             <div
               key={gift.id}
               onClick={() => setSelectedGift(gift)}
-              className="bg-ivory-dark border border-border overflow-hidden hover:shadow-lg hover:border-gold/50 transition-all duration-300 flex flex-col justify-between cursor-pointer group"
-              style={{ borderRadius: '24px' }}
+              className="bg-[#1C0E07] border border-white/15 border-t-4 border-t-[#FA7A21] overflow-hidden hover:shadow-2xl hover:border-white/40 transition-all duration-300 flex flex-col justify-between cursor-pointer group rounded-2xl"
             >
               <div>
-                <div className="relative h-48 overflow-hidden bg-cream">
+                <div className="relative h-56 overflow-hidden bg-black/40">
                   <Image
                     src={gift.image}
                     alt={gift.title}
@@ -95,29 +96,36 @@ export default function CorporateGiftingSection() {
                     sizes="(max-width: 768px) 100vw, 25vw"
                     unoptimized
                   />
-                  <div className="absolute top-3 left-3 bg-charcoal/90 text-ivory text-[10px] font-sans font-medium px-2.5 py-1 shadow-xs" style={{ borderRadius: '8px' }}>
+                  <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-sm text-amber-200 text-[10px] font-sans font-semibold px-2.5 py-1 rounded-md border border-white/10">
                     {gift.tag}
+                  </div>
+                  
+                  {/* Quick View Frosted Pill Matching Screenshot 1 */}
+                  <div className="absolute inset-x-4 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-black/75 backdrop-blur-md text-white text-xs font-semibold py-1.5 text-center rounded-lg border border-white/20">
+                      View Bulk Spec
+                    </div>
                   </div>
                 </div>
 
                 <div className="p-5 space-y-2">
-                  <h3 className="font-serif text-lg font-medium text-charcoal leading-snug group-hover:text-gold transition-colors">
+                  <h3 className="font-serif text-lg font-medium text-white leading-snug group-hover:text-amber-300 transition-colors">
                     {gift.title}
                   </h3>
-                  <p className="text-xs text-stone leading-relaxed">
+                  <p className="text-xs text-stone-300 leading-relaxed font-light line-clamp-2">
                     {gift.desc}
                   </p>
                 </div>
               </div>
 
-              <div className="p-5 pt-0 border-t border-border/60 mt-3 pt-3 flex items-center justify-between text-xs">
+              <div className="p-5 pt-0 border-t border-white/10 mt-3 pt-3 flex items-center justify-between text-xs">
                 <div>
-                  <p className="font-sans font-medium text-stone-light" style={{ fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Bulk Range</p>
-                  <p className="font-serif font-bold text-gold">{gift.priceRange}</p>
+                  <p className="font-sans font-medium text-stone-400 text-[10px] uppercase tracking-wider">Bulk Range</p>
+                  <p className="font-serif font-bold text-amber-300">{gift.priceRange}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-sans font-medium text-stone-light" style={{ fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>MOQ</p>
-                  <p className="font-medium text-charcoal">{gift.minOrder}</p>
+                  <p className="font-sans font-medium text-stone-400 text-[10px] uppercase tracking-wider">MOQ</p>
+                  <p className="font-medium text-stone-200">{gift.minOrder}</p>
                 </div>
               </div>
             </div>
@@ -125,30 +133,33 @@ export default function CorporateGiftingSection() {
         </div>
 
         {/* Corporate Trust Badges Strip */}
-        <div className="p-6 bg-cream/70 border border-border grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs text-charcoal" style={{ borderRadius: '24px' }}>
+        <div className="p-6 bg-[#331B10]/90 border border-white/15 grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs text-stone-200 rounded-2xl">
           <div className="flex items-start gap-3">
-            <ShieldCheck size={20} className="text-gold shrink-0 mt-0.5" />
+            <ShieldCheck size={20} className="text-[#FA7A21] shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-semibold text-charcoal">Custom Logo &amp; Brand Story</h4>
-              <p className="text-stone text-[11px] mt-0.5">Engrave your logo, custom packaging, and personalized greeting notes.</p>
+              <h4 className="font-semibold text-white">Custom Logo &amp; Brand Story</h4>
+              <p className="text-stone-300 text-[11px] mt-0.5 font-light">Engrave your logo, custom packaging, and personalized greeting notes.</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <Leaf size={20} className="text-gold shrink-0 mt-0.5" />
+            <Leaf size={20} className="text-[#FA7A21] shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-semibold text-charcoal">100% Eco-Friendly &amp; Plastic Free</h4>
-              <p className="text-stone text-[11px] mt-0.5">Recycled craft boxes, handmade paper ribbons, and zero single-use plastics.</p>
+              <h4 className="font-semibold text-white">100% Eco-Friendly &amp; Plastic Free</h4>
+              <p className="text-stone-300 text-[11px] mt-0.5 font-light">Recycled craft boxes, handmade paper ribbons, and zero single-use plastics.</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <Building2 size={20} className="text-gold shrink-0 mt-0.5" />
+            <Building2 size={20} className="text-[#FA7A21] shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-semibold text-charcoal">Direct Cluster Livelihood Impact</h4>
-              <p className="text-stone text-[11px] mt-0.5">Includes artisan certificate authenticating heritage and community benefit.</p>
+              <h4 className="font-semibold text-white">Direct Cluster Livelihood Impact</h4>
+              <p className="text-stone-300 text-[11px] mt-0.5 font-light">Includes artisan certificate authenticating heritage and community benefit.</p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Full-width Folk Art Banner on Bottom Matching Screenshot 1 */}
+      <FolkArtBanner height={90} />
     </section>
   );
 }

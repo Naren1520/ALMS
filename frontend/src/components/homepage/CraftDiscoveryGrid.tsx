@@ -92,49 +92,53 @@ export default function CraftDiscoveryGrid() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-32 bg-ivory text-charcoal font-sans border-t border-border"
+      className="py-24 md:py-32 bg-[#3A4A1C] text-white font-sans border-t border-amber-950 relative overflow-hidden"
+      style={{
+        backgroundImage: `radial-gradient(#55692B 1.5px, transparent 1.5px), radial-gradient(#55692B 1.5px, #3A4A1C 1.5px)`,
+        backgroundSize: `40px 40px`,
+        backgroundPosition: `0 0, 20px 20px`
+      }}
       aria-labelledby="tribal-crafts-heading"
     >
-      <div className="container">
+      <div className="container relative z-10">
         {/* Header */}
         <div ref={headRef} className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
           <div>
             <div className="mb-4">
               <span
-                className="font-sans font-semibold text-gold-dark text-xs px-4 py-1.5 bg-[#FA7A21]/15 border border-[#FA7A21]/30 rounded-full inline-block uppercase tracking-wider"
+                className="font-sans font-semibold text-amber-200 text-xs px-4 py-1.5 bg-black/40 border border-white/20 rounded-full inline-block uppercase tracking-wider backdrop-blur-sm"
               >
                 Indigenous Masterpieces
               </span>
             </div>
             <h2
               id="tribal-crafts-heading"
-              className="font-serif text-3xl sm:text-5xl font-light text-charcoal"
+              className="font-serif text-3xl sm:text-5xl font-light text-white"
             >
               Curated Tribal &amp; Folk Traditions
             </h2>
-            <p className="text-stone text-sm sm:text-base mt-2 max-w-xl font-light">
+            <p className="text-stone-200 text-sm sm:text-base mt-2 max-w-xl font-light">
               From the deep forests of Bastar to the sacred walls of Mithila &mdash; certified authentic handicraft traditions.
             </p>
           </div>
           <Link
             href="/explore"
-            className="px-6 py-3 bg-white hover:bg-stone-50 text-charcoal border border-border hover:border-charcoal transition-all duration-200 text-xs font-semibold rounded-full inline-flex items-center gap-2 shadow-xs shrink-0"
+            className="px-7 py-3.5 bg-white hover:bg-stone-100 text-[#24130A] transition-all duration-200 text-xs font-semibold rounded-full inline-flex items-center gap-2 shadow-lg shrink-0"
           >
             <span>Explore Complete Catalog</span>
             <ArrowRight size={14} />
           </Link>
         </div>
 
-        {/* Mosaic Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Mosaic Grid Matching Screenshot 4 (White borders + frosted floating tag pill) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {TRIBAL_CRAFTS.map((craft) => (
             <Link
               key={craft.name}
               href={`/explore?craft=${encodeURIComponent(craft.name)}`}
-              className={`group relative overflow-hidden bg-cream cursor-pointer border border-border shadow-xs hover:shadow-lg transition-all duration-300 ${
-                craft.wide ? 'md:col-span-2 aspect-[16/8]' : 'aspect-[4/5]'
+              className={`group relative overflow-hidden bg-black/40 cursor-pointer border-4 border-white shadow-2xl hover:shadow-green-950/60 transition-all duration-300 rounded-3xl ${
+                craft.wide ? 'md:col-span-2 aspect-[16/9]' : 'aspect-[4/5]'
               }`}
-              style={{ borderRadius: '24px' }}
             >
               {/* Image */}
               <Image
@@ -147,25 +151,29 @@ export default function CraftDiscoveryGrid() {
               />
 
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
               {/* GI Tag Badge */}
               {craft.giTagged && (
-                <span className="absolute top-3.5 right-3.5 bg-ivory/95 backdrop-blur-sm text-charcoal text-[10px] font-semibold shadow-xs flex items-center gap-1 border border-border" style={{ padding: '0.3rem 0.7rem', borderRadius: '9999px' }}>
-                  <ShieldCheck size={12} className="text-gold" />
+                <span className="absolute top-4 right-4 bg-black/80 backdrop-blur-md text-amber-200 text-[10px] font-semibold shadow-md flex items-center gap-1 border border-white/20 px-3 py-1 rounded-full">
+                  <ShieldCheck size={12} className="text-[#FA7A21]" />
                   GI Certified
                 </span>
               )}
 
-              {/* Bottom Card Content */}
-              <div className="absolute bottom-0 inset-x-0 p-6 text-ivory space-y-1">
-                <span className="font-sans font-semibold text-gold-light" style={{ fontSize: '0.7rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                  {craft.category}
-                </span>
-                <h3 className="font-serif text-xl sm:text-2xl font-light leading-snug group-hover:text-gold-light transition-colors">
-                  {craft.name}
-                </h3>
-                <p className="text-xs text-stone-light">{craft.region}</p>
+              {/* Floating Category Pill Matching Screenshot 4 */}
+              <div className="absolute bottom-5 inset-x-5 flex flex-col gap-1.5">
+                <div className="bg-white/95 backdrop-blur-md text-[#24130A] py-2 px-4 rounded-xl shadow-lg flex items-center justify-between">
+                  <div>
+                    <h3 className="font-serif text-base sm:text-lg font-bold text-[#24130A] leading-snug">
+                      {craft.name}
+                    </h3>
+                    <p className="text-[11px] text-stone-600 font-sans font-medium">{craft.region}</p>
+                  </div>
+                  <span className="text-[10px] font-sans font-semibold uppercase tracking-wider px-2.5 py-1 bg-amber-100 text-[#8B2500] rounded-lg shrink-0">
+                    {craft.category}
+                  </span>
+                </div>
               </div>
             </Link>
           ))}

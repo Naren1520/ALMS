@@ -185,22 +185,22 @@ export default function LiveAIStudioDemo() {
                 setSelectedPresetId(p.id);
                 setTestBuyerOffer(p.costBreakdown.sustainableWholesale * 0.7);
               }}
-              className={`px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider transition-all duration-200 cursor-pointer flex items-center gap-2 ${
                 selectedPresetId === p.id
-                  ? 'bg-charcoal text-ivory shadow-sm border border-charcoal'
-                  : 'bg-ivory-dark border border-border text-stone hover:border-gold hover:text-charcoal'
+                  ? 'bg-[#FA7A21] text-white shadow-md'
+                  : 'bg-stone-100 border border-stone-300 text-stone-700 hover:border-[#FA7A21] hover:text-[#FA7A21]'
               }`}
             >
               <span>{p.name.split(' ')[0]} {p.name.split(' ')[1]}</span>
-              <span className="text-[10px] opacity-70">({p.region.split(',')[0]})</span>
+              <span className="text-[10px] opacity-80">({p.region.split(',')[0]})</span>
             </button>
           ))}
         </div>
 
         {/* Live Interactive Studio Box */}
-        <div className="bg-ivory-dark border border-border rounded-xl shadow-md overflow-hidden max-w-5xl mx-auto">
+        <div className="bg-white border border-stone-200 rounded-3xl shadow-xl overflow-hidden max-w-5xl mx-auto">
           {/* Studio Navigation Tabs */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-border bg-cream/60">
+          <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-stone-200 bg-[#24130A] text-white">
             {[
               { id: 'image', label: '1. AI Image Enhancer', icon: Camera },
               { id: 'voice', label: '2. Voice Auto-Cataloger', icon: Mic },
@@ -212,13 +212,13 @@ export default function LiveAIStudioDemo() {
                 <button
                   key={id}
                   onClick={() => setActiveTab(id as any)}
-                  className={`py-3.5 px-4 text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  className={`py-4 px-4 text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-ivory text-charcoal border-b-2 border-gold shadow-xs'
-                      : 'text-stone hover:text-charcoal hover:bg-ivory/50'
+                      ? 'bg-white text-[#24130A] border-b-2 border-[#FA7A21] font-bold shadow-xs'
+                      : 'text-stone-300 hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  <Icon size={15} className={isActive ? 'text-gold' : 'text-stone-light'} />
+                  <Icon size={15} className={isActive ? 'text-[#FA7A21]' : 'text-stone-400'} />
                   <span>{label}</span>
                 </button>
               );

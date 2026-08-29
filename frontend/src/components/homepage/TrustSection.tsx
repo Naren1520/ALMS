@@ -75,7 +75,7 @@ export default function TrustSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-32 bg-ivory text-charcoal font-sans"
+      className="py-24 md:py-32 bg-[#2B1810] text-white font-sans border-t border-white/10"
       aria-labelledby="reliability-heading"
     >
       <div className="container grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
@@ -84,51 +84,50 @@ export default function TrustSection() {
           <div>
             <div className="mb-5">
               <span
-                className="font-sans font-semibold text-gold-dark text-xs px-4 py-1.5 bg-[#FA7A21]/15 border border-[#FA7A21]/30 rounded-full inline-block uppercase tracking-wider"
+                className="font-sans font-semibold text-amber-300 text-xs px-4 py-1.5 bg-white/10 border border-white/20 rounded-full inline-block uppercase tracking-wider"
               >
                 Explainable Quality Assurance
               </span>
             </div>
             <h2
               id="reliability-heading"
-              className="font-serif text-charcoal leading-tight font-light"
-              style={{ fontSize: 'clamp(2rem, 3.5vw, 3.25rem)' }}
+              className="font-serif text-white leading-tight font-light text-3xl sm:text-5xl"
             >
               Artisan Reliability Profiles:<br />
-              <em className="text-[#FA7A21]" style={{ fontStyle: 'italic' }}>
+              <em className="text-amber-200" style={{ fontStyle: 'italic' }}>
                 Transparent. Explainable. Fair.
               </em>
             </h2>
           </div>
 
-          <p className="text-stone leading-relaxed text-base">
+          <p className="text-stone-300 leading-relaxed text-base font-light">
             Instead of opaque ratings that penalize rural artisans for poor internet connectivity or delayed third-party transport, ALMS provides a transparent <strong>Reliability Profile</strong> grounded in verified craftsmanship, government beneficiary records, and on-time milestone fulfilment.
           </p>
 
           {/* Profile Card Example */}
-          <div className="p-6 bg-ivory-dark border border-border shadow-xs space-y-4" style={{ borderRadius: '24px' }}>
+          <div className="p-6 bg-[#1C0E07] border border-white/15 shadow-2xl space-y-4 rounded-3xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-serif text-lg font-medium text-charcoal">Meera Devi &bull; Mithila Craft Cluster</p>
-                <p className="text-xs text-stone">Madhubani Painting &bull; Bihar (GI Certified)</p>
+                <p className="font-serif text-lg font-medium text-white">Meera Devi &bull; Mithila Craft Cluster</p>
+                <p className="text-xs text-stone-400">Madhubani Painting &bull; Bihar (GI Certified)</p>
               </div>
-              <span className="px-3 py-1 bg-gold/15 text-gold-dark font-semibold text-xs rounded-full border border-gold/30 flex items-center gap-1">
+              <span className="px-3 py-1 bg-[#FA7A21]/20 text-amber-300 font-semibold text-xs rounded-full border border-[#FA7A21]/40 flex items-center gap-1">
                 <ShieldCheck size={13} /> Verified Master
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 pt-3 border-t border-border text-center">
+            <div className="grid grid-cols-3 gap-2 pt-3 border-t border-white/10 text-center">
               <div>
-                <p className="text-stone-light font-sans font-medium" style={{ fontSize: '0.65rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Fulfilment Rate</p>
-                <p className="font-serif text-base font-bold text-charcoal">97.8%</p>
+                <p className="text-stone-400 font-sans font-medium text-[10px] uppercase tracking-wider">Fulfilment Rate</p>
+                <p className="font-serif text-base font-bold text-white">97.8%</p>
               </div>
               <div>
-                <p className="text-stone-light font-sans font-medium" style={{ fontSize: '0.65rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>On-Time Dispatch</p>
-                <p className="font-serif text-base font-bold text-charcoal">95.2%</p>
+                <p className="text-stone-400 font-sans font-medium text-[10px] uppercase tracking-wider">On-Time Dispatch</p>
+                <p className="font-serif text-base font-bold text-white">95.2%</p>
               </div>
               <div>
-                <p className="text-stone-light font-sans font-medium" style={{ fontSize: '0.65rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Active Capacity</p>
-                <p className="font-serif text-base font-bold text-gold">45 Units/mo</p>
+                <p className="text-stone-400 font-sans font-medium text-[10px] uppercase tracking-wider">Active Capacity</p>
+                <p className="font-serif text-base font-bold text-amber-300">45 Units/mo</p>
               </div>
             </div>
           </div>
@@ -142,19 +141,18 @@ export default function TrustSection() {
               <div
                 key={item.title}
                 ref={(el) => { itemsRef.current[i] = el; }}
-                className="p-5 bg-ivory-dark border border-border hover:border-gold/50 transition-all duration-200 flex items-center justify-between shadow-xs"
-                style={{ borderRadius: '20px' }}
+                className="p-5 bg-[#1C0E07] border border-white/15 hover:border-white/40 transition-all duration-200 flex items-center justify-between shadow-xl rounded-2xl"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 bg-cream border border-border flex items-center justify-center text-gold shrink-0" style={{ borderRadius: '14px' }}>
+                  <div className="w-11 h-11 bg-[#2D160B] border border-white/10 flex items-center justify-center text-[#FA7A21] shrink-0 rounded-xl">
                     <Icon size={20} />
                   </div>
                   <div>
-                    <h3 className="font-sans font-medium text-charcoal text-sm">{item.title}</h3>
-                    <p className="text-stone text-xs mt-0.5">{item.desc}</p>
+                    <h3 className="font-sans font-medium text-white text-sm">{item.title}</h3>
+                    <p className="text-stone-300 text-xs mt-0.5 font-light">{item.desc}</p>
                   </div>
                 </div>
-                <span className="font-serif text-lg font-medium text-charcoal shrink-0 ml-4">
+                <span className="font-serif text-lg font-bold text-amber-300 shrink-0 ml-4">
                   {item.stat}
                 </span>
               </div>
