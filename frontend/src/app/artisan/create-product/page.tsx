@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import Image from 'next/image';
 import { enqueue } from '@/lib/syncQueue';
 import {
@@ -162,7 +163,7 @@ export default function CreateProductPage() {
       <main className="min-h-screen bg-ivory text-charcoal pt-28 pb-24 font-sans">
         <div className="container max-w-4xl">
           {/* Header */}
-          <div className="text-center mb-10">
+          <ScrollReveal className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/30 rounded-full mb-3">
               <Sparkles size={13} className="text-gold" />
               <span className="overline text-gold text-[11px]">Zero-Literacy AI Studio</span>
@@ -173,10 +174,10 @@ export default function CreateProductPage() {
             <p className="text-stone text-sm max-w-xl mx-auto leading-relaxed">
               Upload a craft photo, speak in any native Indian language, and adjust your defensible cost formula.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Quick Preset Pickers */}
-          <div className="mb-8 p-4 bg-ivory-dark border border-border rounded-xl">
+          <ScrollReveal className="mb-8 p-4 bg-ivory-dark border border-border rounded-xl" delay={0.1}>
             <p className="text-xs font-semibold text-charcoal uppercase tracking-wider mb-2.5">
               Select Sample Craft Preset (Or Upload Your Own Below):
             </p>
@@ -196,7 +197,7 @@ export default function CreateProductPage() {
                 </button>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Studio Form Container */}
           <form onSubmit={handleSubmit} className="bg-ivory-dark border border-border p-6 sm:p-10 rounded-xl shadow-sm space-y-10">

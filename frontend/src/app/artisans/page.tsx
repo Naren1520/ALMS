@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, ShieldCheck, Award, ArrowRight, Star } from 'lucide-react';
@@ -127,7 +128,7 @@ export default function ArtisansPage() {
       <main className="min-h-screen bg-ivory text-charcoal pt-28 pb-24 font-sans">
         <div className="container">
           {/* Header */}
-          <div className="text-center max-w-3xl mx-auto mb-12">
+          <ScrollReveal className="text-center max-w-3xl mx-auto mb-12">
             <div className="flex items-center justify-center gap-2 mb-3">
               <span className="w-6 h-px bg-gold" />
               <p className="overline text-gold" style={{ fontSize: '0.65rem' }}>
@@ -141,10 +142,10 @@ export default function ArtisansPage() {
             <p className="text-stone text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
               India&apos;s living national treasures. Every artisan on ALMS undergoes physical workshop verification, identity checks, and craft heritage validation.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Search Bar */}
-          <div className="max-w-xl mx-auto mb-12">
+          <ScrollReveal className="max-w-xl mx-auto mb-12" delay={0.1}>
             <div className="relative">
               <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-light" />
               <input
@@ -155,13 +156,13 @@ export default function ArtisansPage() {
                 className="w-full bg-ivory-dark border border-border pl-11 pr-4 py-3 text-xs text-charcoal placeholder:text-stone-light focus:outline-none focus:border-gold transition-colors shadow-xs"
               />
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Artisan Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredArtisans.map((artisan) => (
+            {filteredArtisans.map((artisan, index) => (
+              <ScrollReveal key={artisan.id} delay={(index % 3) * 0.08}>
               <article
-                key={artisan.id}
                 className="bg-ivory-dark border border-border overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
@@ -234,6 +235,7 @@ export default function ArtisansPage() {
                   </Link>
                 </div>
               </article>
+              </ScrollReveal>
             ))}
           </div>
         </div>

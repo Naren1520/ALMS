@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Sparkles, ArrowRight, ShieldCheck, Search } from 'lucide-react';
@@ -172,7 +173,7 @@ export default function CraftAtlasPage() {
       <main className="min-h-screen bg-ivory text-charcoal pt-28 pb-24 font-sans">
         <div className="container">
           {/* Header */}
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <ScrollReveal className="text-center max-w-3xl mx-auto mb-14">
             <div className="flex items-center justify-center gap-3 mb-4">
               <span className="w-8 h-px bg-gold" />
               <p className="overline text-gold">Heritage Cartography</p>
@@ -188,10 +189,10 @@ export default function CraftAtlasPage() {
               Explore 3,000+ indigenous craft lineages spanning every state and union territory.
               Select a region to discover registered master artisans, GI tags, and cultural legacies.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Main Grid */}
-          <div className="grid lg:grid-cols-12 gap-8 items-start">
+          <ScrollReveal className="grid lg:grid-cols-12 gap-8 items-start" delay={0.1}>
             {/* Left: Map & Region Selector (7 cols) */}
             <div className="lg:col-span-7 bg-ivory-dark border border-border p-6 sm:p-8 shadow-xs">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
@@ -373,7 +374,7 @@ export default function CraftAtlasPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </main>
       <Footer />

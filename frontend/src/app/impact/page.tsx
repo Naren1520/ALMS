@@ -2,6 +2,7 @@
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { ShieldCheck, TrendingUp, Users, Clock, CheckCircle2, ArrowRight, Award, MapPin } from 'lucide-react';
 
 const PILOT_METRICS = [
@@ -26,7 +27,7 @@ export default function ImpactPage() {
       <main className="min-h-screen bg-ivory text-charcoal pt-28 pb-24 font-sans">
         <div className="container max-w-5xl">
           {/* Header */}
-          <div className="text-center max-w-3xl mx-auto mb-12">
+          <ScrollReveal className="text-center max-w-3xl mx-auto mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/30 rounded-full mb-3">
               <ShieldCheck size={13} className="text-gold" />
               <span className="overline text-gold text-[11px]">MoSJE Governance &amp; Livelihood Analytics</span>
@@ -37,21 +38,21 @@ export default function ImpactPage() {
             <p className="text-stone text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
               Real-time monitoring of artisan digital inclusion, economic livelihood gains, and operational efficiency across sponsored craft clusters.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* KPI Cards Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-            {PILOT_METRICS.map((kpi) => (
-              <div key={kpi.label} className="bg-ivory-dark border border-border p-5 rounded-xl shadow-xs space-y-1">
+            {PILOT_METRICS.map((kpi, index) => (
+              <ScrollReveal key={kpi.label} delay={index * 0.08} className="bg-ivory-dark border border-border p-5 rounded-xl shadow-xs space-y-1">
                 <p className="overline text-stone-light text-[10px]">{kpi.label}</p>
                 <p className="font-serif text-2xl sm:text-3xl font-light text-charcoal">{kpi.value}</p>
                 <p className="text-[11px] text-stone leading-tight pt-1 border-t border-border/60">{kpi.desc}</p>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
 
           {/* Before vs After Efficiency Study */}
-          <div className="bg-ivory-dark border border-border p-6 sm:p-8 rounded-xl shadow-sm mb-12">
+          <ScrollReveal className="bg-ivory-dark border border-border p-6 sm:p-8 rounded-xl shadow-sm mb-12">
             <div className="flex items-center justify-between pb-4 border-b border-border mb-6">
               <div>
                 <span className="overline text-gold text-[10px]">Operational Benchmark</span>
@@ -81,10 +82,10 @@ export default function ImpactPage() {
                 <p className="text-stone">Automated capacity splitting across clusters</p>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Regional Beneficiary Clusters Table */}
-          <div className="bg-ivory-dark border border-border p-6 sm:p-8 rounded-xl shadow-sm">
+          <ScrollReveal className="bg-ivory-dark border border-border p-6 sm:p-8 rounded-xl shadow-sm" delay={0.1}>
             <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
               <h2 className="font-serif text-2xl font-medium text-charcoal">Active Craft Cluster Deployments</h2>
               <span className="text-xs text-stone">Reporting Cycle: Q3 2026</span>
@@ -120,7 +121,7 @@ export default function ImpactPage() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </main>
       <Footer />

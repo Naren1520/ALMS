@@ -8,6 +8,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { MailCheck, ArrowRight, Lock, Mail, User, Briefcase, ShoppingBag, AlertCircle } from 'lucide-react';
 
 const registerSchema = z
@@ -239,6 +240,7 @@ export default function RegisterPage() {
     <>
       <Navbar />
       <main className="min-h-screen bg-ivory flex items-center justify-center pt-28 pb-20 px-4 font-sans">
+        <ScrollReveal className="w-full flex justify-center">
         <Suspense
           fallback={
             <div className="w-full max-w-md bg-ivory-dark border border-border p-12 text-center">
@@ -248,6 +250,7 @@ export default function RegisterPage() {
         >
           <RegisterFormComponent />
         </Suspense>
+        </ScrollReveal>
       </main>
       <Footer />
     </>

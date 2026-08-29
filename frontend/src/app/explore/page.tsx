@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, Sparkles, ArrowUpRight, ShieldCheck, Building2, Gift, CheckCircle2, Leaf, X } from 'lucide-react';
@@ -223,7 +224,7 @@ export default function ExplorePage() {
       <main className="min-h-screen bg-ivory text-charcoal pt-28 pb-24 font-sans">
         <div className="container">
           {/* Header */}
-          <div className="text-center max-w-3xl mx-auto mb-12">
+          <ScrollReveal className="text-center max-w-3xl mx-auto mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/30 rounded-full mb-3">
               <Gift size={13} className="text-gold" />
               <span className="overline text-gold text-[11px]">Curated Tribal &amp; Folk Crafts</span>
@@ -234,10 +235,10 @@ export default function ExplorePage() {
             <p className="text-stone text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
               Sourced directly from indigenous artisan collectives, self-help groups (SHGs), and master craftspersons across India. Available for direct consumer orders and bulk corporate gifting.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Filter Bar */}
-          <div className="bg-ivory-dark border border-border p-4 sm:p-6 mb-10 rounded-xl shadow-xs">
+          <ScrollReveal className="bg-ivory-dark border border-border p-4 sm:p-6 mb-10 rounded-xl shadow-xs" delay={0.1}>
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               {/* Search input */}
               <div className="relative flex-1 max-w-md">
@@ -298,13 +299,13 @@ export default function ExplorePage() {
                 </button>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map((product) => (
+            {filteredProducts.map((product, index) => (
+              <ScrollReveal key={product.id} delay={(index % 3) * 0.08}>
               <article
-                key={product.id}
                 className="group bg-ivory-dark border border-border rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
@@ -393,6 +394,7 @@ export default function ExplorePage() {
                   </div>
                 </div>
               </article>
+              </ScrollReveal>
             ))}
           </div>
 

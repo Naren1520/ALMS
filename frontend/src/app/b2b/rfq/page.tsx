@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { Layers, ShieldCheck, CheckCircle2, AlertTriangle, ArrowRight, Sparkles, Building2, Calculator } from 'lucide-react';
 
 interface MatchedCluster {
@@ -78,7 +79,7 @@ export default function B2BRfqPage() {
       <main className="min-h-screen bg-ivory text-charcoal pt-28 pb-24 font-sans">
         <div className="container max-w-5xl">
           {/* Header */}
-          <div className="text-center max-w-3xl mx-auto mb-12">
+          <ScrollReveal className="text-center max-w-3xl mx-auto mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/30 rounded-full mb-3">
               <Building2 size={13} className="text-gold" />
               <span className="overline text-gold text-[11px]">Institutional &amp; Corporate Sourcing</span>
@@ -89,9 +90,9 @@ export default function B2BRfqPage() {
             <p className="text-stone text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
               Submit bulk requirements. ALMS matches verified artisan clusters, enforces fair price floors, and algorithmically splits production capacity.
             </p>
-          </div>
+          </ScrollReveal>
 
-          <div className="grid lg:grid-cols-12 gap-8 items-start">
+          <ScrollReveal className="grid lg:grid-cols-12 gap-8 items-start" delay={0.1}>
             {/* Left: RFQ Submission Form (5 cols) */}
             <div className="lg:col-span-5 bg-ivory-dark border border-border p-6 sm:p-8 rounded-xl shadow-sm space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-border">
@@ -237,7 +238,7 @@ export default function B2BRfqPage() {
                 </button>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </main>
       <Footer />

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { ArrowRight, Lock, Mail, AlertCircle } from 'lucide-react';
 
 interface LoginForm {
@@ -44,7 +45,7 @@ export default function LoginPage() {
     <>
       <Navbar />
       <main className="min-h-screen bg-ivory flex items-center justify-center pt-28 pb-20 px-4 font-sans">
-        <div className="w-full max-w-md bg-ivory-dark border border-border p-8 sm:p-10 shadow-sm relative">
+        <ScrollReveal className="w-full max-w-md bg-ivory-dark border border-border p-8 sm:p-10 shadow-sm relative">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-3">
               <span className="w-6 h-px bg-gold" />
@@ -145,7 +146,7 @@ export default function LoginPage() {
               </Link>
             </p>
           </div>
-        </div>
+        </ScrollReveal>
       </main>
       <Footer />
     </>
