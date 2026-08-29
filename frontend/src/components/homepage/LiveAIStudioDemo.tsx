@@ -160,18 +160,18 @@ export default function LiveAIStudioDemo() {
   const isBelowCostFloor = testBuyerOffer < totalCalculatedCost;
 
   return (
-    <section id="live-ai-studio" className="py-24 md:py-32 bg-ivory text-charcoal font-sans border-t border-border">
+    <section id="live-ai-studio" className="py-24 md:py-32 bg-[#2B1810] text-white font-sans border-t border-amber-900/30">
       <div className="container">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/30 rounded-full mb-3">
-            <Sparkles size={13} className="text-gold" />
-            <span className="overline text-gold text-[11px]">Interactive SIH Demonstration</span>
+        <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#FA7A21]/15 border border-[#FA7A21]/30 rounded-full">
+            <Sparkles size={13} className="text-[#FA7A21]" />
+            <span className="text-amber-300 text-xs font-semibold uppercase tracking-wider">Interactive Demonstration</span>
           </div>
-          <h2 className="font-serif text-3xl sm:text-5xl font-light text-charcoal mb-4">
+          <h2 className="font-serif text-3xl sm:text-5xl font-light text-white">
             Experience the Virtual Business Manager
           </h2>
-          <p className="text-stone text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+          <p className="text-stone-100 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-light">
             Test how raw rural photos and native voice recordings are instantly transformed into commercial-grade listings with sustainable price protection.
           </p>
         </div>
@@ -188,7 +188,7 @@ export default function LiveAIStudioDemo() {
               className={`px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider transition-all duration-200 cursor-pointer flex items-center gap-2 ${
                 selectedPresetId === p.id
                   ? 'bg-[#FA7A21] text-white shadow-md'
-                  : 'bg-stone-100 border border-stone-300 text-stone-700 hover:border-[#FA7A21] hover:text-[#FA7A21]'
+                  : 'bg-white/10 border border-white/20 text-stone-100 hover:border-[#FA7A21]/60 hover:text-amber-200'
               }`}
             >
               <span>{p.name.split(' ')[0]} {p.name.split(' ')[1]}</span>
@@ -198,9 +198,9 @@ export default function LiveAIStudioDemo() {
         </div>
 
         {/* Live Interactive Studio Box */}
-        <div className="bg-white border border-stone-200 rounded-3xl shadow-xl overflow-hidden max-w-5xl mx-auto">
+        <div className="bg-[#1C0E07] border border-white/15 rounded-3xl shadow-2xl overflow-hidden max-w-5xl mx-auto">
           {/* Studio Navigation Tabs */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-stone-200 bg-[#24130A] text-white">
+          <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-white/10 bg-[#24130A] text-white">
             {[
               { id: 'image', label: '1. AI Image Enhancer', icon: Camera },
               { id: 'voice', label: '2. Voice Auto-Cataloger', icon: Mic },
@@ -214,8 +214,8 @@ export default function LiveAIStudioDemo() {
                   onClick={() => setActiveTab(id as any)}
                   className={`py-4 px-4 text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-white text-[#24130A] border-b-2 border-[#FA7A21] font-bold shadow-xs'
-                      : 'text-stone-300 hover:text-white hover:bg-white/10'
+                      ? 'bg-[#1C0E07] text-amber-200 border-b-2 border-[#FA7A21] font-bold shadow-xs'
+                      : 'text-stone-300 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   <Icon size={15} className={isActive ? 'text-[#FA7A21]' : 'text-stone-400'} />
@@ -229,25 +229,25 @@ export default function LiveAIStudioDemo() {
           {activeTab === 'image' && (
             <div className="p-6 sm:p-10 grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <span className="overline text-gold text-[11px] mb-2 block">Mandatory PS Feature #1</span>
-                <h3 className="font-serif text-2xl sm:text-3xl text-charcoal mb-3">
+                <span className="text-amber-300 uppercase tracking-wider text-[11px] font-semibold mb-2 block">Feature #1</span>
+                <h3 className="font-serif text-2xl sm:text-3xl text-white mb-3 font-light">
                   AI Image Studio &amp; Background Cleaner
                 </h3>
-                <p className="text-stone text-xs sm:text-sm leading-relaxed mb-6">
+                <p className="text-stone-100 text-xs sm:text-sm leading-relaxed mb-6 font-light">
                   Rural artisans photograph products on muddy floors or cluttered workshops. Our computer vision pipeline automatically isolates the subject, corrects uneven lighting, and generates professional white/studio e-commerce backgrounds.
                 </p>
 
                 <div className="space-y-2.5 mb-6">
-                  <div className="flex items-center gap-2 text-xs text-charcoal">
-                    <CheckCircle2 size={15} className="text-gold shrink-0" />
+                  <div className="flex items-center gap-2 text-xs text-stone-100">
+                    <CheckCircle2 size={15} className="text-[#FA7A21] shrink-0" />
                     <span>Automatic clutter &amp; background removal</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-charcoal">
-                    <CheckCircle2 size={15} className="text-gold shrink-0" />
+                  <div className="flex items-center gap-2 text-xs text-stone-100">
+                    <CheckCircle2 size={15} className="text-[#FA7A21] shrink-0" />
                     <span>Shadow balance &amp; natural lighting correction</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-charcoal">
-                    <CheckCircle2 size={15} className="text-gold shrink-0" />
+                  <div className="flex items-center gap-2 text-xs text-stone-100">
+                    <CheckCircle2 size={15} className="text-[#FA7A21] shrink-0" />
                     <span>Standardized e-commerce 1:1 &amp; 4:3 high-res framing</span>
                   </div>
                 </div>
@@ -255,19 +255,19 @@ export default function LiveAIStudioDemo() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setShowBefore((v) => !v)}
-                    className="btn-primary text-xs py-2.5 px-5 cursor-pointer"
+                    className="px-5 py-2.5 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full shadow-md transition-all cursor-pointer flex items-center gap-1.5"
                   >
-                    <RefreshCw size={13} className="mr-1.5" />
-                    Toggle {showBefore ? 'Enhanced' : 'Original Raw'} Image
+                    <RefreshCw size={13} />
+                    <span>Toggle {showBefore ? 'Enhanced' : 'Original Raw'} Image</span>
                   </button>
-                  <span className="text-[11px] text-stone-light">
-                    Showing: <strong>{showBefore ? 'Raw Unedited Photo' : 'AI-Enhanced Studio Shot'}</strong>
+                  <span className="text-[11px] text-stone-300">
+                    Showing: <strong className="text-white">{showBefore ? 'Raw Unedited Photo' : 'AI-Enhanced Studio Shot'}</strong>
                   </span>
                 </div>
               </div>
 
               {/* Visual Frame */}
-              <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-border shadow-inner bg-cream">
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 shadow-inner bg-black/40">
                 <Image
                   src={showBefore ? preset.rawImage : preset.enhancedImage}
                   alt={preset.name}
@@ -276,11 +276,11 @@ export default function LiveAIStudioDemo() {
                   sizes="50vw"
                   unoptimized
                 />
-                <div className="absolute top-3 left-3 bg-charcoal/90 text-ivory text-[10px] overline px-2.5 py-1 rounded">
+                <div className="absolute top-3 left-3 bg-black/80 text-amber-200 text-[10px] font-semibold px-2.5 py-1 rounded-full border border-white/15">
                   {showBefore ? 'Raw Smartphone Photo (Cluttered)' : 'AI Studio Cleaned (Marketplace Ready)'}
                 </div>
                 {!showBefore && (
-                  <div className="absolute bottom-3 right-3 bg-gold/90 text-ivory text-[10px] font-semibold px-2.5 py-1 rounded flex items-center gap-1 shadow-sm">
+                  <div className="absolute bottom-3 right-3 bg-[#FA7A21] text-white text-[10px] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
                     <Sparkles size={11} /> AI Enhanced &bull; 0.8s
                   </div>
                 )}
@@ -292,62 +292,62 @@ export default function LiveAIStudioDemo() {
           {activeTab === 'voice' && (
             <div className="p-6 sm:p-10 grid md:grid-cols-2 gap-8 items-start">
               <div>
-                <span className="overline text-gold text-[11px] mb-2 block">Mandatory PS Feature #2</span>
-                <h3 className="font-serif text-2xl sm:text-3xl text-charcoal mb-3">
+                <span className="text-amber-300 uppercase tracking-wider text-[11px] font-semibold mb-2 block">Feature #2</span>
+                <h3 className="font-serif text-2xl sm:text-3xl text-white mb-3 font-light">
                   Voice-First Auto-Cataloging
                 </h3>
-                <p className="text-stone text-xs sm:text-sm leading-relaxed mb-4">
+                <p className="text-stone-100 text-xs sm:text-sm leading-relaxed mb-4 font-light">
                   Low-literacy artisans do not type descriptions or fill complex forms. They simply speak in their native tongue. AI extracts dimensions, material, craft legacy, and generates bilingual English + Hindi listings automatically.
                 </p>
 
                 {/* Voice player simulation */}
-                <div className="p-4 bg-cream border border-border rounded-lg mb-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold text-charcoal flex items-center gap-1.5">
-                      <Volume2 size={15} className="text-gold" />
+                <div className="p-4 bg-black/30 border border-white/10 rounded-xl mb-6 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-amber-200 flex items-center gap-1.5">
+                      <Volume2 size={15} className="text-[#FA7A21]" />
                       Artisan Audio Note ({preset.audioLanguage})
                     </span>
                     <button
                       onClick={() => setIsPlayingAudio(!isPlayingAudio)}
-                      className="text-[11px] px-2.5 py-1 bg-charcoal text-ivory rounded hover:bg-gold transition-colors cursor-pointer"
+                      className="text-[11px] px-3 py-1 bg-[#FA7A21] text-white rounded-full hover:bg-[#e06917] transition-colors cursor-pointer"
                     >
                       {isPlayingAudio ? 'Pause' : 'Play Audio Sample'}
                     </button>
                   </div>
-                  <p className="text-xs text-stone italic leading-relaxed">
+                  <p className="text-xs text-stone-200 italic leading-relaxed">
                     {preset.audioTranscript}
                   </p>
                 </div>
 
-                <div className="space-y-2 text-xs">
-                  <p className="font-semibold text-charcoal uppercase tracking-wider text-[11px]">
+                <div className="space-y-2 text-xs text-stone-100">
+                  <p className="font-semibold text-amber-300 uppercase tracking-wider text-[11px]">
                     Extracted Craft Metadata:
                   </p>
-                  <p><strong className="text-stone-light">Tradition:</strong> {preset.extractedAttributes.craftTradition}</p>
-                  <p><strong className="text-stone-light">Material:</strong> {preset.extractedAttributes.material}</p>
-                  <p><strong className="text-stone-light">Dimensions:</strong> {preset.extractedAttributes.dimensions}</p>
-                  <p><strong className="text-stone-light">Crafting Time:</strong> {preset.extractedAttributes.productionDays} Days</p>
+                  <p><strong className="text-stone-300">Tradition:</strong> {preset.extractedAttributes.craftTradition}</p>
+                  <p><strong className="text-stone-300">Material:</strong> {preset.extractedAttributes.material}</p>
+                  <p><strong className="text-stone-300">Dimensions:</strong> {preset.extractedAttributes.dimensions}</p>
+                  <p><strong className="text-stone-300">Crafting Time:</strong> {preset.extractedAttributes.productionDays} Days</p>
                 </div>
               </div>
 
               {/* Generated Catalog Listing Preview */}
-              <div className="bg-ivory border border-border p-6 rounded-lg space-y-4 shadow-sm">
-                <div className="flex items-center justify-between border-b border-border pb-3">
-                  <span className="text-xs font-serif text-charcoal font-medium">Bilingual Catalog Output</span>
-                  <span className="text-[10px] bg-green-100 text-green-800 font-semibold px-2 py-0.5 rounded">
+              <div className="bg-[#24130A] border border-amber-900/30 p-6 rounded-2xl space-y-4 shadow-sm">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <span className="text-xs font-serif text-white font-medium">Bilingual Catalog Output</span>
+                  <span className="text-[10px] bg-green-900/40 text-green-300 border border-green-700/40 font-semibold px-2.5 py-0.5 rounded-full">
                     Bhashini / Gemini Verified
                   </span>
                 </div>
 
                 <div>
-                  <p className="overline text-stone-light text-[10px]">English Listing</p>
-                  <h4 className="font-serif text-lg font-medium text-charcoal mb-1">{preset.name}</h4>
-                  <p className="text-xs text-stone leading-relaxed">{preset.extractedAttributes.descriptionEn}</p>
+                  <p className="text-[#FA7A21] uppercase tracking-wider text-[10px] font-semibold">English Listing</p>
+                  <h4 className="font-serif text-lg font-light text-white mb-1">{preset.name}</h4>
+                  <p className="text-xs text-stone-100 leading-relaxed font-light">{preset.extractedAttributes.descriptionEn}</p>
                 </div>
 
-                <div className="pt-3 border-t border-border">
-                  <p className="overline text-stone-light text-[10px]">Hindi Listing (हिंदी विवरण)</p>
-                  <p className="text-xs text-stone leading-relaxed font-sans mt-1">{preset.extractedAttributes.descriptionHi}</p>
+                <div className="pt-3 border-t border-white/10">
+                  <p className="text-[#FA7A21] uppercase tracking-wider text-[10px] font-semibold">Hindi Listing (हिंदी विवरण)</p>
+                  <p className="text-xs text-stone-100 leading-relaxed font-sans font-light mt-1">{preset.extractedAttributes.descriptionHi}</p>
                 </div>
               </div>
             </div>
@@ -357,78 +357,87 @@ export default function LiveAIStudioDemo() {
           {activeTab === 'pricing' && (
             <div className="p-6 sm:p-10 space-y-8">
               <div className="max-w-3xl">
-                <span className="overline text-gold text-[11px] mb-2 block">Mandatory PS Feature #3</span>
-                <h3 className="font-serif text-2xl sm:text-3xl text-charcoal mb-2">
+                <span className="text-amber-300 uppercase tracking-wider text-[11px] font-semibold mb-2 block">Feature #3</span>
+                <h3 className="font-serif text-2xl sm:text-3xl text-white mb-2 font-light">
                   Defensible Cost Breakdown &amp; Sustainable Price Floor
                 </h3>
-                <p className="text-stone text-xs sm:text-sm leading-relaxed">
+                <p className="text-stone-100 text-xs sm:text-sm leading-relaxed font-light">
                   Instead of black-box &ldquo;AI magic&rdquo;, our pricing engine calculates real costs: raw materials + labour hours + overhead + regional indices to protect marginalized artisans from predatory wholesale buyer offers.
                 </p>
               </div>
 
               {/* Transparent Cost Formula Cards */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="bg-ivory border border-border p-4 rounded text-center">
-                  <p className="overline text-stone-light text-[10px]">Raw Material Cost</p>
-                  <p className="font-serif text-xl text-charcoal font-medium mt-1">
+                <div className="bg-black/30 border border-white/10 p-4 rounded-xl text-center">
+                  <p className="text-[10px] uppercase font-bold tracking-wider text-stone-300">Raw Material Cost</p>
+                  <p className="font-serif text-xl text-white font-light mt-1">
                     ₹{preset.costBreakdown.rawMaterialCost}
                   </p>
                 </div>
-                <div className="bg-ivory border border-border p-4 rounded text-center">
-                  <p className="overline text-stone-light text-[10px]">Labour ({preset.costBreakdown.labourHours} hrs @ ₹{preset.costBreakdown.hourlyWage}/hr)</p>
-                  <p className="font-serif text-xl text-charcoal font-medium mt-1">
+                <div className="bg-black/30 border border-white/10 p-4 rounded-xl text-center">
+                  <p className="text-[10px] uppercase font-bold tracking-wider text-stone-300">Labour ({preset.costBreakdown.labourHours} hrs @ ₹{preset.costBreakdown.hourlyWage}/hr)</p>
+                  <p className="font-serif text-xl text-white font-light mt-1">
                     ₹{preset.costBreakdown.labourHours * preset.costBreakdown.hourlyWage}
                   </p>
                 </div>
-                <div className="bg-ivory border border-border p-4 rounded text-center">
-                  <p className="overline text-stone-light text-[10px]">Overhead &amp; Tools</p>
-                  <p className="font-serif text-xl text-charcoal font-medium mt-1">
+                <div className="bg-black/30 border border-white/10 p-4 rounded-xl text-center">
+                  <p className="text-[10px] uppercase font-bold tracking-wider text-stone-300">Overhead &amp; Logistics</p>
+                  <p className="font-serif text-xl text-white font-light mt-1">
                     ₹{preset.costBreakdown.overheadCost}
                   </p>
                 </div>
-                <div className="bg-cream border border-gold/40 p-4 rounded text-center">
-                  <p className="overline text-gold text-[10px] font-bold">Total Base Production Cost</p>
-                  <p className="font-serif text-xl text-gold font-bold mt-1">
+                <div className="bg-[#FA7A21]/15 border-2 border-[#FA7A21]/50 p-4 rounded-xl text-center shadow-md">
+                  <p className="text-[10px] uppercase font-bold tracking-wider text-[#FA7A21]">Cost Floor (Anti-Distress)</p>
+                  <p className="font-serif text-2xl text-[#FA7A21] font-bold mt-1">
                     ₹{totalCalculatedCost}
                   </p>
                 </div>
               </div>
 
-              {/* Suggested Price vs Price Floor Anti-Exploitation Test */}
-              <div className="p-6 bg-ivory border border-border rounded-lg">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-border">
-                  <div>
-                    <h4 className="font-serif text-lg text-charcoal font-medium">Anti-Exploitation Price Floor Simulator</h4>
-                    <p className="text-xs text-stone">Test a corporate wholesale buyer offer against the artisan&apos;s base production cost.</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-stone-light">Buyer Quote Offer:</span>
-                    <input
-                      type="number"
-                      value={testBuyerOffer}
-                      onChange={(e) => setTestBuyerOffer(Number(e.target.value))}
-                      className="w-28 px-3 py-1.5 border border-border bg-white text-xs font-bold text-charcoal rounded text-right focus:outline-none focus:border-gold"
-                    />
+              {/* Interactive Buyer Negotiation Simulation */}
+              <div className="bg-[#24130A] border border-amber-900/30 p-6 rounded-2xl space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/10">
+                  <span className="text-xs font-semibold text-white">
+                    Simulate Buyer Wholesale Offer Negotiation:
+                  </span>
+                  <span className="text-xs text-amber-200">
+                    Buyer Offers: <strong className="text-white text-base">₹{testBuyerOffer}</strong> / unit
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  <input
+                    type="range"
+                    min={Math.round(totalCalculatedCost * 0.5)}
+                    max={Math.round(totalCalculatedCost * 1.8)}
+                    value={testBuyerOffer}
+                    onChange={(e) => setTestBuyerOffer(Number(e.target.value))}
+                    className="w-full accent-[#FA7A21] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[11px] text-stone-300">
+                    <span>Below Cost Floor (₹{Math.round(totalCalculatedCost * 0.5)})</span>
+                    <span>Fair Floor: ₹{totalCalculatedCost}</span>
+                    <span>Generous Margin (₹{Math.round(totalCalculatedCost * 1.8)})</span>
                   </div>
                 </div>
 
                 {isBelowCostFloor ? (
-                  <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 text-red-800 text-xs rounded">
-                    <AlertTriangle size={18} className="text-red-600 shrink-0 mt-0.5" />
+                  <div className="p-4 bg-red-900/30 border border-red-700/40 text-red-300 rounded-xl flex items-start gap-3 text-xs">
+                    <AlertTriangle size={18} className="text-red-400 shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-bold">⚠️ Warning: Offer is below sustainable production cost!</p>
-                      <p className="mt-0.5 text-red-700">
-                        The proposed offer of ₹{testBuyerOffer} is ₹{totalCalculatedCost - testBuyerOffer} below the artisan&apos;s base production cost (₹{totalCalculatedCost}). ALMS automatically recommends countering at sustainable wholesale price (₹{preset.costBreakdown.sustainableWholesale}).
+                      <p className="font-semibold text-red-200">Anti-Exploitation Alert Triggered</p>
+                      <p className="mt-0.5 leading-relaxed text-red-300">
+                        This offer (₹{testBuyerOffer}) is below the sustainable production cost floor (₹{totalCalculatedCost}). ALMS automatically blocks distress acceptance and proposes a fair counter-offer of ₹{preset.costBreakdown.sustainableWholesale}.
                       </p>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 text-green-800 text-xs rounded">
-                    <ShieldCheck size={18} className="text-green-600 shrink-0 mt-0.5" />
+                  <div className="p-4 bg-green-900/30 border border-green-700/40 text-green-300 rounded-xl flex items-start gap-3 text-xs">
+                    <CheckCircle2 size={18} className="text-green-400 shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-bold">✅ Fair Commercial Offer Approved</p>
-                      <p className="mt-0.5 text-green-700">
-                        Offer exceeds the sustainable cost floor, ensuring fair daily wages for the artisan cluster.
+                      <p className="font-semibold text-green-200">Sustainable Fair-Trade Offer</p>
+                      <p className="mt-0.5 leading-relaxed text-green-300">
+                        Offer meets artisan livelihood requirements. Net artisan margin after all inputs: <strong>₹{testBuyerOffer - totalCalculatedCost} per unit</strong>.
                       </p>
                     </div>
                   </div>
@@ -437,21 +446,21 @@ export default function LiveAIStudioDemo() {
             </div>
           )}
 
-          {/* Tab 4: ONDC & B2B Sandbox Interoperability */}
+          {/* Tab 4: ONDC Payload Viewer */}
           {activeTab === 'ondc' && (
             <div className="p-6 sm:p-10 space-y-6">
-              <div className="max-w-3xl">
-                <span className="overline text-gold text-[11px] mb-2 block">Interoperability Layer</span>
-                <h3 className="font-serif text-2xl sm:text-3xl text-charcoal mb-2">
-                  ONDC Protocol &amp; B2B Payload Generator
+              <div>
+                <span className="text-amber-300 uppercase tracking-wider text-[11px] font-semibold mb-2 block">Feature #4</span>
+                <h3 className="font-serif text-2xl sm:text-3xl text-white mb-2 font-light">
+                  ONDC Protocol Standardized Payload
                 </h3>
-                <p className="text-stone text-xs sm:text-sm leading-relaxed">
-                  ALMS generates schema-compliant ONDC Beckn protocol payloads, allowing rural artisan clusters to be discovered across ONDC buyer apps and B2B procurement networks.
+                <p className="text-stone-100 text-xs sm:text-sm leading-relaxed font-light">
+                  ALMS maps the artisan&apos;s multimodal inputs directly into Beckn protocol-compliant schemas, ready for ingestion by ONDC buyer applications (Paytm, Mystore, Pincode).
                 </p>
               </div>
 
               {/* JSON Payload viewer */}
-              <div className="bg-[#1A1A1A] text-ivory p-5 rounded-lg font-mono text-xs overflow-x-auto shadow-inner">
+              <div className="bg-black/60 text-amber-200 p-5 rounded-2xl font-mono text-xs overflow-x-auto border border-white/10 shadow-inner">
                 <pre>{JSON.stringify({
                   context: {
                     domain: "nic2004:52110",
