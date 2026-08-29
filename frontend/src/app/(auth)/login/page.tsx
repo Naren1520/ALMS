@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
-import { ArrowRight, Lock, Mail, AlertCircle } from 'lucide-react';
+import { ArrowRight, Lock, Mail, AlertCircle, Sparkles, UserCheck } from 'lucide-react';
 
 interface LoginForm {
   email: string;
@@ -44,27 +45,35 @@ export default function LoginPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-ivory flex items-center justify-center pt-28 pb-20 px-4 font-sans">
-        <ScrollReveal className="w-full max-w-md bg-ivory-dark border border-border p-8 sm:p-10 shadow-sm relative">
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <span className="w-6 h-px bg-gold" />
-              <p className="overline text-gold" style={{ fontSize: '0.65rem' }}>
-                Account Access
-              </p>
-              <span className="w-6 h-px bg-gold" />
+      <main className="min-h-screen flex items-center justify-center pt-24 pb-20 px-4 font-sans" style={{ background: 'linear-gradient(135deg, #1A0D06 0%, #2B1810 60%, #1A0D06 100%)' }}>
+        <ScrollReveal className="w-full max-w-md bg-[#1C0E07] border border-white/15 p-8 sm:p-10 rounded-2xl shadow-2xl relative">
+          {/* Top Logo & Emblem */}
+          <div className="text-center mb-8 space-y-3">
+            <div className="relative w-12 h-12 mx-auto rounded-full overflow-hidden border border-[#FA7A21]/40 shadow-xs bg-[#FA7A21]/10 p-1">
+              <Image
+                src="/images/logo.png"
+                alt="ALMS emblem"
+                fill
+                className="object-contain p-1"
+                priority
+              />
             </div>
-            <h1 className="font-serif text-3xl sm:text-4xl font-light text-charcoal mb-2">
+
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FA7A21]/15 border border-[#FA7A21]/30 text-amber-300 text-[11px] font-semibold uppercase tracking-wider">
+              <span>MoSJE Beneficiary Portal</span>
+            </div>
+
+            <h1 className="font-serif text-3xl sm:text-4xl font-normal text-white tracking-tight">
               Welcome Back
             </h1>
-            <p className="text-stone text-xs sm:text-sm">
-              Sign in to your ALMS artisan or buyer account
+            <p className="text-stone-200 text-xs sm:text-sm font-light leading-relaxed">
+              Sign in to your ALMS artisan, buyer, or government portal
             </p>
           </div>
 
           {serverError && (
             <div
-              className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2.5 shadow-xs"
+              className="mb-6 p-4 bg-red-900/30 border border-red-700/40 text-red-300 text-xs flex items-center gap-2.5 rounded-xl"
               role="alert"
             >
               <AlertCircle size={16} className="shrink-0" />
@@ -74,18 +83,18 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
             <div>
-              <label htmlFor="email" className="block text-xs uppercase tracking-wider font-semibold text-charcoal mb-1.5">
+              <label htmlFor="email" className="block text-xs uppercase tracking-wider font-semibold text-stone-100 mb-1.5">
                 Email Address
               </label>
               <div className="relative">
-                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-light" />
+                <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
                 <input
                   id="email"
                   type="email"
                   autoComplete="email"
                   {...register('email', { required: 'Email is required' })}
                   placeholder="artisan@domain.com"
-                  className="w-full bg-white border border-border pl-10 pr-4 py-2.5 text-xs text-charcoal placeholder:text-stone-light focus:outline-none focus:border-gold transition-colors shadow-xs"
+                  className="w-full bg-black/30 border border-white/15 pl-11 pr-4 py-3 text-xs text-white placeholder:text-stone-400 rounded-xl focus:outline-none focus:border-[#FA7A21]/60 transition-colors"
                   style={{ borderColor: errors.email ? '#dc2626' : undefined }}
                   aria-describedby={errors.email ? 'email-err' : undefined}
                   aria-invalid={!!errors.email}
@@ -100,22 +109,22 @@ export default function LoginPage() {
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label htmlFor="password" className="block text-xs uppercase tracking-wider font-semibold text-charcoal">
+                <label htmlFor="password" className="block text-xs uppercase tracking-wider font-semibold text-stone-100">
                   Password
                 </label>
-                <Link href="/forgot-password" className="text-[11px] text-stone hover:text-gold transition-colors">
+                <Link href="/forgot-password" className="text-[11px] text-stone-300 hover:text-amber-200 transition-colors">
                   Forgot?
                 </Link>
               </div>
               <div className="relative">
-                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-light" />
+                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
                 <input
                   id="password"
                   type="password"
                   autoComplete="current-password"
                   {...register('password', { required: 'Password is required' })}
                   placeholder="••••••••••••"
-                  className="w-full bg-white border border-border pl-10 pr-4 py-2.5 text-xs text-charcoal placeholder:text-stone-light focus:outline-none focus:border-gold transition-colors shadow-xs"
+                  className="w-full bg-black/30 border border-white/15 pl-11 pr-4 py-3 text-xs text-white placeholder:text-stone-400 rounded-xl focus:outline-none focus:border-[#FA7A21]/60 transition-colors"
                   style={{ borderColor: errors.password ? '#dc2626' : undefined }}
                   aria-describedby={errors.password ? 'pwd-err' : undefined}
                   aria-invalid={!!errors.password}
@@ -131,17 +140,17 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="btn-primary w-full justify-center text-xs py-3 mt-2 font-medium"
+              className="w-full py-3.5 px-6 bg-[#FA7A21] hover:bg-[#e06917] text-white font-semibold text-xs rounded-full shadow-md hover:shadow-orange-500/25 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer mt-2"
             >
               {isSubmitting ? 'Authenticating…' : 'Sign In'}
-              <ArrowRight size={13} aria-hidden="true" />
+              <ArrowRight size={14} aria-hidden="true" />
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-border text-center">
-            <p className="text-xs text-stone">
+          <div className="mt-8 pt-6 border-t border-white/10 text-center">
+            <p className="text-xs text-stone-300">
               Don&apos;t have an account yet?{' '}
-              <Link href="/register" className="font-semibold text-charcoal hover:text-gold transition-colors ml-1">
+              <Link href="/register" className="font-semibold text-[#FA7A21] hover:text-amber-200 transition-colors ml-1">
                 Create an account
               </Link>
             </p>

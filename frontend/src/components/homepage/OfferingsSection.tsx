@@ -62,7 +62,7 @@ export default function OfferingsSection() {
             Our Digital Offerings
           </h2>
 
-          <p className="text-stone-300 font-sans text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl mx-auto font-light">
+          <p className="text-stone-100 font-sans text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl mx-auto font-light">
             ALMS connects marginalized rural artisans with domestic consumers and global institutional buyers. By eliminating technical and literacy barriers through voice AI, image normalization, and automated ONDC payloads, we transform traditional craft into scalable digital commerce.
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function OfferingsSection() {
                     <h3 className="font-serif text-xl font-medium text-white group-hover:text-amber-300 transition-colors">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-stone-300 leading-relaxed font-sans font-light">
+                    <p className="text-xs text-stone-100 leading-relaxed font-sans font-light">
                       {item.desc}
                     </p>
                   </div>

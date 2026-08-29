@@ -78,7 +78,7 @@ const REGION_DETAILS: Record<string, RegionData> = {
     artisanCount: 19800,
     crafts: ['Tanjore Gold Paintings', 'Kanchipuram Silks', 'Swamimalai Bronze Idols', 'Pattamadai Mats'],
     sampleImages: ['https://images.unsplash.com/photo-1547612345-7f6e9f2bd6f6?w=600&q=80&auto=format&fit=crop'],
-    culturalDescription: 'Chola dynasty lost-wax bronze sculptures and temple silk tapestries enriched with 22-karat gold foil foil inlay and unboiled silk weaves.',
+    culturalDescription: 'Chola dynasty lost-wax bronze sculptures and temple silk tapestries enriched with 22-karat gold foil inlay and unboiled silk weaves.',
   },
   KA: {
     regionCode: 'Karnataka',
@@ -170,59 +170,57 @@ export default function CraftAtlasPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-ivory text-charcoal pt-28 pb-24 font-sans">
-        <div className="container">
+      <main className="min-h-screen bg-[#2B1810] text-white pt-28 pb-24 font-sans">
+        <div className="container max-w-7xl mx-auto px-4">
           {/* Header */}
-          <ScrollReveal className="text-center max-w-3xl mx-auto mb-14">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <span className="w-8 h-px bg-gold" />
-              <p className="overline text-gold">Heritage Cartography</p>
-              <span className="w-8 h-px bg-gold" />
+          <ScrollReveal className="text-center max-w-3xl mx-auto mb-14 space-y-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FA7A21]/15 border border-[#FA7A21]/30 text-amber-300 text-xs font-semibold uppercase tracking-wider">
+              <Sparkles size={14} className="text-[#FA7A21]" />
+              <span>Indigenous Heritage Cartography &bull; 3,000+ Traditions</span>
             </div>
-            <h1
-              className="font-serif text-charcoal font-light mb-4"
-              style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.1 }}
-            >
-              The Craft Atlas of India
+
+            <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-normal text-white tracking-tight leading-tight">
+              The Craft Atlas <br />
+              <em className="text-amber-200" style={{ fontStyle: 'italic' }}>of Bharat</em>
             </h1>
-            <p className="text-stone leading-relaxed text-base md:text-lg max-w-2xl mx-auto">
-              Explore 3,000+ indigenous craft lineages spanning every state and union territory.
-              Select a region to discover registered master artisans, GI tags, and cultural legacies.
+
+            <p className="text-stone-100 font-sans text-base font-light max-w-2xl leading-relaxed">
+              Explore 3,000+ indigenous craft lineages spanning every state and union territory. Select a region below to discover registered master artisans, GI tags, and cultural legacies.
             </p>
           </ScrollReveal>
 
           {/* Main Grid */}
           <ScrollReveal className="grid lg:grid-cols-12 gap-8 items-start" delay={0.1}>
             {/* Left: Map & Region Selector (7 cols) */}
-            <div className="lg:col-span-7 bg-ivory-dark border border-border p-6 sm:p-8 shadow-xs">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
+            <div className="lg:col-span-7 bg-[#1C0E07] border border-white/10 p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
                 <div className="flex items-center gap-2">
-                  <MapPin size={18} className="text-gold" />
-                  <span className="font-serif text-lg text-charcoal font-medium">Interactive Map</span>
+                  <MapPin size={20} className="text-[#FA7A21]" />
+                  <span className="font-serif text-xl text-white font-light">Interactive Heritage Map</span>
                 </div>
                 {/* Search / filter box */}
-                <div className="relative w-full sm:w-60">
-                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-light" />
+                <div className="relative w-full sm:w-64">
+                  <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
                   <input
                     type="text"
                     value={searchFilter}
                     onChange={(e) => setSearchFilter(e.target.value)}
                     placeholder="Search state..."
-                    className="w-full bg-ivory border border-border pl-8 pr-3 py-1.5 text-xs text-charcoal placeholder:text-stone-light focus:outline-none focus:border-gold transition-colors"
+                    className="w-full bg-black/30 border border-white/15 pl-10 pr-3 py-2 text-xs text-white placeholder:text-stone-400 focus:outline-none focus:border-[#FA7A21]/60 rounded-full transition-colors"
                   />
                 </div>
               </div>
 
               {/* State Quick Selection Pills */}
-              <div className="flex flex-wrap gap-1.5 mb-6 max-h-24 overflow-y-auto pr-1">
+              <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1">
                 {filteredStates.map((state) => (
                   <button
                     key={state.code}
                     onClick={() => handleRegionSelect(state.code)}
-                    className={`px-2.5 py-1 text-[11px] font-sans transition-all duration-200 cursor-pointer ${
+                    className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 cursor-pointer font-medium ${
                       selectedRegion === state.code
-                        ? 'bg-charcoal text-ivory font-medium shadow-xs'
-                        : 'bg-ivory border border-border text-stone hover:border-gold hover:text-charcoal'
+                        ? 'bg-[#FA7A21] text-white font-semibold shadow-xs'
+                        : 'bg-white/10 border border-white/20 text-stone-100 hover:border-[#FA7A21]/60 hover:text-amber-200'
                     }`}
                   >
                     {state.name}
@@ -231,7 +229,7 @@ export default function CraftAtlasPage() {
               </div>
 
               {/* SVG Map Canvas */}
-              <div className="relative w-full aspect-[500/420] bg-ivory border border-border overflow-hidden p-2">
+              <div className="relative w-full aspect-[500/420] bg-[#24130A] border border-amber-900/30 rounded-2xl overflow-hidden p-2 shadow-inner">
                 <svg
                   viewBox="0 0 500 450"
                   className="w-full h-full"
@@ -240,19 +238,19 @@ export default function CraftAtlasPage() {
                 >
                   <defs>
                     <radialGradient id="mapGlow" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#B8965A" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#B8965A" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#FA7A21" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="#FA7A21" stopOpacity="0" />
                     </radialGradient>
                   </defs>
 
                   {/* Subdued map outline aesthetic */}
                   <path
                     d="M 190 70 Q 230 60 250 90 L 300 130 Q 380 140 420 150 L 390 200 L 340 210 Q 300 240 280 340 L 250 400 L 220 340 Q 180 250 170 210 Z"
-                    fill="#EDE8DF"
-                    stroke="#E2DDD6"
+                    fill="#2B1810"
+                    stroke="#5A3520"
                     strokeWidth="2"
                     strokeDasharray="4 4"
-                    opacity="0.7"
+                    opacity="0.8"
                   />
 
                   {INDIA_STATES.map((state) => {
@@ -279,19 +277,19 @@ export default function CraftAtlasPage() {
                           cx={state.cx}
                           cy={state.cy}
                           r={isSelected ? 16 : 12}
-                          fill={isSelected ? '#B8965A' : '#FFFFFF'}
-                          stroke={isSelected ? '#9A7A42' : '#C4A882'}
+                          fill={isSelected ? '#FA7A21' : 'rgba(255,255,255,0.15)'}
+                          stroke={isSelected ? '#FA7A21' : '#FA7A21'}
                           strokeWidth={isSelected ? '2.5' : '1.5'}
-                          className="transition-all duration-300 group-hover:fill-gold group-hover:stroke-gold-dark group-hover:scale-110"
+                          className="transition-all duration-300 group-hover:fill-[#FA7A21] group-hover:scale-110"
                         />
                         <text
                           x={state.cx}
                           y={state.cy + 3.5}
                           textAnchor="middle"
                           fontSize={isSelected ? '8' : '7'}
-                          fontWeight={isSelected ? '700' : '500'}
+                          fontWeight={isSelected ? '700' : '600'}
                           fontFamily="var(--font-sans), sans-serif"
-                          fill={isSelected ? '#FFFFFF' : '#1A1A1A'}
+                          fill={isSelected ? '#FFFFFF' : '#EDE6DB'}
                           pointerEvents="none"
                         >
                           {state.code}
@@ -305,43 +303,43 @@ export default function CraftAtlasPage() {
 
             {/* Right: Selected Region Detail Panel (5 cols) */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="bg-ivory-dark border border-border p-6 sm:p-8 shadow-sm">
-                <div className="flex items-center justify-between gap-4 mb-4 pb-4 border-b border-border">
+              <div className="bg-[#1C0E07] border border-white/10 p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
+                <div className="flex items-center justify-between gap-4 pb-4 border-b border-white/10">
                   <div>
-                    <span className="overline text-gold" style={{ fontSize: '0.6rem' }}>
+                    <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
                       Region Overview
                     </span>
-                    <h2 className="font-serif text-2xl sm:text-3xl text-charcoal font-medium mt-0.5">
+                    <h2 className="font-serif text-2xl sm:text-3xl text-white font-light mt-0.5">
                       {activeData.regionCode}
                     </h2>
                   </div>
                   <div className="text-right">
-                    <span className="font-serif text-2xl text-gold font-light">
+                    <span className="font-serif text-2xl text-[#FA7A21] font-bold">
                       {activeData.artisanCount.toLocaleString('en-IN')}
                     </span>
-                    <p className="overline text-stone" style={{ fontSize: '0.55rem' }}>
-                      Registered Artisans
+                    <p className="text-[10px] text-stone-200 font-semibold uppercase tracking-wider">
+                      Makers Onboarded
                     </p>
                   </div>
                 </div>
 
                 {/* Cultural Narrative */}
-                <div className="mb-6">
-                  <p className="text-stone leading-relaxed text-sm">{activeData.culturalDescription}</p>
+                <div>
+                  <p className="text-stone-100 leading-relaxed text-sm font-light">{activeData.culturalDescription}</p>
                 </div>
 
                 {/* Featured Crafts */}
-                <div className="mb-6">
-                  <p className="overline text-stone-light mb-3" style={{ fontSize: '0.65rem' }}>
-                    Signature Crafts &amp; GI Traditions
+                <div className="space-y-2.5">
+                  <p className="text-xs font-bold text-white uppercase tracking-wider">
+                    Signature Crafts &amp; GI Traditions:
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {activeData.crafts.map((craft) => (
                       <span
                         key={craft}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ivory border border-border text-xs text-charcoal font-medium shadow-xs"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-black/30 border border-white/15 text-xs text-white font-medium rounded-full"
                       >
-                        <Sparkles size={11} className="text-gold flex-shrink-0" />
+                        <Sparkles size={12} className="text-[#FA7A21] flex-shrink-0" />
                         {craft}
                       </span>
                     ))}
@@ -349,27 +347,27 @@ export default function CraftAtlasPage() {
                 </div>
 
                 {/* Verified Protection Badge */}
-                <div className="flex items-center gap-3 p-3.5 bg-cream border border-border mb-6">
-                  <ShieldCheck size={20} className="text-gold flex-shrink-0" />
-                  <p className="text-xs text-stone leading-normal">
+                <div className="flex items-center gap-3 p-4 bg-[#FA7A21]/10 border border-[#FA7A21]/20 rounded-xl">
+                  <ShieldCheck size={22} className="text-[#FA7A21] flex-shrink-0" />
+                  <p className="text-xs text-stone-100 leading-relaxed font-light">
                     All listed craft clusters are verified by the Ministry of Social Justice &amp; Empowerment and GI registry.
                   </p>
                 </div>
 
                 {/* CTAs */}
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <Link
                     href={`/explore?region=${selectedRegion}`}
-                    className="btn-primary flex-1 justify-center text-xs py-3"
+                    className="flex-1 py-3 px-6 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full text-center shadow-md hover:shadow-orange-500/25 transition-all flex items-center justify-center gap-2"
                   >
-                    View Products
-                    <ArrowRight size={13} aria-hidden="true" />
+                    <span>View Products</span>
+                    <ArrowRight size={13} />
                   </Link>
                   <Link
                     href={`/artisans?region=${selectedRegion}`}
-                    className="btn-outline flex-1 justify-center text-xs py-3"
+                    className="flex-1 py-3 px-6 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold rounded-full text-center transition-all flex items-center justify-center gap-2"
                   >
-                    Meet Artisans
+                    <span>Meet Artisans</span>
                   </Link>
                 </div>
               </div>

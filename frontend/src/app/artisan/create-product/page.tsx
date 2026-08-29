@@ -16,10 +16,9 @@ import {
   Calculator,
   ShieldCheck,
   AlertTriangle,
-  Code2,
   RefreshCw,
-  Sliders,
-  Volume2
+  Camera,
+  Check
 } from 'lucide-react';
 
 const CRAFT_TEMPLATES = [
@@ -27,7 +26,7 @@ const CRAFT_TEMPLATES = [
     name: 'Bastar Bamboo Basket',
     region: 'Bastar, Chhattisgarh',
     image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80&auto=format&fit=crop',
-    voiceSample: '“ನಮ್ಮ ಕಾಡಿನ ಬಿದಿರಿನಿಂದ ಕೈಯಿಂದ ನೇಯ್ದ ಬುಟ್ಟಿ ಇದು. ಮೂರು ದಿನ ಬೇಕಾಗುತ್ತದೆ...”',
+    voiceSample: '"ನಮ್ಮ ಕಾಡಿನ ಬಿದಿರಿನಿಂದ ಕೈಯಿಂದ ನೇಯ್ದ ಬುಟ್ಟಿ ಇದು. ಮೂರು ದಿನ ಬೇಕಾಗುತ್ತದೆ..."',
     material: 'Natural Seasoned Bamboo & Cane',
     labourHours: 18,
     hourlyWage: 50,
@@ -38,7 +37,7 @@ const CRAFT_TEMPLATES = [
     name: 'Mithila Madhubani Silk Scroll',
     region: 'Mithila, Bihar',
     image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80&auto=format&fit=crop',
-    voiceSample: '“ई मिथिलाक पारंपरिक कोहबर पेंटिंग छी। सात दिन लागल...”',
+    voiceSample: '"ई मिथिलाक पारंपरिक कोहबर पेंटिंग छी। सात दिन लागल..."',
     material: 'Tussar Silk & Organic Floral Dyes',
     labourHours: 42,
     hourlyWage: 65,
@@ -49,7 +48,7 @@ const CRAFT_TEMPLATES = [
     name: 'Jaipur Blue Pottery Urn',
     region: 'Jaipur, Rajasthan',
     image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80&auto=format&fit=crop',
-    voiceSample: '“यो जयपुर को खास ब्लू पॉटरी को फूलदान छे। क्वार्ट्ज और कांच स्यूं बण्यो है...”',
+    voiceSample: '"यो जयपुर को खास ब्लू पॉटरी को फूलदान छे। क्वार्ट्ज और कांच स्यूं बण्यो है..."',
     material: 'Ground Quartz, Fuller Earth & Cobalt Glaze',
     labourHours: 24,
     hourlyWage: 55,
@@ -58,25 +57,21 @@ const CRAFT_TEMPLATES = [
   },
 ];
 
+const DIALECTS = ['Hindi', 'ಕನ್ನಡ (Kannada)', 'বাংলা (Bengali)', 'தமிழ் (Tamil)', 'मराठी (Marathi)', 'ગુજરાતી (Gujarati)'];
+
 export default function CreateProductPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(0);
-  const [images, setImages] = useState<File[]>([]);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(CRAFT_TEMPLATES[0].image);
   const [showEnhanced, setShowEnhanced] = useState(true);
-
-  // Voice recording state
+  const [selectedDialect, setSelectedDialect] = useState('Hindi');
   const [recording, setRecording] = useState(false);
   const [voiceFile, setVoiceFile] = useState<File | null>(null);
   const [voiceSeconds, setVoiceSeconds] = useState(0);
   const [textInput, setTextInput] = useState(CRAFT_TEMPLATES[0].voiceSample);
-
-  // Dynamic Pricing Sliders
   const [materialCost, setMaterialCost] = useState<number>(CRAFT_TEMPLATES[0].materialCost);
   const [labourHours, setLabourHours] = useState<number>(CRAFT_TEMPLATES[0].labourHours);
   const [hourlyWage, setHourlyWage] = useState<number>(CRAFT_TEMPLATES[0].hourlyWage);
   const [overhead, setOverhead] = useState<number>(CRAFT_TEMPLATES[0].overhead);
-
-  // Job Submission State
   const [jobStatus, setJobStatus] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -84,7 +79,6 @@ export default function CreateProductPage() {
   const mediaRef = useRef<MediaRecorder | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Calculations
   const baseCost = materialCost + labourHours * hourlyWage + overhead;
   const recommendedRetail = Math.round(baseCost * 1.55);
   const recommendedWholesale = Math.round(baseCost * 1.25);
@@ -103,7 +97,6 @@ export default function CreateProductPage() {
   function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
     if (files.length > 0) {
-      setImages(files);
       const url = URL.createObjectURL(files[0]);
       setImagePreviewUrl(url);
       setSelectedTemplate(null);
@@ -140,8 +133,7 @@ export default function CreateProductPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
-    setJobStatus('AI Pipeline running: Enhancing photo & generating bilingual catalog...');
-
+    setJobStatus('AI Pipeline running: Extracting background, translating voice note & generating ONDC catalog...');
     if (!navigator.onLine) {
       enqueue('PRODUCT_DRAFT', { textInput, materialCost, labourHours }, () => {});
       setJobStatus('Offline mode: Saved locally. Will sync to ONDC when reconnected.');
@@ -149,266 +141,239 @@ export default function CreateProductPage() {
       setIsSuccess(true);
       return;
     }
-
     setTimeout(() => {
       setSubmitting(false);
       setIsSuccess(true);
-      setJobStatus('Listing successfully generated and formatted for ONDC & B2B procurement networks!');
+      setJobStatus('Listing successfully generated, price-protected, and formatted for ONDC & B2B procurement networks!');
     }, 1800);
   }
 
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-ivory text-charcoal pt-28 pb-24 font-sans">
-        <div className="container max-w-4xl">
-          {/* Header */}
-          <ScrollReveal className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/30 rounded-full mb-3">
-              <Sparkles size={13} className="text-gold" />
-              <span className="overline text-gold text-[11px]">Zero-Literacy AI Studio</span>
+      {/* ── Hero banner matching homepage dark aesthetic ── */}
+      <section
+        className="relative min-h-[45vh] flex items-center overflow-hidden pt-20"
+        style={{ background: 'linear-gradient(135deg, #1A0D06 0%, #2B1810 60%, #1A0D06 100%)' }}
+      >
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 20% 50%, #FA7A21 0%, transparent 50%), radial-gradient(circle at 80% 20%, #B8965A 0%, transparent 40%)',
+          }}
+        />
+        <div className="container relative z-10 py-16 md:py-20">
+          <div className="max-w-3xl space-y-5">
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-xs text-amber-200">
+              <span className="w-2 h-2 rounded-full bg-[#FA7A21] animate-pulse" />
+              <span className="font-sans font-medium tracking-wide">Zero-Literacy AI Studio &bull; MoSJE Virtual Business Manager</span>
             </div>
-            <h1 className="font-serif text-3xl sm:text-5xl font-light mb-3">
-              Virtual Business Manager Studio
+            <h1 className="font-serif text-white font-normal" style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)', lineHeight: 1.08, letterSpacing: '-0.015em' }}>
+              AI Cataloging Studio<br />
+              <em className="font-light text-amber-200" style={{ fontStyle: 'italic' }}>for India&apos;s Master Artisans.</em>
             </h1>
-            <p className="text-stone text-sm max-w-xl mx-auto leading-relaxed">
-              Upload a craft photo, speak in any native Indian language, and adjust your defensible cost formula.
+            <p className="text-white font-sans text-base font-light max-w-2xl leading-relaxed">
+              One smartphone photo + one native voice note → studio-grade listing, defensible price floor, and ONDC payload in under 4 minutes.
             </p>
-          </ScrollReveal>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 max-w-2xl">
+              {[
+                { icon: Camera, label: 'AI Image Studio', sub: 'Background Extraction' },
+                { icon: Mic, label: 'Voice Cataloger', sub: '12+ Native Dialects' },
+                { icon: Calculator, label: 'Dynamic Pricing', sub: 'Fair Price Floor' },
+              ].map(({ icon: Icon, label, sub }) => (
+                <div key={label} className="p-3 bg-black/40 backdrop-blur-md border border-white/15 rounded-2xl flex items-center gap-2.5">
+                  <Icon size={18} className="text-[#FA7A21] shrink-0" />
+                  <div>
+                    <p className="text-xs font-semibold text-white">{label}</p>
+                    <p className="text-[10px] text-white">{sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
-          {/* Quick Preset Pickers */}
-          <ScrollReveal className="mb-8 p-4 bg-ivory-dark border border-border rounded-xl" delay={0.1}>
-            <p className="text-xs font-semibold text-charcoal uppercase tracking-wider mb-2.5">
-              Select Sample Craft Preset (Or Upload Your Own Below):
-            </p>
+      <main className="bg-[#2B1810] text-white font-sans pb-0">
+        <div className="container max-w-4xl py-14">
+
+          {/* Preset Pickers */}
+          <ScrollReveal className="mb-8 p-5 bg-[#1C0E07] border border-white/10 rounded-2xl" delay={0.05}>
+            <p className="text-xs font-semibold text-amber-300 uppercase tracking-widest mb-3">Select Sample Craft Preset:</p>
             <div className="flex flex-wrap gap-2">
               {CRAFT_TEMPLATES.map((t, idx) => (
                 <button
                   type="button"
                   key={t.name}
                   onClick={() => applyTemplate(idx)}
-                  className={`px-3.5 py-2 text-xs rounded border transition-all cursor-pointer ${
+                  className={`px-4 py-2 text-xs rounded-full font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
                     selectedTemplate === idx
-                      ? 'bg-charcoal text-ivory border-charcoal font-semibold shadow-xs'
-                      : 'bg-white border-border text-stone hover:border-gold hover:text-charcoal'
+                      ? 'bg-[#FA7A21] text-white font-semibold shadow-md'
+                      : 'bg-white/10 border border-white/20 text-stone-100 hover:border-[#FA7A21]/60 hover:text-amber-200'
                   }`}
                 >
-                  {t.name} ({t.region.split(',')[0]})
+                  {selectedTemplate === idx && <Check size={12} />}
+                  <span>{t.name}</span>
+                  <span className="opacity-75 text-[10px]">({t.region.split(',')[0]})</span>
                 </button>
               ))}
             </div>
           </ScrollReveal>
 
-          {/* Studio Form Container */}
-          <form onSubmit={handleSubmit} className="bg-ivory-dark border border-border p-6 sm:p-10 rounded-xl shadow-sm space-y-10">
-            {/* Step 1: AI Image Studio */}
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="bg-[#1C0E07] border border-white/10 p-6 sm:p-10 rounded-2xl space-y-10">
+
+            {/* Step 1 */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="overline text-gold text-[11px]">Step 1 &bull; Photography</span>
-                <button
-                  type="button"
-                  onClick={() => setShowEnhanced((v) => !v)}
-                  className="text-xs text-stone hover:text-charcoal flex items-center gap-1.5 cursor-pointer font-medium"
-                >
-                  <RefreshCw size={13} />
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5 pb-4 border-b border-white/10">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-7 h-7 rounded-full bg-[#FA7A21] text-white text-xs font-bold flex items-center justify-center shrink-0">1</span>
+                  <h2 className="font-serif text-xl text-white font-light">AI Image Studio &bull; Photography</h2>
+                </div>
+                <button type="button" onClick={() => setShowEnhanced(v => !v)}
+                  className="text-xs text-stone-200 bg-white/5 border border-white/15 hover:border-[#FA7A21]/60 hover:text-amber-200 rounded-full px-3.5 py-1.5 flex items-center gap-1.5 cursor-pointer transition-all">
+                  <RefreshCw size={12} className="text-[#FA7A21]" />
                   Toggle {showEnhanced ? 'Raw' : 'AI Enhanced'} View
                 </button>
               </div>
-
               <div className="grid md:grid-cols-2 gap-6 items-center">
-                {/* Upload box */}
                 <div
-                  className="border-2 border-dashed border-border hover:border-gold rounded-lg p-6 text-center cursor-pointer transition-colors bg-white"
+                  className="border-2 border-dashed border-white/20 hover:border-[#FA7A21]/60 bg-black/30 hover:bg-[#FA7A21]/5 rounded-2xl p-8 text-center cursor-pointer transition-all group flex flex-col items-center min-h-[240px] justify-center"
                   onClick={() => document.getElementById('craft-photo-input')?.click()}
                 >
-                  <input
-                    id="craft-photo-input"
-                    type="file"
-                    accept="image/*"
-                    className="sr-only"
-                    onChange={handleImageUpload}
-                  />
-                  <UploadCloud size={32} className="text-gold mx-auto mb-2" />
-                  <p className="font-serif text-base text-charcoal font-medium">Click to Upload Raw Photo</p>
-                  <p className="text-[11px] text-stone-light mt-1">JPEG, PNG, WebP &bull; Taken from any phone</p>
+                  <input id="craft-photo-input" type="file" accept="image/*" className="sr-only" onChange={handleImageUpload} />
+                  <div className="w-14 h-14 rounded-full bg-[#FA7A21]/20 border border-[#FA7A21]/40 flex items-center justify-center text-[#FA7A21] mb-3 group-hover:scale-110 transition-transform">
+                    <UploadCloud size={26} />
+                  </div>
+                  <p className="font-serif text-lg text-white font-light">Click to Upload Raw Photo</p>
+                  <p className="text-xs text-stone-300 mt-1">Any budget smartphone photo</p>
                 </div>
-
-                {/* Live Preview */}
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-border bg-cream shadow-inner">
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-black/40 shadow-xl">
                   <Image
                     src={imagePreviewUrl}
                     alt="Craft Preview"
                     fill
-                    className={`object-cover transition-all duration-300 ${showEnhanced ? 'contrast-105' : 'grayscale contrast-75'}`}
+                    className={`object-cover transition-all duration-500 ${showEnhanced ? 'contrast-105 saturate-110' : 'grayscale contrast-75'}`}
                     unoptimized
                   />
-                  <div className="absolute top-2 left-2 bg-charcoal/90 text-ivory text-[10px] overline px-2 py-0.5 rounded">
-                    {showEnhanced ? 'AI Cleaned Studio Shot' : 'Raw Smartphone Shot'}
+                  <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-md text-amber-200 text-[10px] font-semibold px-3 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
+                    <Sparkles size={11} className="text-[#FA7A21]" />
+                    {showEnhanced ? 'AI Studio Shot' : 'Raw Phone Shot'}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Step 2: Voice Auto-Cataloger */}
-            <div className="pt-8 border-t border-border">
-              <span className="overline text-gold text-[11px] block mb-1">Step 2 &bull; Multilingual Voice</span>
-              <h3 className="font-serif text-xl text-charcoal font-medium mb-3">Speak in Your Native Language</h3>
-              <p className="text-xs text-stone mb-4">
-                Record in Hindi, Kannada, Tamil, Bengali, Marathi, or Gujarati. AI handles translation &amp; technical listing metadata.
-              </p>
-
-              <div className="space-y-4">
-                <div className="flex flex-wrap items-center gap-3">
-                  {!recording ? (
-                    <button
-                      type="button"
-                      onClick={startRecording}
-                      className="btn-primary inline-flex items-center gap-2 text-xs py-2.5 px-5 cursor-pointer"
-                    >
-                      <Mic size={14} className="text-gold-light" />
-                      Record Native Audio Note
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={stopRecording}
-                      className="inline-flex items-center gap-2 text-xs py-2.5 px-5 bg-red-600 text-white rounded font-medium animate-pulse cursor-pointer"
-                    >
-                      <Square size={13} />
-                      Stop Recording ({voiceSeconds}s)
-                    </button>
-                  )}
-
-                  {voiceFile && (
-                    <span className="text-xs text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded flex items-center gap-1.5">
-                      <CheckCircle2 size={14} /> Voice note ready for transcription
-                    </span>
-                  )}
-                </div>
-
+            {/* Step 2 */}
+            <div className="pt-8 border-t border-white/10 space-y-5">
+              <div className="flex items-center gap-2.5 pb-3 border-b border-white/10">
+                <span className="w-7 h-7 rounded-full bg-[#FA7A21] text-white text-xs font-bold flex items-center justify-center shrink-0">2</span>
                 <div>
-                  <label htmlFor="voice-notes" className="block text-xs font-semibold text-charcoal mb-1">
-                    Transcribed Audio / Notes:
-                  </label>
-                  <textarea
-                    id="voice-notes"
-                    value={textInput}
-                    onChange={(e) => setTextInput(e.target.value)}
-                    rows={3}
-                    className="w-full bg-white border border-border p-3 text-xs text-charcoal rounded focus:outline-none focus:border-gold resize-none shadow-xs"
-                  />
+                  <h2 className="font-serif text-xl text-white font-light">Multilingual Voice Auto-Cataloger</h2>
+                  <p className="text-xs text-stone-200 mt-0.5">Speak naturally — AI translates and generates structured ONDC metadata.</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {DIALECTS.map(lang => (
+                  <button type="button" key={lang} onClick={() => setSelectedDialect(lang)}
+                    className={`px-3.5 py-1.5 text-xs rounded-full border transition-all cursor-pointer font-medium ${
+                      selectedDialect === lang
+                        ? 'bg-[#FA7A21] text-white border-[#FA7A21] font-semibold'
+                        : 'bg-white/10 border-white/20 text-stone-100 hover:border-[#FA7A21]/60 hover:text-amber-200'
+                    }`}
+                  >{lang}</button>
+                ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                {!recording ? (
+                  <button type="button" onClick={startRecording}
+                    className="px-6 py-3 bg-[#FA7A21] hover:bg-[#e06917] text-white font-semibold text-xs rounded-full shadow-md hover:shadow-orange-500/25 flex items-center gap-2 cursor-pointer transition-all transform hover:-translate-y-0.5">
+                    <Mic size={15} /> Record Native Audio Note
+                  </button>
+                ) : (
+                  <button type="button" onClick={stopRecording}
+                    className="px-6 py-3 bg-red-700 hover:bg-red-800 text-white font-semibold text-xs rounded-full flex items-center gap-2 animate-pulse cursor-pointer">
+                    <Square size={13} /> Stop ({voiceSeconds}s)
+                  </button>
+                )}
+                {voiceFile && (
+                  <span className="text-xs text-green-400 bg-green-900/40 border border-green-600/40 px-3.5 py-2 rounded-full flex items-center gap-1.5">
+                    <CheckCircle2 size={14} /> Voice captured
+                  </span>
+                )}
+              </div>
+              <div>
+                <label htmlFor="voice-notes" className="block text-xs font-semibold text-white mb-1.5 uppercase tracking-wider">
+                  Transcribed Audio / Story Notes:
+                </label>
+                <textarea
+                  id="voice-notes"
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                  rows={3}
+                  className="w-full bg-black/30 border border-white/15 p-4 text-xs text-white rounded-xl focus:outline-none focus:border-[#FA7A21]/60 resize-none"
+                />
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="pt-8 border-t border-white/10 space-y-6">
+              <div className="flex items-center gap-2.5 pb-3 border-b border-white/10">
+                <span className="w-7 h-7 rounded-full bg-[#FA7A21] text-white text-xs font-bold flex items-center justify-center shrink-0">3</span>
+                <div>
+                  <h2 className="font-serif text-xl text-white font-light">Defensible Cost Floor &amp; Pricing Engine</h2>
+                  <p className="text-xs text-stone-200 mt-0.5">Anti-exploitation price floor based on crafting hours, materials, and regional wage indices.</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 p-6 bg-[#24130A] border border-amber-900/30 rounded-2xl">
+                {[
+                  { label: 'Raw Material Cost', value: `₹${materialCost}`, min: 50, max: 10000, step: 50, val: materialCost, set: setMaterialCost, note: 'Natural dyes, silk, brass, bamboo' },
+                  { label: 'Labour Crafting Duration', value: `${labourHours} Hours`, min: 2, max: 300, step: 2, val: labourHours, set: setLabourHours, note: 'Hands-on crafting time' },
+                  { label: 'Hourly Fair Wage Rate', value: `₹${hourlyWage}/hr`, min: 30, max: 200, step: 5, val: hourlyWage, set: setHourlyWage, note: 'MoSJE benchmark rate' },
+                  { label: 'Overhead & Kiln/Tools', value: `₹${overhead}`, min: 20, max: 2000, step: 20, val: overhead, set: setOverhead, note: 'Kiln, polishing, packaging' },
+                ].map(({ label, value, min, max, step, val, set, note }) => (
+                  <div key={label} className="space-y-1.5">
+                    <label className="flex justify-between text-xs font-semibold text-stone-100">
+                      <span>{label}:</span>
+                      <span className="text-[#FA7A21] font-bold">{value}</span>
+                    </label>
+                    <input type="range" min={min} max={max} step={step} value={val}
+                      onChange={e => set(Number(e.target.value))} className="w-full accent-[#FA7A21] cursor-pointer" />
+                    <p className="text-[10px] text-stone-300">{note}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div className="p-4 bg-black/30 border border-white/10 rounded-2xl">
+                  <p className="text-[9px] uppercase font-bold tracking-wider text-stone-300">Base Production Cost</p>
+                  <p className="font-serif text-2xl font-light text-white mt-1">₹{baseCost.toLocaleString('en-IN')}</p>
+                </div>
+                <div className="p-4 bg-[#FA7A21]/15 border-2 border-[#FA7A21]/50 rounded-2xl shadow-lg transform -translate-y-1">
+                  <p className="text-[9px] uppercase font-bold tracking-wider text-[#FA7A21]">Wholesale Price Floor</p>
+                  <p className="font-serif text-2xl font-bold text-[#FA7A21] mt-1">₹{recommendedWholesale.toLocaleString('en-IN')}</p>
+                </div>
+                <div className="p-4 bg-black/30 border border-white/10 rounded-2xl">
+                  <p className="text-[9px] uppercase font-bold tracking-wider text-stone-300">Suggested Retail</p>
+                  <p className="font-serif text-2xl font-light text-amber-200 mt-1">₹{recommendedRetail.toLocaleString('en-IN')}</p>
                 </div>
               </div>
             </div>
 
-            {/* Step 3: Dynamic Pricing & Cost Floor Sliders */}
-            <div className="pt-8 border-t border-border">
-              <span className="overline text-gold text-[11px] block mb-1">Step 3 &bull; Pricing Assistant</span>
-              <h3 className="font-serif text-xl text-charcoal font-medium mb-2">Defensible Cost Breakdown</h3>
-              <p className="text-xs text-stone mb-6">
-                Adjust raw material costs, crafting time, and hourly wages. ALMS enforces sustainable price floor protection.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-5 bg-cream/60 border border-border rounded-lg mb-6">
-                <div>
-                  <label className="flex justify-between text-xs font-semibold text-charcoal mb-1">
-                    <span>Raw Material Cost:</span>
-                    <span className="text-gold font-bold">₹{materialCost}</span>
-                  </label>
-                  <input
-                    type="range"
-                    min="50"
-                    max="10000"
-                    step="50"
-                    value={materialCost}
-                    onChange={(e) => setMaterialCost(Number(e.target.value))}
-                    className="w-full accent-gold"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex justify-between text-xs font-semibold text-charcoal mb-1">
-                    <span>Labour Crafting Duration:</span>
-                    <span className="text-gold font-bold">{labourHours} Hours</span>
-                  </label>
-                  <input
-                    type="range"
-                    min="2"
-                    max="300"
-                    step="2"
-                    value={labourHours}
-                    onChange={(e) => setLabourHours(Number(e.target.value))}
-                    className="w-full accent-gold"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex justify-between text-xs font-semibold text-charcoal mb-1">
-                    <span>Hourly Fair Wage:</span>
-                    <span className="text-gold font-bold">₹{hourlyWage}/hr</span>
-                  </label>
-                  <input
-                    type="range"
-                    min="30"
-                    max="200"
-                    step="5"
-                    value={hourlyWage}
-                    onChange={(e) => setHourlyWage(Number(e.target.value))}
-                    className="w-full accent-gold"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex justify-between text-xs font-semibold text-charcoal mb-1">
-                    <span>Overhead &amp; Kiln/Tools:</span>
-                    <span className="text-gold font-bold">₹{overhead}</span>
-                  </label>
-                  <input
-                    type="range"
-                    min="20"
-                    max="2000"
-                    step="20"
-                    value={overhead}
-                    onChange={(e) => setOverhead(Number(e.target.value))}
-                    className="w-full accent-gold"
-                  />
-                </div>
-              </div>
-
-              {/* Calculated Outputs */}
-              <div className="grid grid-cols-3 gap-3 text-center">
-                <div className="p-3.5 bg-white border border-border rounded">
-                  <p className="overline text-stone-light text-[10px]">Base Production Cost</p>
-                  <p className="font-serif text-lg font-bold text-charcoal mt-0.5">₹{baseCost}</p>
-                </div>
-                <div className="p-3.5 bg-cream border border-gold/40 rounded">
-                  <p className="overline text-gold text-[10px] font-bold">Wholesale Price Floor</p>
-                  <p className="font-serif text-lg font-bold text-gold mt-0.5">₹{recommendedWholesale}</p>
-                </div>
-                <div className="p-3.5 bg-white border border-border rounded">
-                  <p className="overline text-stone-light text-[10px]">Suggested Retail Price</p>
-                  <p className="font-serif text-lg font-bold text-charcoal mt-0.5">₹{recommendedRetail}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Status Alert */}
             {jobStatus && (
-              <div className={`p-4 rounded-lg text-xs flex items-center gap-2.5 ${isSuccess ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-cream text-charcoal border border-border'}`}>
-                <CheckCircle2 size={16} className={isSuccess ? 'text-green-600' : 'text-gold'} />
-                <span>{jobStatus}</span>
+              <div className={`p-4 rounded-xl text-xs flex items-center gap-3 ${
+                isSuccess ? 'bg-green-900/40 text-green-300 border border-green-700/40' : 'bg-[#FA7A21]/10 text-amber-200 border border-[#FA7A21]/30'
+              }`}>
+                <CheckCircle2 size={18} className={isSuccess ? 'text-green-400 shrink-0' : 'text-[#FA7A21] shrink-0'} />
+                <span className="leading-relaxed">{jobStatus}</span>
               </div>
             )}
 
-            {/* Submit Action */}
-            <div className="pt-4">
-              <button
-                type="submit"
-                disabled={submitting}
-                className="btn-gold w-full justify-center py-4 text-xs font-semibold shadow-md cursor-pointer"
-              >
-                {submitting ? 'Generating ONDC Payload & Catalog...' : 'Publish to ONDC & B2B Procurement Networks'}
-                <ArrowRight size={14} />
+            <div className="pt-2">
+              <button type="submit" disabled={submitting}
+                className="w-full py-4 bg-[#FA7A21] hover:bg-[#e06917] text-white font-semibold text-sm rounded-full shadow-lg hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
+                <Sparkles size={16} />
+                <span>{submitting ? 'Generating ONDC Payload...' : 'Publish to ONDC & B2B Procurement Networks'}</span>
+                <ArrowRight size={16} />
               </button>
             </div>
           </form>

@@ -13,7 +13,6 @@ import ImpactPreviewSection from '@/components/homepage/ImpactPreviewSection';
 import VLEAssistedSection from '@/components/homepage/VLEAssistedSection';
 import ArtisanSpotlightSection from '@/components/homepage/ArtisanSpotlightSection';
 import FinalCTASection from '@/components/homepage/FinalCTASection';
-import FloatingSupportWidget from '@/components/homepage/FloatingSupportWidget';
 
 export default function HomePageSections() {
   return (
@@ -63,7 +62,7 @@ export default function HomePageSections() {
       <FinalCTASection />
 
       {/* Floating Orange Chat & Support Widget */}
-      <FloatingSupportWidget />
+
     </main>
   );
 }

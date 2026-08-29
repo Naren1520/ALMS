@@ -89,7 +89,7 @@ export default function AITransformationSection() {
               One Photo. One Voice Note.
             </em>
           </h2>
-          <p className="leading-relaxed mb-10 text-stone-300 text-base font-light">
+          <p className="leading-relaxed mb-10 text-stone-100 text-base font-light">
             ALMS replaces complex e-commerce seller dashboards with an intuitive voice-first mobile pipeline. We solve the exact operational bottlenecks holding back rural micro-producers.
           </p>
 
@@ -98,12 +98,16 @@ export default function AITransformationSection() {
               const Icon = p.icon;
               return (
                 <div key={p.title} className="flex gap-4 p-4 sm:p-5 bg-[#331B10]/90 border border-white/10 hover:border-[#FA7A21]/50 transition-all duration-200 rounded-2xl">
-                  <div className="w-11 h-11 bg-[#FA7A21]/20 border border-[#FA7A21]/40 flex items-center justify-center text-[#FA7A21] shrink-0 rounded-xl">
+                  <div className="w-10 h-10 rounded-full bg-[#FA7A21]/20 border border-[#FA7A21]/40 flex items-center justify-center text-[#FA7A21] shrink-0 mt-0.5">
                     <Icon size={20} />
                   </div>
                   <div>
-                    <h3 className="font-sans font-medium text-white text-sm mb-1">{p.title}</h3>
-                    <p className="text-stone-300 text-xs leading-relaxed font-light">{p.desc}</p>
+                    <h3 className="font-serif text-lg font-normal text-white mb-1">
+                      {p.title}
+                    </h3>
+                    <p className="text-xs text-stone-200 leading-relaxed font-sans font-light">
+                      {p.desc}
+                    </p>
                   </div>
                 </div>
               );
