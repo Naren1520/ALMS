@@ -15,9 +15,17 @@
   --border:       #E2DDD6;
   --border-light: #EDEAE4;
 
-  /* Typography */
-  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+  /* Typography mapping to Next.js Google Fonts */
+  --font-serif: var(--font-cormorant), 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans:  var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Backward-compatible aliases */
+  --color-bg-primary: #FDFBF7;
+  --color-surface:    #F5F0E8;
+  --color-accent:     #B8965A;
+  --color-accent-dark:#9A7A42;
+  --color-text-primary:#1A1A1A;
+  --color-text-muted:  #6B6560;
 
   /* Spacing & layout */
   --section-gap: 120px;
@@ -204,3 +212,57 @@ hr.luxury {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
 }
+
+/* ─── Luxury Glassmorphism & UI Helpers ────────────────────────── */
+.glass-ivory {
+  background: rgba(253, 251, 247, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+.glass-charcoal {
+  background: rgba(26, 26, 26, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.font-display {
+  font-family: var(--font-serif);
+}
+
+.font-ui {
+  font-family: var(--font-sans);
+}
+
+.text-brand-muted {
+  color: var(--stone);
+}
+
+.text-brand-text {
+  color: var(--charcoal);
+}
+
+.text-brand-accent {
+  color: var(--gold);
+}
+
+.bg-brand-accent {
+  background-color: var(--gold);
+}
+
+.input-luxury {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border);
+  color: var(--charcoal);
+  font-family: var(--font-sans);
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+
+.input-luxury:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184, 150, 90, 0.15);
+}
+

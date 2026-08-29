@@ -23,8 +23,8 @@ const config: Config = {
         'border-light':'#EDEAE4',
       },
       fontFamily: {
-        serif: ['Cormorant Garamond', 'Georgia', 'serif'],
-        sans:  ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-cormorant)', 'Cormorant Garamond', 'Georgia', 'serif'],
+        sans:  ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'display-xl': ['clamp(3.5rem, 8vw, 7rem)',   { lineHeight: '1.0', letterSpacing: '-0.02em' }],

@@ -1,42 +1,42 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { Globe, Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
-  { label: 'Discover', href: '/explore' },
+  { label: 'AI Studio', href: '/artisan/create-product' },
+  { label: 'B2B RFQ Matcher', href: '/b2b/rfq' },
+  { label: 'Explore Crafts', href: '/explore' },
   { label: 'Artisans', href: '/artisans' },
-  { label: 'Heritage', href: '/craft-atlas' },
-  { label: 'B2B', href: '/register?role=BUYER' },
+  { label: 'Impact Dashboard', href: '/impact' },
+  { label: 'Heritage Atlas', href: '/craft-atlas' },
 ];
 
-export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const navRef = useRef<HTMLElement>(null);
+const LANGUAGES = ['English', 'हिन्दी', 'ಕನ್ನಡ', 'বাংলা', 'தமிழ்'];
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 48);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+export default function Navbar() {
+  const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [currentLang, setCurrentLang] = useState('English');
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
 
   return (
     <header
-      ref={navRef}
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500
-        ${scrolled
-          ? 'bg-ivory/98 backdrop-blur-sm shadow-sm border-b border-border'
-          : 'bg-transparent'
-        }`}
+      className="fixed top-0 inset-x-0 z-50 bg-charcoal/95 text-ivory border-b border-white/10 backdrop-blur-md shadow-md"
       style={{ fontFamily: 'var(--font-sans)' }}
     >
       <div className="container flex items-center justify-between h-16 md:h-20">
-
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group" aria-label="ALMS — Home">
-          <div className="relative w-9 h-9 flex-shrink-0">
+        {/* Brand Logo */}
+        <Link
+          href="/"
+          className="flex items-center gap-3 group"
+          aria-label="ALMS — Home"
+          onClick={() => setMenuOpen(false)}
+        >
+          <div className="relative w-8 h-8 md:w-9 md:h-9 flex-shrink-0 transition-transform duration-200 group-hover:scale-105">
             <Image
               src="/images/logo.png"
               alt="ALMS logo"
@@ -46,126 +46,137 @@ export default function Navbar() {
             />
           </div>
           <div className="flex flex-col leading-none">
-            <span
-              className={`font-serif text-lg font-medium transition-colors duration-300
-                ${scrolled ? 'text-charcoal' : 'text-ivory'}`}
-              style={{ letterSpacing: '0.1em' }}
-            >
+            <span className="font-serif text-lg md:text-xl font-medium tracking-wider text-ivory">
               ALMS
             </span>
             <span
-              className={`overline hidden sm:block mt-0.5 transition-colors duration-300
-                ${scrolled ? 'text-stone' : 'text-ivory/60'}`}
+              className="overline mt-0.5 text-stone-light"
               style={{ fontSize: '0.55rem' }}
             >
-              Artisan Marketplace
+              Virtual Business Manager
             </span>
           </div>
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-10" aria-label="Primary navigation">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`overline transition-colors duration-300 hover:text-charcoal
-                ${scrolled ? 'text-stone' : 'text-ivory/70 hover:!text-ivory'}`}
-              style={{ fontSize: '0.7rem' }}
-            >
-              {link.label}
-            </Link>
-          ))}
+        {/* Desktop Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8" aria-label="Primary navigation">
+          {NAV_LINKS.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`relative py-1 text-xs uppercase tracking-widest transition-colors duration-200 font-medium ${
+                  isActive ? 'text-gold-light' : 'text-stone-light hover:text-ivory'
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold-light rounded-full" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* CTA group */}
-        <div className="hidden md:flex items-center gap-5">
+        {/* Desktop Controls (Language Selector + CTAs) */}
+        <div className="hidden md:flex items-center gap-3.5">
+          {/* Language Switcher */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setLangDropdownOpen((v) => !v)}
+              className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded border border-white/20 text-ivory hover:bg-white/10 transition-colors cursor-pointer"
+              aria-label="Select Language"
+            >
+              <Globe size={13} className="text-gold" />
+              <span>{currentLang}</span>
+            </button>
+
+            {langDropdownOpen && (
+              <div className="absolute right-0 mt-1.5 w-32 bg-charcoal border border-white/20 rounded-lg shadow-xl py-1 z-50">
+                {LANGUAGES.map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => {
+                      setCurrentLang(lang);
+                      setLangDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-1.5 text-xs text-stone-light hover:text-ivory hover:bg-white/10 transition-colors cursor-pointer ${
+                      currentLang === lang ? 'font-bold text-gold-light' : ''
+                    }`}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <Link
             href="/login"
-            className={`overline transition-colors duration-300
-              ${scrolled ? 'text-stone hover:text-charcoal' : 'text-ivory/70 hover:text-ivory'}`}
-            style={{ fontSize: '0.7rem' }}
+            className="text-xs uppercase tracking-widest px-2.5 py-2 text-stone-light hover:text-ivory transition-colors font-medium"
           >
             Sign In
           </Link>
           <Link
-            href="/register"
-            className={`px-5 py-2.5 text-xs font-sans font-medium uppercase tracking-widest
-              transition-all duration-300 border
-              ${scrolled
-                ? 'bg-charcoal text-ivory border-charcoal hover:bg-charcoal-mid'
-                : 'bg-ivory/10 text-ivory border-ivory/30 hover:bg-ivory/20'
-              }`}
+            href="/artisan/create-product"
+            className="px-4 py-2.5 text-xs font-sans font-medium uppercase tracking-widest bg-gold text-ivory hover:bg-gold-dark transition-all rounded shadow-sm"
           >
-            Get Started
+            Launch Studio
           </Link>
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Mobile Hamburger Button */}
         <button
-          className="md:hidden flex flex-col gap-1.5 p-2 -mr-2"
+          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg text-ivory hover:bg-white/10 transition-colors cursor-pointer"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
-          <span
-            className={`block w-6 h-px transition-all duration-300
-              ${scrolled ? 'bg-charcoal' : 'bg-ivory'}
-              ${menuOpen ? 'rotate-45 translate-y-[8.5px]' : ''}`}
-          />
-          <span
-            className={`block w-6 h-px transition-all duration-300
-              ${scrolled ? 'bg-charcoal' : 'bg-ivory'}
-              ${menuOpen ? 'opacity-0 scale-x-0' : ''}`}
-          />
-          <span
-            className={`block w-6 h-px transition-all duration-300
-              ${scrolled ? 'bg-charcoal' : 'bg-ivory'}
-              ${menuOpen ? '-rotate-45 -translate-y-[8.5px]' : ''}`}
-          />
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* Mobile drawer */}
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-400
-          bg-ivory border-t border-border
-          ${menuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}`}
-      >
-        <nav className="container flex flex-col py-8 gap-6" aria-label="Mobile navigation">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="font-serif text-2xl font-light text-charcoal hover:text-gold
-                transition-colors duration-300"
-              onClick={() => setMenuOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <div className="flex gap-4 pt-4 border-t border-border">
-            <Link
-              href="/login"
-              className="px-5 py-3 text-xs font-sans font-medium uppercase tracking-widest
-                border border-charcoal text-charcoal hover:bg-charcoal hover:text-ivory
-                transition-all duration-300 flex-1 text-center"
-              onClick={() => setMenuOpen(false)}
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/register"
-              className="px-5 py-3 text-xs font-sans font-medium uppercase tracking-widest
-                bg-charcoal text-ivory hover:bg-charcoal-mid
-                transition-all duration-300 flex-1 text-center"
-              onClick={() => setMenuOpen(false)}
-            >
-              Register
-            </Link>
-          </div>
-        </nav>
-      </div>
+      {/* Mobile Drawer */}
+      {menuOpen && (
+        <div className="lg:hidden bg-charcoal text-ivory border-t border-white/10 shadow-2xl">
+          <nav className="container flex flex-col py-6 gap-3.5" aria-label="Mobile navigation">
+            {NAV_LINKS.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`font-serif text-xl font-light transition-colors py-1 flex items-center justify-between ${
+                    isActive ? 'text-gold-light font-normal' : 'text-ivory hover:text-gold-light'
+                  }`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <span>{link.label}</span>
+                  {isActive && <span className="text-xs overline text-gold">Active</span>}
+                </Link>
+              );
+            })}
+            <div className="flex gap-3 pt-4 mt-2 border-t border-white/10">
+              <Link
+                href="/login"
+                className="px-4 py-3 text-xs font-sans font-medium uppercase tracking-widest border border-white/20 text-ivory hover:bg-white/10 flex-1 text-center rounded"
+                onClick={() => setMenuOpen(false)}
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/artisan/create-product"
+                className="px-4 py-3 text-xs font-sans font-medium uppercase tracking-widest bg-gold text-ivory hover:bg-gold-dark flex-1 text-center rounded"
+                onClick={() => setMenuOpen(false)}
+              >
+                Launch Studio
+              </Link>
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

@@ -3,55 +3,62 @@
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { Camera, Mic, Calculator, Sparkles, CheckCircle2 } from 'lucide-react';
 
-const FEATURES = [
+const PILLARS = [
   {
-    n: '01',
-    title: 'Smart Photography',
-    desc: 'Background removal, lighting correction, and professional framing — automatically.',
+    icon: Camera,
+    title: 'AI Image Studio & Lighting Normalization',
+    desc: 'Automatically extracts products from noisy rural backgrounds (mud floors, tin sheds) and creates standardized high-res studio lighting.',
   },
   {
-    n: '02',
-    title: 'AI Catalog Writing',
-    desc: 'Voice your product description in any Indian language. We translate, structure, and optimize.',
+    icon: Mic,
+    title: 'Multilingual Auto-Cataloger (Bhashini/Gemini)',
+    desc: 'Artisans speak in 12+ native Indian languages. AI transcribes, translates, and generates structured English and Hindi product listings.',
   },
   {
-    n: '03',
-    title: 'Smart Pricing',
-    desc: 'Real-time market analysis ensures fair pricing for artisans and competitive rates for buyers.',
-  },
-  {
-    n: '04',
-    title: 'Global Discovery',
-    desc: 'Semantic search connects your craft with the right international buyers automatically.',
+    icon: Calculator,
+    title: 'Dynamic Pricing Engine & Cost Floor Protection',
+    desc: 'Computes raw materials, crafting hours, and regional wage indices to establish a defensible price floor and prevent buyer exploitation.',
   },
 ];
 
 export default function AITransformationSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const listRef    = useRef<HTMLDivElement>(null);
-  const imgRef     = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
 
   useEffect(() => {
     if (prefersReduced) return;
     let ctx: any;
     (async () => {
-      const { gsap } = await import('gsap');
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      gsap.registerPlugin(ScrollTrigger);
-      ctx = gsap.context(() => {
-        gsap.from(imgRef.current, {
-          opacity: 0, x: 40, duration: 1, ease: 'expo.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
-        });
-        if (listRef.current) {
-          gsap.from(Array.from(listRef.current.children), {
-            opacity: 0, x: -32, stagger: 0.12, duration: 0.7, ease: 'power3.out',
-            scrollTrigger: { trigger: listRef.current, start: 'top 75%' },
+      try {
+        const { gsap } = await import('gsap');
+        const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+        gsap.registerPlugin(ScrollTrigger);
+        ctx = gsap.context(() => {
+          gsap.from(imgRef.current, {
+            opacity: 0,
+            x: 40,
+            duration: 1,
+            ease: 'expo.out',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
           });
-        }
-      });
+          if (listRef.current) {
+            gsap.from(Array.from(listRef.current.children), {
+              opacity: 0,
+              x: -32,
+              stagger: 0.12,
+              duration: 0.7,
+              ease: 'power3.out',
+              scrollTrigger: { trigger: listRef.current, start: 'top 75%' },
+            });
+          }
+        });
+      } catch (e) {
+        // fallback
+      }
     })();
     return () => ctx?.revert();
   }, [prefersReduced]);
@@ -60,82 +67,88 @@ export default function AITransformationSection() {
     <section
       ref={sectionRef}
       className="py-24 md:py-32 overflow-hidden"
-      aria-labelledby="ai-heading"
+      aria-labelledby="ai-pillars-heading"
       style={{ background: '#1A1A1A', color: '#FDFBF7' }}
     >
       <div className="container grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
-
-        {/* Text */}
+        {/* Left: Content */}
         <div>
-          <p className="overline text-gold mb-4">AI-Powered Tools</p>
-          <div className="w-10 h-px bg-gold mb-8" />
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-8 h-px bg-gold" />
+            <p className="overline text-gold text-[11px]">Virtual Business Manager Architecture</p>
+          </div>
           <h2
-            id="ai-heading"
-            className="font-serif text-ivory mb-6"
-            style={{ fontSize: 'clamp(2rem, 3.5vw, 3.25rem)', fontWeight: 300, lineHeight: 1.1 }}
+            id="ai-pillars-heading"
+            className="font-serif text-ivory mb-6 font-light"
+            style={{ fontSize: 'clamp(2rem, 3.5vw, 3.25rem)', lineHeight: 1.1 }}
           >
-            From phone photo to<br />
+            Zero-Literacy AI Pipeline:<br />
             <em className="text-gold-light" style={{ fontStyle: 'italic' }}>
-              professional listing.
+              One Photo. One Voice Note.
             </em>
           </h2>
-          <p className="leading-relaxed mb-12" style={{ color: 'var(--stone-light)', fontSize: '1.0625rem' }}>
-            Our AI pipeline handles the entire product presentation — so artisans can focus on
-            making, not marketing.
+          <p className="leading-relaxed mb-10 text-stone-light text-base">
+            ALMS replaces complex e-commerce seller dashboards with an intuitive voice-first mobile pipeline. We solve the exact operational bottlenecks holding back rural micro-producers.
           </p>
 
-          <div ref={listRef} className="space-y-0 divide-y divide-white/10">
-            {FEATURES.map((f) => (
-              <div key={f.n} className="flex gap-6 py-6 group cursor-default">
-                <span className="font-serif text-gold/50 text-sm mt-0.5 flex-shrink-0 w-6">
-                  {f.n}
-                </span>
-                <div>
-                  <h3 className="font-sans font-medium text-ivory mb-1 text-sm tracking-wide">
-                    {f.title}
-                  </h3>
-                  <p className="text-stone-light leading-relaxed" style={{ fontSize: '0.9375rem' }}>
-                    {f.desc}
-                  </p>
+          <div ref={listRef} className="space-y-6">
+            {PILLARS.map((p) => {
+              const Icon = p.icon;
+              return (
+                <div key={p.title} className="flex gap-4 p-4 rounded-lg bg-white/5 border border-white/10 hover:border-gold/40 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-gold/15 border border-gold/30 flex items-center justify-center text-gold shrink-0">
+                    <Icon size={20} />
+                  </div>
+                  <div>
+                    <h3 className="font-sans font-medium text-ivory text-sm mb-1">{p.title}</h3>
+                    <p className="text-stone-light text-xs leading-relaxed">{p.desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Image — before/after side-by-side */}
-        <div ref={imgRef} className="grid grid-cols-2 gap-3">
-          <div className="relative aspect-[3/4] overflow-hidden">
-            <Image
-              src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600&q=75&auto=format&fit=crop"
-              alt="Raw unedited product photo — before AI enhancement"
-              fill
-              className="object-cover grayscale"
-              sizes="25vw"
-              unoptimized
-            />
-            <div className="absolute bottom-3 left-3 bg-charcoal/80 text-ivory overline px-2.5 py-1.5"
-              style={{ fontSize: '0.55rem' }}>
-              Before
+        {/* Right: Real Visual Transformation */}
+        <div ref={imgRef} className="relative space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="relative aspect-[3/4] rounded-lg overflow-hidden border border-white/10">
+              <Image
+                src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=70&auto=format&fit=crop"
+                alt="Raw unedited artisan smartphone photo"
+                fill
+                className="object-cover grayscale contrast-75"
+                sizes="25vw"
+                unoptimized
+              />
+              <div className="absolute bottom-3 left-3 bg-charcoal/90 text-ivory overline px-2.5 py-1 text-[10px] rounded">
+                Raw Smartphone Photo
+              </div>
+            </div>
+            <div className="relative aspect-[3/4] rounded-lg overflow-hidden border border-gold/40 shadow-lg">
+              <Image
+                src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=95&auto=format&fit=crop"
+                alt="AI-enhanced studio listing"
+                fill
+                className="object-cover contrast-105"
+                sizes="25vw"
+                unoptimized
+              />
+              <div className="absolute bottom-3 right-3 bg-gold text-ivory overline px-2.5 py-1 text-[10px] font-semibold rounded flex items-center gap-1">
+                <Sparkles size={11} /> AI Studio Ready
+              </div>
             </div>
           </div>
-          <div className="relative aspect-[3/4] overflow-hidden">
-            <Image
-              src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600&q=90&auto=format&fit=crop"
-              alt="Professional AI-enhanced product photo — after"
-              fill
-              className="object-cover"
-              sizes="25vw"
-              unoptimized
-            />
-            <div className="absolute bottom-3 right-3 bg-gold text-ivory overline px-2.5 py-1.5"
-              style={{ fontSize: '0.55rem' }}>
-              After AI
-            </div>
+
+          <div className="p-4 bg-white/5 border border-white/10 rounded-lg flex items-center justify-between text-xs text-stone-light">
+            <span className="flex items-center gap-1.5 text-ivory">
+              <CheckCircle2 size={15} className="text-gold" />
+              Direct Output to ONDC &amp; B2B Buyers
+            </span>
+            <span className="text-gold font-mono text-[11px]">Latency: ~1.2s</span>
           </div>
         </div>
       </div>
     </section>
   );
 }
-

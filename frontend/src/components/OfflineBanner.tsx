@@ -68,17 +68,19 @@ export function OfflineBanner() {
 
   return (
     <div
-      className="fixed top-0 inset-x-0 z-50 px-4 py-3 text-center font-ui text-sm"
+      className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full font-sans text-xs shadow-lg flex items-center gap-2 border backdrop-blur-md transition-all duration-300"
       style={{
-        background: isOnline ? '#16a34a' : '#dc2626',
-        color: 'white',
+        background: isOnline ? 'rgba(22, 163, 74, 0.95)' : 'rgba(26, 26, 26, 0.95)',
+        borderColor: isOnline ? 'rgba(34, 197, 94, 0.4)' : 'rgba(184, 150, 90, 0.5)',
+        color: '#FDFBF7',
       }}
       role="status"
       aria-live="polite"
     >
       {!isOnline && (
-        <span>
-          🔴 You&apos;re offline. Your drafts are saved and will sync when you reconnect.
+        <span className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+          <span>Offline mode &mdash; Drafts saved locally</span>
         </span>
       )}
       {isOnline && syncing && <span>🔄 {syncStatus}</span>}

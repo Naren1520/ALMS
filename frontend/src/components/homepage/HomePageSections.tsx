@@ -3,12 +3,14 @@
 import { useEffect, useRef } from 'react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import HeroSection from '@/components/homepage/HeroSection';
-import CraftPhilosophySection from '@/components/homepage/CraftPhilosophySection';
-import ArtisanSpotlightSection from '@/components/homepage/ArtisanSpotlightSection';
-import CraftDiscoveryGrid from '@/components/homepage/CraftDiscoveryGrid';
+import LiveAIStudioDemo from '@/components/homepage/LiveAIStudioDemo';
 import AITransformationSection from '@/components/homepage/AITransformationSection';
 import B2BSection from '@/components/homepage/B2BSection';
 import TrustSection from '@/components/homepage/TrustSection';
+import ImpactPreviewSection from '@/components/homepage/ImpactPreviewSection';
+import VLEAssistedSection from '@/components/homepage/VLEAssistedSection';
+import CraftDiscoveryGrid from '@/components/homepage/CraftDiscoveryGrid';
+import ArtisanSpotlightSection from '@/components/homepage/ArtisanSpotlightSection';
 import FinalCTASection from '@/components/homepage/FinalCTASection';
 
 export default function HomePageSections() {
@@ -56,12 +58,14 @@ export default function HomePageSections() {
   return (
     <main id="main-content">
       <HeroSection />
-      <CraftPhilosophySection />
-      <ArtisanSpotlightSection />
-      <CraftDiscoveryGrid />
+      <LiveAIStudioDemo />
       <AITransformationSection />
       <B2BSection />
       <TrustSection />
+      <ImpactPreviewSection />
+      <VLEAssistedSection />
+      <ArtisanSpotlightSection />
+      <CraftDiscoveryGrid />
       <FinalCTASection />
     </main>
   );
