@@ -1051,107 +1051,260 @@ The project is organized into 35 tasks across 32 dependency waves:
 
 ---
 
-## 18. Mermaid Diagram — Complete System Flow (Generation Prompt)
+## 18. Architecture Diagrams
 
-Use the following prompt with Claude, ChatGPT, or any AI assistant to generate a comprehensive Mermaid flowchart/sequence diagram of the ALMS system:
+### 18.1 Eraser.io — Complete System Flow (Generation Prompt)
 
----
-
-**PROMPT:**
-
-```
-Generate a comprehensive Mermaid diagram for the ALMS (Artisan Linkage and Market System) platform.
-Create a graph TD (top-down flowchart) showing ALL system components and their connections.
-
-Include these nodes and connections:
-
-USERS layer:
-- ARTISAN[Artisan Browser - Next.js PWA]
-- CONSUMER[Consumer Browser - Next.js]
-- BUYER[B2B Buyer Browser - Next.js]
-- MODERATOR[Moderator Dashboard]
-- ADMIN[Admin Dashboard]
-
-EDGE layer:
-- CF[Cloudflare CDN + WAF]
-
-FRONTEND:
-- NEXT[Next.js 14 App Router - Port 3000 - SSR + RSC + GSAP + Zustand + Socket.io Client]
-
-BACKEND (NestJS monolith - Port 3001):
-- AUTH[Auth Module - JWT RS256 + Argon2id + Refresh Rotation]
-- ONBOARD[Onboarding Module - Artisan + Buyer Verification]
-- PRODUCT[Product Module - CRUD + Status Machine + Versioning]
-- INVENTORY[Inventory Module - Atomic Decrement + Alerts]
-- B2B[B2B Module - RFQ + Quoting + Wholesale Tiers]
-- MSG[Messaging Module - WebSocket + Translation]
-- TRUST[Trust Module - Score Computation + Consequences]
-- REVIEW[Review Module - Gated Reviews + Moderation]
-- DISPUTE[Dispute Module - Evidence + Moderator Assignment]
-- SEARCH[Search Module - Hybrid pgvector + FTS Re-ranking]
-- ATLAS[Craft Atlas Module - SVG Map + Region Stats]
-- NOTIF[Notifications Module - In-app + Email + Prefs]
-- ADMIN_MOD[Admin Module - Dashboard + User Management + Config]
-- EXCESS[Excess Inventory Module - Surplus Detection + Buyer Matching]
-- DELIVERY[Delivery Module - ETA Computation + Schedule]
-- MARKET[Market Discovery Module - Domestic + International]
-- MOD[Moderation Module - AI Classification + Queue]
-- QUEUE[BullMQ Manager - 8 Named Queues + Dead Letter]
-- WS[Socket.io Gateway - Redis Adapter - Horizontal Scale]
-
-AI SERVICE (FastAPI - Port 8000):
-- AI_ORCH[AI Orchestrator]
-- IMG_PIPE[Image Pipeline - REMBG + OpenCV + Real-ESRGAN - 1200x1200 WebP]
-- CAT_ENG[Catalog Engine - Gemini 1.5 Pro - 10 Languages - Structured JSON]
-- PRICE_ENG[Pricing Engine - Regional Cost Index + Comparable Median]
-- SEO_ENG[SEO Engine - Meta + OG + Slug + Hashtags + Keywords]
-- EMBED_SVC[Embedding Service - text-embedding-004 - 768 dims]
-- TRANS_SVC[Translation Service - Gemini - Any Indian Language]
-- MOD_PIPE[Moderation Pipeline - SAFE REQUIRES_REVIEW VIOLATES_POLICY]
-- MARKET_PIPE[Market Discovery Pipeline - 3 Domestic + 2 International]
-
-DATA layer:
-- PG[(PostgreSQL 16 + pgvector - 36 Tables - HNSW Index - RLS Policies)]
-- REDIS[(Redis 7 - BullMQ Queues - Rate Limit Counters - Trust Score Cache - pub/sub)]
-- R2[(Cloudflare R2 - Private Buckets - Signed URLs Only - Zero Egress)]
-
-EXTERNAL:
-- GEMINI[Google Gemini 1.5 Pro API]
-- EMAIL[AWS SES / SendGrid]
-- DIGILOCKER[DigiLocker API - Aadhaar + Caste Certs]
-- ONDC[ONDC Seller Node - Paytm PhonePe]
-- INDIAPOST[Dak Ghar Niryat Kendra - India Post API]
-- GI[IPINDIA GI Registry]
-
-Connect them as follows:
-- All users → CF → NEXT
-- NEXT ↔ AUTH, ONBOARD, PRODUCT, INVENTORY, B2B, MSG, TRUST, REVIEW, DISPUTE, SEARCH, ATLAS, NOTIF, ADMIN_MOD, DELIVERY (REST + WebSocket)
-- NEXT ↔ WS (WebSocket)
-- WS ↔ REDIS (pub/sub)
-- AUTH, ONBOARD, PRODUCT, INVENTORY, B2B, MSG, TRUST, REVIEW, DISPUTE, SEARCH, ATLAS, NOTIF, ADMIN_MOD, EXCESS, DELIVERY, MARKET, MOD → PG
-- QUEUE → REDIS
-- PRODUCT, ONBOARD, AI_ORCH → R2
-- PRODUCT, INVENTORY, B2B, SEARCH, TRUST, MARKET, EXCESS → QUEUE
-- QUEUE → AI_ORCH
-- AI_ORCH → IMG_PIPE, CAT_ENG, PRICE_ENG, SEO_ENG, EMBED_SVC, TRANS_SVC, MOD_PIPE, MARKET_PIPE
-- IMG_PIPE, CAT_ENG → GEMINI
-- PRICE_ENG, SEO_ENG, TRANS_SVC, MOD_PIPE, MARKET_PIPE → GEMINI
-- EMBED_SVC → GEMINI
-- AI_ORCH → R2 (enhanced images)
-- AI_ORCH → PG (ai_results, seo_metadata, product_embeddings)
-- NOTIF → EMAIL
-- ONBOARD → DIGILOCKER
-- PRODUCT → ONDC
-- B2B → INDIAPOST
-- PRODUCT → GI
-
-Use subgraphs to group: Users, Edge, Frontend, Backend Modules, AI Service Pipelines, Data Layer, External Services.
-Color-code: users in teal, AI pipelines in purple, data in blue, external in orange.
-```
+Paste this prompt at [eraser.io/new](https://app.eraser.io) using the **AI Diagram** feature to generate a full, accurate ALMS architecture diagram:
 
 ---
 
-The above prompt generates a complete architecture diagram showing every service, module, AI pipeline, data store, and external integration — including all connections. Paste it into [mermaid.live](https://mermaid.live) or any Mermaid renderer.
+```
+Create a detailed system architecture diagram for ALMS (Artisan Linkage and Market System) —
+an AI-powered marketplace for India's marginalized artisans, built for SIH 2024 PS-26090.
+
+Use a dark theme. Organize into clearly labeled swimlane groups separated by color.
+
+--- GROUP 1: Users (pink/magenta border) ---
+- Artisan [icon: user] — mobile PWA, low digital literacy, voice input, offline mode
+- Consumer [icon: user] — retail buyer, semantic search, reviews
+- B2B Buyer [icon: briefcase] — verified procurement, bulk RFQs, wholesale
+- Moderator [icon: shield] — verification queue, dispute resolution
+- Admin [icon: settings] — platform config, user management, queue monitoring
+
+--- GROUP 2: Edge & Frontend (blue border) ---
+- Cloudflare CDN + WAF [icon: cloud] — CDN, DDoS protection, routes traffic
+- Next.js 14 App Router [icon: monitor] — SSR + RSC + Client Components
+  Port 3000 | GSAP ScrollTrigger + Lenis | Zustand + TanStack Query
+  Pages: Home (scroll storytelling) | Artisan Dashboard | Craft Atlas (SVG map) | Auth
+- Socket.io Browser Client [icon: wifi] — real-time messages + job progress + notifications
+- Offline Sync Queue [icon: database] — localStorage, 50-entry cap, auto-replay on reconnect
+
+--- GROUP 3: NestJS Backend API (green border) ---
+Port 3001 | TypeScript | TypeORM | Helmet CSP | 100/500 req/min rate limiting
+
+Sub-group: Auth & Security
+- Auth Module [icon: lock] — Register/Login/Refresh | JWT RS256 15-min | Argon2id | Account lockout
+- CSRF Guard [icon: shield] — Synchronizer Token Pattern, rotated per request
+- RBAC Guard [icon: key] — 5 roles, HTTP 403 + audit log on failure
+
+Sub-group: Core Commerce
+- Product Module [icon: package] — CRUD | Status machine (DRAFT→PUBLISHED→PAUSED→ARCHIVED) | Versioned snapshots
+- Inventory Module [icon: archive] — Atomic decrement | FOR UPDATE lock | Low-stock alerts | OUT_OF_STOCK auto-transition
+- B2B Module [icon: handshake] — RFQ system | AI artisan matching | Quoting | Wholesale price tiers (up to 5)
+- Delivery Module [icon: truck] — ETA = ceil(backlog/capacity) + lead_time + transit_days
+
+Sub-group: AI Orchestration
+- Product Pipeline Coordinator [icon: cpu] — enqueues 8 BullMQ jobs, returns job_id within 3s
+- Excess Inventory Engine [icon: alert] — 24h scheduled scan | >80% capacity 30 days → buyer matching
+- Market Discovery Module [icon: globe] — triggers on publish | 3 domestic + 2 international markets
+
+Sub-group: Trust & Safety
+- Trust Module [icon: star] — 11 event types | score = CLAMP(SUM(applied_weight), 0, 100) | consequences at score < 30
+- Review Module [icon: thumbs-up] — DELIVERED orders only | AI moderation gating | artisan reply
+- Dispute Module [icon: alert-triangle] — 2h moderator assignment | 14-day escalation | Trust Events on resolution
+- Moderation Module [icon: eye] — SAFE / REQUIRES_REVIEW / VIOLATES_POLICY classification
+
+Sub-group: Discovery & Communication
+- Semantic Search Module [icon: search] — query embedding | pgvector HNSW top-50 | re-rank FTS×0.4 + cosine×0.4 + trust×0.2 | <500ms
+- Craft Atlas Module [icon: map] — SVG India map | district artisan counts | craft traditions | cultural descriptions
+- Messaging Module [icon: message] — 1 conversation per artisan-buyer pair | SENT→DELIVERED→READ | auto-translation
+- Negotiation Assistant [icon: bot] — Gemini classifies price negotiation | draft in artisan language | never auto-sends
+- Notifications Module [icon: bell] — 10 categories | WebSocket push + email | 90-day retention
+
+Sub-group: Platform
+- Admin Module [icon: sliders] — metrics dashboard | user management | impersonation (audit logged) | queue monitoring
+- Onboarding Module [icon: user-check] — artisan + buyer verification | DigiLocker integration | R2 document storage
+- WebSocket Gateway [icon: wifi] — Socket.io + Redis pub/sub adapter | horizontal scaling
+
+--- GROUP 4: BullMQ Job Queue (orange/amber border) ---
+Redis 7 backed | exponential backoff (30s → 2min → 10min) | dead-letter on 3 failures
+
+8 Independent Named Queues:
+- PRODUCT_CATALOG_GENERATION [icon: layers] — full AI pipeline trigger
+- IMAGE_ENHANCEMENT [icon: image] — standalone image processing
+- EMBEDDING_UPDATE [icon: cpu] — pgvector embedding generation/refresh
+- PRICING [icon: tag] — pricing recommendation job
+- SEO_GENERATION [icon: search] — metadata + slug + hashtags
+- MARKET_DISCOVERY [icon: globe] — opportunity analysis
+- TRANSLATION [icon: languages] — cross-language message translation
+- MODERATION [icon: shield] — content safety classification
+
+--- GROUP 5: FastAPI AI Service (purple border) ---
+Port 8000 | Python 3.11 | Pydantic v2 | Service token auth
+
+8 Pipelines:
+- Image Pipeline [icon: image] — REMBG background removal → OpenCV lighting/color → Real-ESRGAN 4x upscale → 1200×1200 WebP | craft presets: textile/pottery/jewelry/default
+- Catalog Engine [icon: file-text] — Gemini 1.5 Pro function calling | 10 Indian language transcription | structured JSON output | confidence scores | round-trip validation
+- Pricing Engine [icon: trending-up] — regional cost index lookup | comparable median prices | retail + wholesale + MOQ ranges | factor breakdown
+- SEO Engine [icon: search] — meta_title 50-60 chars | og tags | kebab slug | 5-15 hashtags | 10-30 keywords | JSON-LD Schema.org Product
+- Embedding Service [icon: cpu] — Google text-embedding-004 | 768-dim vectors | batch support
+- Translation Service [icon: globe] — Gemini | any language pair | invisible to end user
+- Moderation Pipeline [icon: shield] — SAFE / REQUIRES_REVIEW / VIOLATES_POLICY | policy category label
+- Market Discovery Pipeline [icon: bar-chart] — import trend analysis | diaspora signals | festival calendars | demand surge detection
+
+--- GROUP 6: Data Layer (blue border) ---
+- PostgreSQL 16 + pgvector [icon: database]
+  Supabase hosted | 36+ tables | Row-Level Security | 7 migrations
+  HNSW index: m=16, ef_construction=64 on product_embeddings(vector(768))
+  GIN+trgm on users.email | GIN FTS on products
+  Tables: users | artisan_profiles | buyer_profiles | products | product_media | product_attributes | ai_jobs | ai_results | seo_metadata | product_embeddings | inventory_batches | rfqs | rfq_matches | quotes | wholesale_tiers | orders | conversations | messages | trust_events | trust_scores | reviews | disputes | dispute_evidence | notifications | market_opportunities | audit_logs | platform_config | trust_event_weights | regional_cost_index | refresh_tokens | artisan_verifications | buyer_verifications
+
+- Redis 7 [icon: zap]
+  BullMQ job queues | Rate limit counters (IP + user) | Trust Score cache
+  WebSocket pub/sub (Socket.io adapter) | Session data
+
+- Cloudflare R2 [icon: hard-drive]
+  Private buckets only | Signed URLs (60-min verification docs, 24-hr product media)
+  products/{id}/original/ | products/{id}/enhanced/ | verifications/
+
+--- GROUP 7: External Services (gold/yellow border) ---
+- Google Gemini 1.5 Pro API [icon: sparkles] — LLM for catalog, negotiation, translation, moderation
+- Google text-embedding-004 [icon: cpu] — 768-dim semantic embeddings
+- AWS SES / SendGrid [icon: mail] — transactional + digest emails in 7 languages
+- DigiLocker API [icon: shield-check] — Aadhaar + SC/ST/OBC caste cert + UDID disability card validation
+- ONDC Seller Node [icon: network] — auto-syndicate artisan catalogs to Paytm, PhonePe
+- Dak Ghar Niryat Kendra [icon: package] — India Post API, Postal Bill of Export generation
+- IPINDIA GI Registry [icon: award] — Geographical Indication tag eligibility reference
+- Exchange Rate API [icon: refresh] — INR→USD/EUR/GBP, daily sync, "indicative rate" label
+
+--- CONNECTIONS ---
+All users → Cloudflare CDN → Next.js frontend
+
+Next.js ↔ NestJS REST API (all modules)
+Next.js ↔ WebSocket Gateway (bidirectional, real-time)
+
+WebSocket Gateway ↔ Redis (pub/sub channel per user)
+
+NestJS modules → PostgreSQL (read/write all feature data)
+NestJS modules → Redis (cache reads/writes, BullMQ enqueue)
+Product + Onboarding modules → Cloudflare R2 (raw uploads)
+
+BullMQ → FastAPI AI Service (HTTP job execution)
+FastAPI AI Service → Google Gemini API (LLM calls)
+FastAPI AI Service → Cloudflare R2 (store enhanced images)
+FastAPI AI Service → PostgreSQL (write ai_results, seo_metadata, product_embeddings)
+
+Notifications Module → AWS SES/SendGrid (email delivery)
+Onboarding Module → DigiLocker API (identity verification)
+Product Module → ONDC Seller Node (catalog syndication on publish)
+B2B Module → Dak Ghar Niryat Kendra (PBE generation on B2B order)
+Product Module → IPINDIA GI Registry (GI eligibility check)
+
+Show these key data flows as labeled arrows:
+1. "voice/image upload" — Artisan → Next.js → Product Module → R2 + BullMQ
+2. "job_id returned <3s" — Product Module → Next.js → Artisan
+3. "WebSocket progress stages" — BullMQ/AI Service → Redis → WebSocket Gateway → Next.js → Artisan
+4. "semantic search <500ms" — Consumer → Search Module → pgvector HNSW → re-rank → results
+5. "RFQ → AI match score" — B2B Buyer → B2B Module → BullMQ → AI match algorithm → ranked artisans
+6. "trust event → score update" — any event → Trust Module → trust_events table → score recalc within 60s
+7. "offline → sync queue" — Artisan goes offline → localStorage queue → reconnect → auto-replay → AI pipeline
+```
+
+---
+
+### 18.2 Mermaid — Complete System Flow
+
+Paste into [mermaid.live](https://mermaid.live):
+
+```mermaid
+graph TD
+  subgraph USERS["👥 Users"]
+    A[🧑‍🎨 Artisan\nVoice · Image · Offline]
+    C[🛍️ Consumer\nSearch · Purchase · Review]
+    B[🏢 B2B Buyer\nRFQ · Bulk Orders]
+    MOD_U[🛡️ Moderator\nVerification · Disputes]
+    ADM_U[⚙️ Admin\nConfig · Monitoring]
+  end
+
+  subgraph EDGE["🌐 Edge"]
+    CF[Cloudflare CDN + WAF]
+  end
+
+  subgraph FRONTEND["💻 Frontend — Next.js 14 App Router · Port 3000"]
+    NEXT[Next.js · SSR + RSC + Client Components\nGSAP ScrollTrigger · Lenis · Zustand · TanStack Query]
+    WS_CLIENT[Socket.io Client\nMessages · Job Progress · Notifications]
+    OFFLINE[Offline Sync Queue\nlocalStorage · 50-entry cap · Auto-replay]
+  end
+
+  subgraph BACKEND["🟢 NestJS Backend · Port 3001"]
+    AUTH[Auth Module\nJWT RS256 · Argon2id · Refresh Rotation]
+    ONBOARD[Onboarding Module\nArtisan + Buyer Verification]
+    PRODUCT[Product Module\nCRUD · State Machine · Versioned Snapshots]
+    INVENTORY[Inventory Module\nAtomic Decrement · Low-Stock Alerts]
+    B2B_MOD[B2B Module\nRFQ · Quoting · Wholesale Tiers]
+    MSG[Messaging Module\n1 convo per pair · SENT→DELIVERED→READ]
+    TRUST[Trust Module\n11 event types · CLAMP 0–100 · Auto-consequences]
+    REVIEW[Review Module\nDelivered-only gate · AI moderation]
+    DISPUTE[Dispute Module\n2h assignment · 14-day escalation]
+    SEARCH[Search Module\npgvector HNSW top-50 · FTS+cosine+trust rerank · 500ms]
+    ATLAS[Craft Atlas Module\nSVG India map · District artisan counts]
+    NOTIF[Notifications Module\n10 categories · WebSocket + Email · 90-day retention]
+    EXCESS[Excess Inventory Engine\n24h scan · 80% capacity 30d → buyer match]
+    MARKET[Market Discovery Module\n3 domestic + 2 international]
+    ADMIN_MOD[Admin Module\nDashboard · User mgmt · Queue monitoring]
+    WS_GW[Socket.io Gateway\nRedis pub/sub adapter]
+    QUEUE_MGR[BullMQ Manager\n8 queues · Dead-letter · Exponential backoff]
+  end
+
+  subgraph QUEUES["🟠 BullMQ Job Queues — Redis 7"]
+    Q1[PRODUCT_CATALOG_GENERATION]
+    Q2[IMAGE_ENHANCEMENT]
+    Q3[EMBEDDING_UPDATE]
+    Q4[PRICING]
+    Q5[SEO_GENERATION]
+    Q6[MARKET_DISCOVERY]
+    Q7[TRANSLATION]
+    Q8[MODERATION]
+  end
+
+  subgraph AI_SVC["🟣 FastAPI AI Service · Port 8000"]
+    IMG[Image Pipeline\nREMBG · OpenCV · Real-ESRGAN\n1200×1200 WebP · Craft presets]
+    CAT[Catalog Engine\nGemini 1.5 Pro function calling\n10 Indian languages · Confidence scores]
+    PRICE[Pricing Engine\nRegional cost index · Comparable median\nRetail + Wholesale + MOQ ranges]
+    SEO[SEO Engine\nMeta tags · OG · Slug · Hashtags · JSON-LD]
+    EMBED[Embedding Service\ntext-embedding-004 · 768-dim]
+    TRANS[Translation Service\nGemini · Any language pair]
+    MOD_AI[Moderation Pipeline\nSAFE · REQUIRES_REVIEW · VIOLATES_POLICY]
+    MKT[Market Discovery Pipeline\nDemand signals · Diaspora · Festival calendar]
+  end
+
+  subgraph DATA["🔵 Data Layer"]
+    PG[(PostgreSQL 16 + pgvector\nSupabase · 36+ tables · RLS\nHNSW m=16 ef=64 on vector 768)]
+    REDIS_DB[(Redis 7\nBullMQ · Rate limits · Trust cache\nWebSocket pub/sub)]
+    R2[(Cloudflare R2\nPrivate buckets · Signed URLs only\n60-min verification · 24-hr media)]
+  end
+
+  subgraph EXT["🟡 External Services"]
+    GEMINI[Google Gemini 1.5 Pro]
+    EMAIL[AWS SES / SendGrid]
+    DIGILOCKER[DigiLocker API\nAadhaar · Caste · UDID]
+    ONDC[ONDC Seller Node\nPaytm · PhonePe]
+    INDIAPOST[Dak Ghar Niryat Kendra\nIndia Post · PBE Generation]
+    GI_REG[IPINDIA GI Registry]
+  end
+
+  A & C & B & MOD_U & ADM_U --> CF --> NEXT
+  NEXT --- WS_CLIENT
+  NEXT --- OFFLINE
+  NEXT <-->|REST /api/v1/*| AUTH & ONBOARD & PRODUCT & INVENTORY & B2B_MOD & MSG & TRUST & REVIEW & DISPUTE & SEARCH & ATLAS & NOTIF & ADMIN_MOD
+  WS_CLIENT <-->|WebSocket| WS_GW
+  WS_GW <-->|pub/sub| REDIS_DB
+  PRODUCT & INVENTORY & B2B_MOD & SEARCH & TRUST & MARKET & EXCESS & MSG -->|enqueue| QUEUE_MGR
+  QUEUE_MGR --> Q1 & Q2 & Q3 & Q4 & Q5 & Q6 & Q7 & Q8
+  Q1 & Q2 & Q3 & Q4 & Q5 & Q6 & Q7 & Q8 -->|HTTP job| IMG & CAT & PRICE & SEO & EMBED & TRANS & MOD_AI & MKT
+  IMG & CAT & PRICE & SEO & EMBED & TRANS & MOD_AI & MKT --> GEMINI
+  IMG -->|enhanced images| R2
+  CAT & PRICE & SEO & EMBED -->|ai_results + embeddings| PG
+  AUTH & ONBOARD & PRODUCT & INVENTORY & B2B_MOD & MSG & TRUST & REVIEW & DISPUTE & SEARCH & ATLAS & NOTIF & EXCESS & MARKET & ADMIN_MOD --> PG
+  QUEUE_MGR --> REDIS_DB
+  ONBOARD & PRODUCT -->|raw uploads| R2
+  NOTIF -->|email| EMAIL
+  ONBOARD -->|verify identity| DIGILOCKER
+  PRODUCT -->|catalog sync| ONDC
+  B2B_MOD -->|PBE generation| INDIAPOST
+  PRODUCT -->|GI eligibility| GI_REG
+```
 
 ---
 
