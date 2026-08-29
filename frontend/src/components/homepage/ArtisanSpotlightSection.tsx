@@ -60,8 +60,7 @@ export default function ArtisanSpotlightSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-32"
-      style={{ background: '#F5F0E8' }}
+      className="py-24 md:py-32 bg-[#F5F0E8] border-t border-border"
       aria-labelledby="spotlight-heading"
     >
       <div className="container">
@@ -69,17 +68,19 @@ export default function ArtisanSpotlightSection() {
         {/* Section header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
-            <p className="overline text-gold mb-4">Artisan Spotlight</p>
+            <span className="font-sans font-semibold text-gold-dark text-xs uppercase tracking-widest px-4 py-1.5 bg-[#FA7A21]/15 border border-[#FA7A21]/30 rounded-full inline-block mb-3">
+              Artisan Voices &bull; Ground Stories
+            </span>
             <h2
               id="spotlight-heading"
               className="font-serif text-charcoal"
               style={{ fontSize: 'clamp(2rem, 3.5vw, 3.25rem)', fontWeight: 300 }}
             >
-              The hands behind the craft
+              The hands behind India&apos;s living heritage
             </h2>
           </div>
-          <p className="text-stone max-w-xs leading-relaxed" style={{ fontSize: '0.9375rem' }}>
-            Real artisans, real stories. Meet the makers transforming India's craft economy.
+          <p className="text-stone max-w-xs leading-relaxed text-sm sm:text-base font-light">
+            Real artisans, real stories. Meet the master makers transforming India&apos;s rural craft economy.
           </p>
         </div>
 
@@ -89,45 +90,45 @@ export default function ArtisanSpotlightSection() {
             <article
               key={artisan.name}
               ref={(el) => { cardsRef.current[i] = el; }}
-              className="group bg-ivory overflow-hidden shadow-sm card-lift"
+              className="group bg-white overflow-hidden shadow-sm hover:shadow-xl hover:border-[#FA7A21]/40 border border-border transition-all duration-300 rounded-3xl flex flex-col justify-between"
             >
-              {/* Image */}
-              <div className="relative h-72 overflow-hidden">
-                <Image
-                  src={artisan.image}
-                  alt={`${artisan.name} — ${artisan.craft} artisan from ${artisan.region}`}
-                  fill
-                  className="object-cover object-top transition-transform duration-700
-                    group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  unoptimized
-                />
-                {/* Tag badge */}
-                <span className="absolute top-4 left-4 bg-ivory/90 text-charcoal overline px-3 py-1.5"
-                  style={{ fontSize: '0.6rem' }}>
-                  {artisan.tag}
-                </span>
-              </div>
-
-              {/* Body */}
-              <div className="p-7">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="font-serif text-charcoal text-xl font-medium">
-                      {artisan.name}
-                    </h3>
-                    <p className="overline text-gold mt-1" style={{ fontSize: '0.6rem' }}>
-                      {artisan.craft}
-                    </p>
-                  </div>
-                  <p className="text-stone-light text-xs mt-1">{artisan.region}</p>
+              <div>
+                {/* Image */}
+                <div className="relative h-72 overflow-hidden bg-cream">
+                  <Image
+                    src={artisan.image}
+                    alt={`${artisan.name} — ${artisan.craft} artisan from ${artisan.region}`}
+                    fill
+                    className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    unoptimized
+                  />
+                  {/* Tag badge */}
+                  <span className="absolute top-4 left-4 bg-black/75 backdrop-blur-md text-amber-200 text-[10px] font-sans font-semibold px-3 py-1 rounded-full border border-white/10 shadow-sm">
+                    {artisan.tag}
+                  </span>
                 </div>
-                <blockquote
-                  className="text-stone leading-relaxed border-l-2 pl-4"
-                  style={{ borderColor: 'var(--gold)', fontSize: '0.9375rem', fontStyle: 'italic' }}
-                >
-                  "{artisan.quote}"
-                </blockquote>
+
+                {/* Body */}
+                <div className="p-6 sm:p-7 space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="font-serif text-charcoal text-xl font-medium">
+                        {artisan.name}
+                      </h3>
+                      <p className="font-sans text-xs font-semibold text-[#FA7A21] uppercase tracking-wide mt-0.5">
+                        {artisan.craft}
+                      </p>
+                    </div>
+                    <p className="text-stone text-xs mt-0.5">{artisan.region}</p>
+                  </div>
+                  <blockquote
+                    className="text-stone-700 leading-relaxed border-l-2 pl-4 text-xs sm:text-sm font-sans font-light italic"
+                    style={{ borderColor: '#FA7A21' }}
+                  >
+                    &ldquo;{artisan.quote}&rdquo;
+                  </blockquote>
+                </div>
               </div>
             </article>
           ))}

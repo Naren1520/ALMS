@@ -66,42 +66,44 @@ export default function AITransformationSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-32 overflow-hidden"
+      className="py-24 md:py-32 overflow-hidden bg-[#24130A] text-white border-t border-amber-900/30"
       aria-labelledby="ai-pillars-heading"
-      style={{ background: '#1A1A1A', color: '#FDFBF7' }}
     >
       <div className="container grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
         {/* Left: Content */}
         <div>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="w-8 h-px bg-gold" />
-            <p className="overline text-gold text-[11px]">Virtual Business Manager Architecture</p>
+          <div className="mb-5">
+            <span
+              className="inline-flex items-center gap-1.5 text-amber-300 font-sans font-semibold text-xs px-4 py-1.5 bg-[#FA7A21]/20 border border-[#FA7A21]/40 rounded-full uppercase tracking-wider"
+            >
+              Virtual Business Manager Architecture
+            </span>
           </div>
           <h2
             id="ai-pillars-heading"
-            className="font-serif text-ivory mb-6 font-light"
+            className="font-serif text-white mb-6 font-light"
             style={{ fontSize: 'clamp(2rem, 3.5vw, 3.25rem)', lineHeight: 1.1 }}
           >
             Zero-Literacy AI Pipeline:<br />
-            <em className="text-gold-light" style={{ fontStyle: 'italic' }}>
+            <em className="text-amber-200" style={{ fontStyle: 'italic' }}>
               One Photo. One Voice Note.
             </em>
           </h2>
-          <p className="leading-relaxed mb-10 text-stone-light text-base">
+          <p className="leading-relaxed mb-10 text-stone-300 text-base font-light">
             ALMS replaces complex e-commerce seller dashboards with an intuitive voice-first mobile pipeline. We solve the exact operational bottlenecks holding back rural micro-producers.
           </p>
 
-          <div ref={listRef} className="space-y-6">
+          <div ref={listRef} className="space-y-4">
             {PILLARS.map((p) => {
               const Icon = p.icon;
               return (
-                <div key={p.title} className="flex gap-4 p-4 rounded-lg bg-white/5 border border-white/10 hover:border-gold/40 transition-colors">
-                  <div className="w-10 h-10 rounded-lg bg-gold/15 border border-gold/30 flex items-center justify-center text-gold shrink-0">
+                <div key={p.title} className="flex gap-4 p-4 sm:p-5 bg-[#331B10]/90 border border-white/10 hover:border-[#FA7A21]/50 transition-all duration-200 rounded-2xl">
+                  <div className="w-11 h-11 bg-[#FA7A21]/20 border border-[#FA7A21]/40 flex items-center justify-center text-[#FA7A21] shrink-0 rounded-xl">
                     <Icon size={20} />
                   </div>
                   <div>
-                    <h3 className="font-sans font-medium text-ivory text-sm mb-1">{p.title}</h3>
-                    <p className="text-stone-light text-xs leading-relaxed">{p.desc}</p>
+                    <h3 className="font-sans font-medium text-white text-sm mb-1">{p.title}</h3>
+                    <p className="text-stone-300 text-xs leading-relaxed font-light">{p.desc}</p>
                   </div>
                 </div>
               );
@@ -111,8 +113,8 @@ export default function AITransformationSection() {
 
         {/* Right: Real Visual Transformation */}
         <div ref={imgRef} className="relative space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="relative aspect-[3/4] rounded-lg overflow-hidden border border-white/10">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="relative aspect-[3/4] overflow-hidden border border-white/10 rounded-2xl bg-black/40">
               <Image
                 src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=70&auto=format&fit=crop"
                 alt="Raw unedited artisan smartphone photo"
@@ -121,11 +123,11 @@ export default function AITransformationSection() {
                 sizes="25vw"
                 unoptimized
               />
-              <div className="absolute bottom-3 left-3 bg-charcoal/90 text-ivory overline px-2.5 py-1 text-[10px] rounded">
+              <div className="absolute bottom-3 left-3 bg-black/80 backdrop-blur-sm text-white text-[10px] px-2.5 py-1 font-sans font-medium rounded-lg">
                 Raw Smartphone Photo
               </div>
             </div>
-            <div className="relative aspect-[3/4] rounded-lg overflow-hidden border border-gold/40 shadow-lg">
+            <div className="relative aspect-[3/4] overflow-hidden border-2 border-[#FA7A21]/60 rounded-2xl shadow-xl shadow-orange-950/40">
               <Image
                 src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=95&auto=format&fit=crop"
                 alt="AI-enhanced studio listing"
@@ -134,18 +136,18 @@ export default function AITransformationSection() {
                 sizes="25vw"
                 unoptimized
               />
-              <div className="absolute bottom-3 right-3 bg-gold text-ivory overline px-2.5 py-1 text-[10px] font-semibold rounded flex items-center gap-1">
+              <div className="absolute bottom-3 right-3 bg-[#FA7A21] text-white px-2.5 py-1 font-sans font-semibold text-[10px] flex items-center gap-1 rounded-lg shadow-md">
                 <Sparkles size={11} /> AI Studio Ready
               </div>
             </div>
           </div>
 
-          <div className="p-4 bg-white/5 border border-white/10 rounded-lg flex items-center justify-between text-xs text-stone-light">
-            <span className="flex items-center gap-1.5 text-ivory">
-              <CheckCircle2 size={15} className="text-gold" />
+          <div className="p-4 bg-[#331B10]/90 border border-white/10 flex items-center justify-between text-xs text-stone-300 rounded-xl">
+            <span className="flex items-center gap-1.5 text-white">
+              <CheckCircle2 size={15} className="text-[#FA7A21]" />
               Direct Output to ONDC &amp; B2B Buyers
             </span>
-            <span className="text-gold font-mono text-[11px]">Latency: ~1.2s</span>
+            <span className="text-amber-300 font-mono text-[11px]">Latency: ~1.2s</span>
           </div>
         </div>
       </div>

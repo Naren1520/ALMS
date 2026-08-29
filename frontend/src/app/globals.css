@@ -1,6 +1,6 @@
-/* ─── ALMS Luxury Design Tokens ─────────────────────────────── */
+/* ─── ALMS Material Design Tokens ─────────────────────────────── */
 :root {
-  /* Palette — clean ivory + deep charcoal + warm gold */
+  /* Palette — warm ivory + deep charcoal + warm gold */
   --ivory:        #FDFBF7;
   --ivory-dark:   #F5F0E8;
   --cream:        #EDE8DF;
@@ -15,32 +15,42 @@
   --border:       #E2DDD6;
   --border-light: #EDEAE4;
 
-  /* Typography mapping to Next.js Google Fonts */
-  --font-serif: var(--font-cormorant), 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --font-sans:  var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+  /* Typography */
+  --font-serif: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+  --font-sans:  var(--font-inter), 'Inter', system-ui, sans-serif;
 
   /* Backward-compatible aliases */
-  --color-bg-primary: #FDFBF7;
-  --color-surface:    #F5F0E8;
-  --color-accent:     #B8965A;
-  --color-accent-dark:#9A7A42;
-  --color-text-primary:#1A1A1A;
-  --color-text-muted:  #6B6560;
+  --color-bg-primary:   #FDFBF7;
+  --color-surface:      #F5F0E8;
+  --color-accent:       #B8965A;
+  --color-accent-dark:  #9A7A42;
+  --color-text-primary: #1A1A1A;
+  --color-text-muted:   #6B6560;
 
   /* Spacing & layout */
   --section-gap: 120px;
   --container:   1320px;
 
   /* Transitions */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
 
-  /* Shadows — subtle, no glow */
-  --shadow-xs: 0 1px 2px rgba(26,26,26,0.04);
-  --shadow-sm: 0 2px 8px rgba(26,26,26,0.06);
-  --shadow-md: 0 4px 20px rgba(26,26,26,0.08);
-  --shadow-lg: 0 12px 40px rgba(26,26,26,0.10);
-  --shadow-xl: 0 24px 64px rgba(26,26,26,0.12);
+  /* ── Material Elevation Shadows (warm-tinted, multi-layer) */
+  --shadow-xs:  0 1px 3px rgba(26,26,26,0.06), 0 1px 2px rgba(26,26,26,0.04);
+  --shadow-sm:  0 2px 6px rgba(26,26,26,0.07), 0 1px 3px rgba(26,26,26,0.05);
+  --shadow-md:  0 4px 16px rgba(26,26,26,0.10), 0 2px 6px rgba(26,26,26,0.06);
+  --shadow-lg:  0 10px 32px rgba(26,26,26,0.12), 0 4px 12px rgba(26,26,26,0.07);
+  --shadow-xl:  0 20px 56px rgba(26,26,26,0.14), 0 8px 20px rgba(26,26,26,0.08);
+  --shadow-2xl: 0 32px 80px rgba(26,26,26,0.18), 0 12px 32px rgba(26,26,26,0.10);
+
+  /* ── Material Radii */
+  --radius-xs:  6px;
+  --radius-sm:  10px;
+  --radius-md:  16px;
+  --radius-lg:  24px;
+  --radius-xl:  32px;
+  --radius-2xl: 48px;
+  --radius-full: 9999px;
 }
 
 @tailwind base;
@@ -67,7 +77,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ─── Typography scale ────────────────────────────────────────── */
+/* ─── Typography ──────────────────────────────────────────────── */
 h1, h2, h3, h4, .serif {
   font-family: var(--font-serif);
   font-weight: 300;
@@ -83,14 +93,58 @@ h1, h2, h3, h4, .serif {
   width: 100%;
 }
 
-/* ─── Dividers ────────────────────────────────────────────────── */
-.divider {
-  width: 48px;
-  height: 1px;
-  background: var(--gold);
+/* ─── Section padding ─────────────────────────────────────────── */
+.section-pad {
+  padding-block: var(--section-gap);
 }
 
-/* ─── Buttons ─────────────────────────────────────────────────── */
+/* ─── Material Badge / Chip (replaces overline) ───────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3rem 0.875rem;
+  border-radius: var(--radius-full);
+  background: rgba(184, 150, 90, 0.12);
+  color: var(--gold-dark);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.chip-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3rem 0.875rem;
+  border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.12);
+  color: var(--gold-light);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Legacy overline — now renders as chip */
+.overline {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  background: rgba(184, 150, 90, 0.10);
+  color: var(--gold-dark);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ─── Material Buttons ────────────────────────────────────────── */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -99,18 +153,25 @@ h1, h2, h3, h4, .serif {
   background: var(--charcoal);
   color: var(--ivory);
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border: 1px solid var(--charcoal);
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: var(--radius-full);
   cursor: pointer;
-  transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out),
-              transform 0.2s var(--ease-out);
+  box-shadow: var(--shadow-md);
+  transition: background 0.25s var(--ease-out),
+              transform 0.2s var(--ease-out),
+              box-shadow 0.25s var(--ease-out);
 }
 .btn-primary:hover {
   background: var(--charcoal-mid);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-outline {
@@ -121,19 +182,23 @@ h1, h2, h3, h4, .serif {
   background: transparent;
   color: var(--charcoal);
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border: 1px solid var(--charcoal);
+  letter-spacing: 0.02em;
+  border: 1.5px solid rgba(26,26,26,0.25);
+  border-radius: var(--radius-full);
   cursor: pointer;
-  transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out),
-              transform 0.2s var(--ease-out);
+  transition: background 0.25s var(--ease-out),
+              border-color 0.25s var(--ease-out),
+              transform 0.2s var(--ease-out),
+              box-shadow 0.25s var(--ease-out);
 }
 .btn-outline:hover {
   background: var(--charcoal);
   color: var(--ivory);
-  transform: translateY(-1px);
+  border-color: var(--charcoal);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-gold {
@@ -144,38 +209,110 @@ h1, h2, h3, h4, .serif {
   background: var(--gold);
   color: var(--ivory);
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border: 1px solid var(--gold);
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: var(--radius-full);
   cursor: pointer;
-  transition: background 0.3s var(--ease-out), transform 0.2s var(--ease-out);
+  box-shadow: 0 4px 20px rgba(184,150,90,0.35);
+  transition: background 0.25s var(--ease-out),
+              transform 0.2s var(--ease-out),
+              box-shadow 0.25s var(--ease-out);
 }
 .btn-gold:hover {
   background: var(--gold-dark);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(184,150,90,0.4);
 }
 
-/* ─── Overline label ──────────────────────────────────────────── */
-.overline {
+/* ─── Material Cards ──────────────────────────────────────────── */
+.card-material {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.35s var(--ease-out),
+              box-shadow 0.35s var(--ease-out);
+  overflow: hidden;
+}
+.card-material:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Legacy card-lift now uses material style */
+.card-lift {
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+  border-radius: var(--radius-lg);
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ─── Divider — replaced sharp line with pill accent ─────────── */
+.divider {
+  width: 48px;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+}
+
+/* ─── Glassmorphism surfaces ─────────────────────────────────── */
+.glass-ivory {
+  background: rgba(253, 251, 247, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.glass-charcoal {
+  background: rgba(26, 26, 26, 0.80);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+}
+
+/* ─── Input fields ────────────────────────────────────────────── */
+.input-luxury {
+  background-color: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--charcoal);
   font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--stone);
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+.input-luxury:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(184, 150, 90, 0.12);
 }
 
-/* ─── Section padding ─────────────────────────────────────────── */
-.section-pad {
-  padding-block: var(--section-gap);
+/* ─── Material Surface elevation levels ──────────────────────── */
+.surface-1 {
+  background: var(--ivory);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+}
+.surface-2 {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+.surface-3 {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 /* ─── Accessibility ───────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
+  outline: 2.5px solid var(--gold);
+  outline-offset: 4px;
+  border-radius: var(--radius-xs);
 }
 
 .skip-to-main {
@@ -184,13 +321,14 @@ h1, h2, h3, h4, .serif {
   top: 0.5rem;
   background: var(--charcoal);
   color: var(--ivory);
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.25rem;
   font-size: 0.875rem;
+  border-radius: var(--radius-full);
   z-index: 9999;
 }
 .skip-to-main:focus { inset-inline-start: 0.5rem; }
 
-/* ─── Smooth scroll (Lenis) ───────────────────────────────────── */
+/* ─── Smooth scroll ───────────────────────────────────────────── */
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
 }
@@ -198,71 +336,17 @@ h1, h2, h3, h4, .serif {
 /* ─── Image utility ───────────────────────────────────────────── */
 img { display: block; }
 
-/* ─── Thin horizontal rule ────────────────────────────────────── */
+/* ─── Thin rule ───────────────────────────────────────────────── */
 hr.luxury {
   border: none;
-  border-top: 1px solid var(--border);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
 }
 
-/* ─── Card hover lift ─────────────────────────────────────────── */
-.card-lift {
-  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
-}
-.card-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-}
-
-/* ─── Luxury Glassmorphism & UI Helpers ────────────────────────── */
-.glass-ivory {
-  background: rgba(253, 251, 247, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
-}
-
-.glass-charcoal {
-  background: rgba(26, 26, 26, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.font-display {
-  font-family: var(--font-serif);
-}
-
-.font-ui {
-  font-family: var(--font-sans);
-}
-
-.text-brand-muted {
-  color: var(--stone);
-}
-
-.text-brand-text {
-  color: var(--charcoal);
-}
-
-.text-brand-accent {
-  color: var(--gold);
-}
-
-.bg-brand-accent {
-  background-color: var(--gold);
-}
-
-.input-luxury {
-  background-color: #FFFFFF;
-  border: 1px solid var(--border);
-  color: var(--charcoal);
-  font-family: var(--font-sans);
-  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
-}
-
-.input-luxury:focus {
-  outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(184, 150, 90, 0.15);
-}
-
+/* ─── Text helpers ────────────────────────────────────────────── */
+.font-display    { font-family: var(--font-serif); }
+.font-ui         { font-family: var(--font-sans); }
+.text-brand-muted  { color: var(--stone); }
+.text-brand-text   { color: var(--charcoal); }
+.text-brand-accent { color: var(--gold); }
+.bg-brand-accent   { background-color: var(--gold); }

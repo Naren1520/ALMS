@@ -82,9 +82,12 @@ export default function TrustSection() {
         {/* Left: Text Narrative */}
         <div ref={textRef} className="space-y-8">
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-8 h-px bg-gold" />
-              <p className="overline text-gold text-[11px]">Explainable Quality Assurance</p>
+            <div className="mb-5">
+              <span
+                className="font-sans font-semibold text-gold-dark text-xs px-4 py-1.5 bg-[#FA7A21]/15 border border-[#FA7A21]/30 rounded-full inline-block uppercase tracking-wider"
+              >
+                Explainable Quality Assurance
+              </span>
             </div>
             <h2
               id="reliability-heading"
@@ -92,7 +95,7 @@ export default function TrustSection() {
               style={{ fontSize: 'clamp(2rem, 3.5vw, 3.25rem)' }}
             >
               Artisan Reliability Profiles:<br />
-              <em className="text-gold" style={{ fontStyle: 'italic' }}>
+              <em className="text-[#FA7A21]" style={{ fontStyle: 'italic' }}>
                 Transparent. Explainable. Fair.
               </em>
             </h2>
@@ -103,7 +106,7 @@ export default function TrustSection() {
           </p>
 
           {/* Profile Card Example */}
-          <div className="p-6 bg-ivory-dark border border-border rounded-xl shadow-xs space-y-4">
+          <div className="p-6 bg-ivory-dark border border-border shadow-xs space-y-4" style={{ borderRadius: '24px' }}>
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-serif text-lg font-medium text-charcoal">Meera Devi &bull; Mithila Craft Cluster</p>
@@ -116,15 +119,15 @@ export default function TrustSection() {
 
             <div className="grid grid-cols-3 gap-2 pt-3 border-t border-border text-center">
               <div>
-                <p className="overline text-stone-light text-[10px]">Fulfilment Rate</p>
+                <p className="text-stone-light font-sans font-medium" style={{ fontSize: '0.65rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Fulfilment Rate</p>
                 <p className="font-serif text-base font-bold text-charcoal">97.8%</p>
               </div>
               <div>
-                <p className="overline text-stone-light text-[10px]">On-Time Dispatch</p>
+                <p className="text-stone-light font-sans font-medium" style={{ fontSize: '0.65rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>On-Time Dispatch</p>
                 <p className="font-serif text-base font-bold text-charcoal">95.2%</p>
               </div>
               <div>
-                <p className="overline text-stone-light text-[10px]">Active Capacity</p>
+                <p className="text-stone-light font-sans font-medium" style={{ fontSize: '0.65rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Active Capacity</p>
                 <p className="font-serif text-base font-bold text-gold">45 Units/mo</p>
               </div>
             </div>
@@ -139,10 +142,11 @@ export default function TrustSection() {
               <div
                 key={item.title}
                 ref={(el) => { itemsRef.current[i] = el; }}
-                className="p-5 bg-ivory-dark border border-border rounded-lg hover:border-gold/50 transition-colors flex items-center justify-between shadow-xs"
+                className="p-5 bg-ivory-dark border border-border hover:border-gold/50 transition-all duration-200 flex items-center justify-between shadow-xs"
+                style={{ borderRadius: '20px' }}
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-cream border border-border flex items-center justify-center text-gold shrink-0">
+                  <div className="w-11 h-11 bg-cream border border-border flex items-center justify-center text-gold shrink-0" style={{ borderRadius: '14px' }}>
                     <Icon size={20} />
                   </div>
                   <div>

@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { ArrowRight, Sparkles, Camera, Mic, Calculator, ShieldCheck } from 'lucide-react';
+import { Sparkles, ArrowRight, ShieldCheck, Camera, Mic, Calculator } from 'lucide-react';
 
 export default function HeroSection() {
   const prefersReduced = useReducedMotion();
@@ -12,7 +12,6 @@ export default function HeroSection() {
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const metaRef = useRef<HTMLDivElement>(null);
-  const badgesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (prefersReduced) return;
@@ -23,13 +22,12 @@ export default function HeroSection() {
         ctx = gsap.context(() => {
           const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
           tl.from(metaRef.current, { opacity: 0, y: 16, duration: 0.8, delay: 0.2 })
-            .from(headingRef.current, { opacity: 0, y: 40, duration: 1.1 }, '-=0.4')
-            .from(subRef.current, { opacity: 0, y: 24, duration: 0.8 }, '-=0.5')
-            .from(badgesRef.current, { opacity: 0, y: 20, duration: 0.7 }, '-=0.4')
+            .from(headingRef.current, { opacity: 0, y: 36, duration: 1.0 }, '-=0.4')
+            .from(subRef.current, { opacity: 0, y: 20, duration: 0.8 }, '-=0.5')
             .from(ctaRef.current, { opacity: 0, y: 20, duration: 0.7 }, '-=0.4');
         });
       } catch (e) {
-        // animations fallback
+        // fallback
       }
     })();
     return () => ctx?.revert();
@@ -37,120 +35,142 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative min-h-screen flex items-end overflow-hidden bg-charcoal text-ivory"
+      className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden bg-charcoal text-white pt-20"
       aria-label="ALMS — Virtual Business Manager for Artisans"
     >
-      {/* Background image: Authentic artisan crafting in workshop */}
+      {/* Background Image: Authentic Handcrafted Heritage Artwork & Ambient Workshop */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2000&q=85&auto=format&fit=crop"
-          alt="Indian artisan handcrafting traditional textiles"
+          src="/images/truly_tribal_hero.jpg"
+          alt="Indian traditional handicrafts, brass diyas, and handpainted artisan plates"
           fill
           priority
           className="object-cover object-center"
           sizes="100vw"
-          unoptimized
         />
-        {/* Layered luxury gradient */}
+        {/* Soft Vignette / Gradient Overlay for pristine text readability */}
         <div
           className="absolute inset-0"
           style={{
-            background: `
-              linear-gradient(
-                to bottom,
-                rgba(26,26,26,0.3) 0%,
-                rgba(26,26,26,0.45) 30%,
-                rgba(26,26,26,0.78) 70%,
-                rgba(26,26,26,0.95) 100%
-              )
-            `,
+            background: `linear-gradient(
+              to right,
+              rgba(18, 10, 6, 0.90) 0%,
+              rgba(24, 12, 7, 0.78) 50%,
+              rgba(18, 10, 6, 0.42) 100%
+            )`,
           }}
         />
       </div>
 
       {/* Hero Content */}
-      <div className="container relative z-10 pb-16 md:pb-24 pt-32">
-        <div className="max-w-4xl">
+      <div className="container relative z-10 py-16 md:py-24">
+        <div className="max-w-3xl space-y-6">
           {/* Government Affiliation Badge */}
-          <div ref={metaRef} className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-ivory/10 backdrop-blur-md border border-white/20 rounded-full mb-6">
-            <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-            <span className="overline text-ivory tracking-widest text-[11px]">
-              Ministry of Social Justice &amp; Empowerment &bull; Govt. of India
-            </span>
+          <div ref={metaRef} className="space-y-3">
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-xs text-amber-200 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-[#FA7A21] animate-pulse" />
+              <span className="font-sans font-medium tracking-wide">
+                Ministry of Social Justice &amp; Empowerment &bull; Govt. of India
+              </span>
+            </div>
+            {/* <p
+              className="text-[#FA7A21] font-sans font-bold tracking-widest text-xs uppercase flex items-center gap-2"
+              style={{ letterSpacing: '0.14em' }}
+            >
+              <span className="w-6 h-0.5 bg-[#FA7A21] rounded-full inline-block" />
+              SIH Problem Statement Solution
+            </p> */}
           </div>
 
-          {/* Main Headline */}
+          {/* Main Headline: Original ALMS Core Identity */}
           <h1
             ref={headingRef}
-            className="font-serif text-ivory mb-6"
+            className="font-serif text-white font-normal"
             style={{
-              fontSize: 'clamp(2.75rem, 6.5vw, 5.5rem)',
-              lineHeight: 1.05,
-              letterSpacing: '-0.02em',
-              fontWeight: 300,
+              fontSize: 'clamp(2.75rem, 6vw, 5.25rem)',
+              lineHeight: 1.08,
+              letterSpacing: '-0.015em',
             }}
           >
             The Virtual Business Manager<br />
-            <em className="text-gold-light" style={{ fontStyle: 'italic' }}>
-              for India&apos;s Artisans.
-            </em>
+            <span className="italic font-light text-amber-200">for India&apos;s Artisans.</span>
           </h1>
 
-          {/* Subtitle addressing the PS barriers */}
+          {/* Subtitle: Addressing Problem Statement Barriers */}
           <p
             ref={subRef}
-            className="text-stone-light font-sans mb-8 max-w-2xl leading-relaxed text-base sm:text-lg"
+            className="text-stone-200 font-sans text-base sm:text-lg font-light max-w-2xl leading-relaxed"
           >
-            Bridging indigenous craftsmanship and digital markets without technical barriers.
-            <strong className="text-ivory font-medium"> One photo + one native voice note</strong> turns raw craft into an e-commerce-ready catalogue, defensible price breakdown, and direct B2B market connection.
+            Bridging indigenous craftsmanship and digital commerce without technical barriers.
+            <strong className="text-white font-medium"> One photo + one native voice note</strong> turns raw craft into an e-commerce-ready catalogue, defensible price breakdown, and direct B2B market connection.
           </p>
 
           {/* 3 Core AI Pillars Pills */}
-          <div ref={badgesRef} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10 max-w-2xl">
-            <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-charcoal/80 border border-white/15 rounded backdrop-blur-sm">
-              <Camera size={16} className="text-gold shrink-0" />
-              <span className="text-xs font-medium text-ivory">AI Image Studio</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 max-w-2xl">
+            <div className="p-3 bg-black/40 backdrop-blur-md border border-white/15 rounded-2xl flex items-center gap-2.5 shadow-sm">
+              <Camera size={18} className="text-[#FA7A21] shrink-0" />
+              <div>
+                <p className="text-xs font-semibold text-white">AI Image Studio</p>
+                <p className="text-[10px] text-stone-300">Background Extraction</p>
+              </div>
             </div>
-            <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-charcoal/80 border border-white/15 rounded backdrop-blur-sm">
-              <Mic size={16} className="text-gold shrink-0" />
-              <span className="text-xs font-medium text-ivory">Voice Auto-Cataloger</span>
+            <div className="p-3 bg-black/40 backdrop-blur-md border border-white/15 rounded-2xl flex items-center gap-2.5 shadow-sm">
+              <Mic size={18} className="text-[#FA7A21] shrink-0" />
+              <div>
+                <p className="text-xs font-semibold text-white">Voice Cataloger</p>
+                <p className="text-[10px] text-stone-300">12+ Native Dialects</p>
+              </div>
             </div>
-            <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-charcoal/80 border border-white/15 rounded backdrop-blur-sm">
-              <Calculator size={16} className="text-gold shrink-0" />
-              <span className="text-xs font-medium text-ivory">Dynamic Price Engine</span>
+            <div className="p-3 bg-black/40 backdrop-blur-md border border-white/15 rounded-2xl flex items-center gap-2.5 shadow-sm">
+              <Calculator size={18} className="text-[#FA7A21] shrink-0" />
+              <div>
+                <p className="text-xs font-semibold text-white">Dynamic Pricing</p>
+                <p className="text-[10px] text-stone-300">Fair Price Floor</p>
+              </div>
             </div>
           </div>
 
-          {/* CTA Row */}
-          <div ref={ctaRef} className="flex flex-wrap gap-4 items-center">
-            <Link href="#live-ai-studio" className="btn-gold flex items-center gap-2 text-xs py-3.5 px-6 font-semibold">
-              <Sparkles size={14} />
-              Launch Live AI Studio Demo
+          {/* CTAs */}
+          <div ref={ctaRef} className="flex flex-wrap items-center gap-4 pt-4">
+            <Link
+              href="#live-ai-studio"
+              className="px-8 py-4 bg-[#FA7A21] hover:bg-[#e06917] text-white font-sans font-semibold text-sm sm:text-base rounded-full shadow-lg hover:shadow-orange-500/25 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2"
+            >
+              <Sparkles size={17} />
+              <span>Launch Live AI Studio Demo</span>
             </Link>
-            <Link href="/b2b/rfq" className="btn-outline flex items-center gap-2 text-xs py-3.5 px-6 font-semibold" style={{ borderColor: 'rgba(253,251,247,0.4)', color: 'var(--ivory)' }}>
-              B2B RFQ Matching Engine
-              <ArrowRight size={14} />
+
+            <Link
+              href="/b2b/rfq"
+              className="px-7 py-4 bg-white/10 hover:bg-white/20 text-white font-sans font-medium text-sm sm:text-base rounded-full border border-white/30 backdrop-blur-md transition-all duration-300 flex items-center gap-2"
+            >
+              <span>B2B RFQ Matcher</span>
+              <ArrowRight size={16} />
             </Link>
-            <Link href="/impact" className="overline text-stone-light hover:text-ivory transition-colors duration-300 flex items-center gap-1.5 text-xs py-2">
-              <ShieldCheck size={14} className="text-gold" />
-              MoSJE Impact Tracker
+
+            <Link
+              href="/impact"
+              className="flex items-center gap-1.5 text-xs text-stone-300 hover:text-white transition-colors py-2 px-3"
+            >
+              <ShieldCheck size={15} className="text-amber-400" />
+              <span>MoSJE Impact Tracker</span>
             </Link>
           </div>
-        </div>
 
-        {/* Bottom Metrics: Grounded & Realistic */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-14 pt-8 border-t border-white/10">
-          {[
-            { n: '3.5 Mins', l: 'Catalogue Creation Time' },
-            { n: '12+ Dialects', l: 'Multilingual Voice AI' },
-            { n: 'Fair Price Floor', l: 'Anti-Exploitation Engine' },
-            { n: 'ONDC Ready', l: 'Standardized Payload Format' },
-          ].map(({ n, l }) => (
-            <div key={l}>
-              <p className="font-serif text-gold-light text-xl sm:text-2xl font-light">{n}</p>
-              <p className="overline text-stone-light mt-0.5" style={{ fontSize: '0.6rem' }}>{l}</p>
-            </div>
-          ))}
+          {/* Key Metrics Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8 border-t border-white/15">
+            {[
+              { n: '3.5 Mins', l: 'Catalogue Creation' },
+              { n: '12+ Dialects', l: 'Voice AI Translation' },
+              { n: 'Fair Price Floor', l: 'Wage Protection' },
+              { n: 'ONDC Ready', l: 'Standardized Payload' },
+            ].map(({ n, l }) => (
+              <div key={l}>
+                <p className="font-serif text-amber-200 text-xl sm:text-2xl font-light">{n}</p>
+                <p className="text-stone-300 text-[11px] font-sans mt-0.5">{l}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

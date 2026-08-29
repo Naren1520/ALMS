@@ -8,17 +8,20 @@ export default function VLEAssistedSection() {
       <div className="container grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
         {/* Left: Narrative */}
         <div>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="w-8 h-px bg-gold" />
-            <p className="overline text-gold text-[11px]">Last-Mile Human-in-the-Loop</p>
+          <div className="mb-5">
+            <span
+              className="font-sans font-semibold text-gold-dark text-xs px-4 py-1.5 bg-[#FA7A21]/15 border border-[#FA7A21]/30 rounded-full inline-block uppercase tracking-wider"
+            >
+              Last-Mile Human-in-the-Loop
+            </span>
           </div>
           <h2 className="font-serif text-3xl sm:text-5xl font-light text-charcoal mb-6 leading-tight">
             VLE &amp; CSC Assisted Onboarding:<br />
-            <em className="text-gold" style={{ fontStyle: 'italic' }}>
+            <em className="text-[#FA7A21]" style={{ fontStyle: 'italic' }}>
               No Artisan Left Behind.
             </em>
           </h2>
-          <p className="text-stone text-base leading-relaxed mb-6">
+          <p className="text-stone text-base leading-relaxed mb-6 font-light">
             We recognize that elderly master weavers and rural micro-entrepreneurs may not own smartphones or understand digital apps. ALMS empowers Village Level Entrepreneurs (VLEs) and Common Service Center (CSC) operators to assist artisans on the ground.
           </p>
 
@@ -38,10 +41,10 @@ export default function VLEAssistedSection() {
               },
             ].map((f) => (
               <div key={f.title} className="flex items-start gap-3.5">
-                <CheckCircle2 size={18} className="text-gold mt-0.5 shrink-0" />
+                <CheckCircle2 size={18} className="text-[#FA7A21] mt-0.5 shrink-0" />
                 <div>
                   <h3 className="font-semibold text-xs text-charcoal">{f.title}</h3>
-                  <p className="text-stone text-xs leading-relaxed mt-0.5">{f.desc}</p>
+                  <p className="text-stone text-xs leading-relaxed mt-0.5 font-light">{f.desc}</p>
                 </div>
               </div>
             ))}
@@ -49,16 +52,21 @@ export default function VLEAssistedSection() {
         </div>
 
         {/* Right: Flow Diagram Card */}
-        <div className="bg-ivory-dark border border-border p-8 rounded-xl shadow-xs space-y-6">
+        <div className="bg-ivory-dark border border-border p-8 shadow-xs space-y-6" style={{ borderRadius: '28px' }}>
           <div className="flex items-center justify-between pb-4 border-b border-border">
-            <span className="overline text-stone-light text-[10px]">Onboarding Flow</span>
-            <span className="text-[10px] bg-gold/15 text-gold-dark font-semibold px-2.5 py-1 rounded">
+            <span
+              className="font-sans font-medium text-stone-light"
+              style={{ fontSize: '0.65rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}
+            >
+              Onboarding Flow
+            </span>
+            <span className="text-[10px] bg-gold/15 text-gold-dark font-semibold px-3 py-1" style={{ borderRadius: '999px' }}>
               Verified Ground Network
             </span>
           </div>
 
           <div className="space-y-4 text-xs">
-            <div className="flex items-center gap-4 p-3.5 bg-white border border-border rounded-lg shadow-xs">
+            <div className="flex items-center gap-4 p-4 bg-white border border-border shadow-xs" style={{ borderRadius: '18px' }}>
               <div className="w-8 h-8 rounded-full bg-cream border border-border flex items-center justify-center text-charcoal font-bold shrink-0">
                 1
               </div>
@@ -68,7 +76,7 @@ export default function VLEAssistedSection() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4 p-3.5 bg-white border border-border rounded-lg shadow-xs">
+            <div className="flex items-center gap-4 p-4 bg-white border border-border shadow-xs" style={{ borderRadius: '18px' }}>
               <div className="w-8 h-8 rounded-full bg-cream border border-border flex items-center justify-center text-charcoal font-bold shrink-0">
                 2
               </div>
@@ -78,7 +86,7 @@ export default function VLEAssistedSection() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4 p-3.5 bg-white border border-border rounded-lg shadow-xs">
+            <div className="flex items-center gap-4 p-4 bg-white border border-border shadow-xs" style={{ borderRadius: '18px' }}>
               <div className="w-8 h-8 rounded-full bg-cream border border-border flex items-center justify-center text-charcoal font-bold shrink-0">
                 3
               </div>

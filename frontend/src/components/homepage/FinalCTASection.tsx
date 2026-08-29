@@ -70,50 +70,48 @@ export default function FinalCTASection() {
       <div className="container relative z-10 text-center">
         <div ref={contentRef} className="max-w-3xl mx-auto space-y-10">
 
-          <div className="flex items-center justify-center gap-4">
-            <span className="block w-12 h-px bg-gold/60" />
-            <p className="overline text-gold/80" style={{ fontSize: '0.65rem' }}>
+          <div className="flex justify-center mb-2">
+            <span
+              className="font-sans font-semibold text-amber-200 uppercase tracking-widest text-xs px-4 py-1.5 bg-white/10 border border-white/20 rounded-full inline-block backdrop-blur-md"
+            >
               Join the movement
-            </p>
-            <span className="block w-12 h-px bg-gold/60" />
+            </span>
           </div>
 
           <h2
             id="cta-heading"
-            className="font-serif text-ivory"
-            style={{ fontSize: 'clamp(2.5rem, 5.5vw, 5rem)', fontWeight: 300, lineHeight: 1.0 }}
+            className="font-serif text-white font-light"
+            style={{ fontSize: 'clamp(2.5rem, 5.5vw, 5rem)', lineHeight: 1.05 }}
           >
             Your craft deserves<br />
-            <em className="text-gold-light" style={{ fontStyle: 'italic' }}>
-              the world's attention.
+            <em className="text-amber-200" style={{ fontStyle: 'italic' }}>
+              the world&apos;s attention.
             </em>
           </h2>
 
-          <p className="text-stone-light leading-relaxed max-w-lg mx-auto" style={{ fontSize: '1.0625rem' }}>
-            Join 12,000+ artisans already selling on ALMS.
-            Start with just a photo — no e-commerce knowledge required.
+          <p className="text-stone-200 leading-relaxed max-w-lg mx-auto font-sans font-light text-base sm:text-lg">
+            Join 12,000+ artisans already empowered on ALMS.
+            Start with just a smartphone photo &mdash; no e-commerce knowledge required.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Link href="/register?role=ARTISAN"
-              className="btn-gold flex items-center justify-center gap-2 px-10 py-4"
-              style={{ fontSize: '0.8125rem' }}>
-              Start Selling Today
-              <ArrowRight size={15} aria-hidden="true" />
+            <Link
+              href="/register?role=ARTISAN"
+              className="px-9 py-4 bg-[#FA7A21] hover:bg-[#e06917] text-white font-sans font-semibold text-sm rounded-full shadow-xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+            >
+              <span>Start Selling Today</span>
+              <ArrowRight size={16} aria-hidden="true" />
             </Link>
-            <Link href="/explore"
-              className="btn-outline flex items-center justify-center gap-2 px-10 py-4"
-              style={{
-                borderColor: 'rgba(253,251,247,0.35)',
-                color: 'var(--ivory)',
-                fontSize: '0.8125rem',
-              }}>
-              Browse Products
+            <Link
+              href="/explore"
+              className="px-9 py-4 bg-white/10 hover:bg-white/20 text-white font-sans font-medium text-sm rounded-full border border-white/30 backdrop-blur-md transition-all duration-300 flex items-center justify-center gap-2"
+            >
+              <span>Browse Products</span>
             </Link>
           </div>
 
-          <p className="text-stone-light/70 text-xs">
-            Free to register. No listing fees. Powered by the Ministry of Social Justice &amp; Empowerment.
+          <p className="text-stone-300 text-xs font-light">
+            Free to register &bull; Zero listing fees &bull; Powered by Ministry of Social Justice &amp; Empowerment (Govt. of India)
           </p>
         </div>
       </div>

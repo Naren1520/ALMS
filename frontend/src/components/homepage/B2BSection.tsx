@@ -45,19 +45,24 @@ export default function B2BSection() {
     >
       <div className="container grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
         {/* Left: Interactive RFQ Capacity Matching Simulation */}
-        <div className="bg-ivory border border-border p-6 sm:p-8 rounded-xl shadow-sm space-y-6">
+        <div className="bg-ivory border border-border p-6 sm:p-8 shadow-sm space-y-6" style={{ borderRadius: '28px' }}>
           <div className="flex items-center justify-between pb-4 border-b border-border">
             <div>
-              <span className="overline text-gold text-[10px]">Real B2B Procurement Case</span>
+              <span
+                className="font-sans font-semibold text-gold-dark"
+                style={{ fontSize: '0.7rem', letterSpacing: '0.07em', textTransform: 'uppercase' }}
+              >
+                Real B2B Procurement Case
+              </span>
               <h3 className="font-serif text-xl font-medium text-charcoal">Hotel Chain Bulk RFQ: 2,000 Baskets</h3>
             </div>
-            <span className="text-[10px] bg-green-100 text-green-800 font-semibold px-2.5 py-1 rounded">
+            <span className="text-[10px] bg-green-100 text-green-800 font-semibold px-3 py-1" style={{ borderRadius: '999px' }}>
               AI Match Engine: 97% Fit
             </span>
           </div>
 
           {/* Transparent Scoring Formula */}
-          <div className="p-3.5 bg-cream/70 border border-border rounded text-xs">
+          <div className="p-4 bg-cream/70 border border-border text-xs" style={{ borderRadius: '14px' }}>
             <p className="font-mono text-[11px] text-charcoal font-semibold mb-1">
               Deterministic Match Score:
             </p>
@@ -73,7 +78,7 @@ export default function B2BSection() {
             </p>
 
             {/* Cluster A */}
-            <div className="p-4 bg-white border border-border rounded-lg flex items-center justify-between shadow-xs">
+            <div className="p-4 bg-white border border-border flex items-center justify-between shadow-xs" style={{ borderRadius: '18px' }}>
               <div>
                 <p className="font-semibold text-xs text-charcoal">Bastar Bamboo Weavers Guild (Cluster A)</p>
                 <p className="text-[11px] text-stone">Allocated: <strong>800 units</strong> &bull; Delivery: 25 Days &bull; Reliability: 94%</p>
@@ -82,7 +87,7 @@ export default function B2BSection() {
             </div>
 
             {/* Cluster B */}
-            <div className="p-4 bg-white border border-border rounded-lg flex items-center justify-between shadow-xs">
+            <div className="p-4 bg-white border border-border flex items-center justify-between shadow-xs" style={{ borderRadius: '18px' }}>
               <div>
                 <p className="font-semibold text-xs text-charcoal">Kondagaon Cane Collective (Cluster B)</p>
                 <p className="text-[11px] text-stone">Allocated: <strong>1,200 units</strong> &bull; Delivery: 35 Days &bull; Reliability: 96%</p>
@@ -101,9 +106,12 @@ export default function B2BSection() {
         {/* Right: Text Narrative */}
         <div ref={textRef} className="space-y-8">
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-8 h-px bg-gold" />
-              <p className="overline text-gold text-[11px]">Intelligent B2B Linkage</p>
+            <div className="mb-5">
+              <span
+                className="font-sans font-semibold text-gold-dark text-xs px-4 py-1.5 bg-[#FA7A21]/15 border border-[#FA7A21]/30 rounded-full inline-block uppercase tracking-wider"
+              >
+                Intelligent B2B Linkage
+              </span>
             </div>
             <h2
               id="b2b-matching-heading"
@@ -111,13 +119,13 @@ export default function B2BSection() {
               style={{ fontSize: 'clamp(2rem, 3.5vw, 3.25rem)' }}
             >
               Solving Bulk Demand<br />
-              <em className="text-gold" style={{ fontStyle: 'italic' }}>
+              <em className="text-[#FA7A21]" style={{ fontStyle: 'italic' }}>
                 Without Overburdening Artisans.
               </em>
             </h2>
           </div>
 
-          <p className="text-stone leading-relaxed text-base">
+          <p className="text-stone leading-relaxed text-base font-light">
             Individual rural artisans cannot fulfill a 5,000-unit corporate order alone. ALMS extracts structured requirements from natural-language B2B RFQs and transparently distributes volume across verified artisan clusters.
           </p>
 
@@ -128,20 +136,26 @@ export default function B2BSection() {
               'Automated anti-exploitation price floor checks protecting rural margins',
               'Milestone-based PO tracking and transparent delivery reconciliation',
             ].map((item) => (
-              <li key={item} className="flex items-start gap-3 text-stone text-xs sm:text-sm">
-                <CheckCircle2 size={16} className="text-gold mt-0.5 shrink-0" />
+              <li key={item} className="flex items-start gap-3 text-stone-700 text-xs sm:text-sm">
+                <CheckCircle2 size={16} className="text-[#FA7A21] mt-0.5 shrink-0" />
                 <span>{item}</span>
               </li>
             ))}
           </ul>
 
           <div className="flex flex-wrap gap-4 pt-2">
-            <Link href="/b2b/rfq" className="btn-primary inline-flex items-center gap-2 text-xs py-3 px-6">
-              Launch B2B RFQ Portal
+            <Link
+              href="/b2b/rfq"
+              className="px-7 py-3.5 bg-[#FA7A21] hover:bg-[#e06917] text-white font-sans font-semibold text-xs rounded-full shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+            >
+              <span>Launch B2B RFQ Portal</span>
               <ArrowRight size={14} aria-hidden="true" />
             </Link>
-            <Link href="/explore" className="btn-outline inline-flex items-center gap-2 text-xs py-3 px-6">
-              Browse Verified Clusters
+            <Link
+              href="/explore"
+              className="px-7 py-3.5 bg-white hover:bg-stone-50 border border-border hover:border-charcoal text-charcoal font-sans font-medium text-xs rounded-full shadow-xs transition-all duration-200 flex items-center gap-2"
+            >
+              <span>Browse Verified Clusters</span>
             </Link>
           </div>
         </div>
