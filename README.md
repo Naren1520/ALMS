@@ -105,20 +105,24 @@ ALMS removes all three barriers simultaneously.
                     └──────────────┬──────────────────────────────────┘
                                    │
             ┌──────────────────────┼──────────────────────┐
-            │                      │                       │
-     ┌──────▼──────┐        ┌──────▼──────┐       ┌───────▼──────┐
-     │  Next.js 14  │        │  NestJS API  │       │  FastAPI AI  │
-     │  App Router  │◄──────►│  (17 modules)│◄─────►│  (8 pipelines│
-     │  Port 3000   │  REST+ │  Port 3001   │  HTTP │  Port 8000   │
-     └─────────────┘  WS    └──────┬───────┘  jobs └──────────────┘
+            │                      │                      │
+     ┌──────▼──────┐        ┌──────▼──────┐        ┌──────▼──────┐
+     │ Next.js 14  │        │  NestJS API │        │  FastAPI AI │
+     │ + Voice IVR │◄──────►│ (19 modules)│◄──────►│ (8 pipelines│
+     │ Port 3000   │ REST+WS│  Port 3001  │ HTTP   │ Port 8000)  │
+     └─────────────┘        └──────┬──────┘ jobs   └─────────────┘
                                    │
               ┌────────────────────┼────────────────────┐
-              │                    │                     │
-       ┌──────▼──────┐    ┌────────▼──────┐    ┌────────▼──────┐
-       │PostgreSQL 16 │    │   Redis 7     │    │Cloudflare R2  │
-       │ + pgvector   │    │ BullMQ/Cache  │    │Object Storage │
-       │ 36+ tables   │    │ 8 queues      │    │Images + Docs  │
-       └─────────────┘    └───────────────┘    └───────────────┘
+              │                    │                    │
+       ┌──────▼──────┐      ┌──────▼──────┐      ┌──────▼──────┐
+       │PostgreSQL 16│      │   Redis 7   │      │Cloudflare R2│
+       │ + pgvector  │      │ BullMQ/Cache│      │Object Store │
+       │ 36+ tables  │      │ 8 queues    │      │Media & Docs │
+       └─────────────┘      └─────────────┘      └─────────────┘
+                                   │
+                    ┌──────────────▼──────────────────┐
+                    │  Gov APIs: ONDC · DNK · MoSJE   │
+                    └─────────────────────────────────┘
 ```
 
 **17 NestJS modules:** Auth · Onboarding · Product · Inventory · B2B · Messaging · Trust · Review · Dispute · Atlas · Notifications · Admin · Search · ExcessInventory · Moderation · Delivery · MarketDiscovery
