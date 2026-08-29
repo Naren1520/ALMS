@@ -1,96 +1,173 @@
 import Link from 'next/link';
 import Image from 'next/image';
-
-const LINKS = {
-  Marketplace: [
-    { label: 'Discover Crafts',   href: '/explore' },
-    { label: 'Artisan Profiles',  href: '/artisans' },
-    { label: 'Heritage Atlas',    href: '/craft-atlas' },
-    { label: 'B2B Sourcing',      href: '/register?role=BUYER' },
-  ],
-  Platform: [
-    { label: 'How It Works',  href: '/how-it-works' },
-    { label: 'AI Features',   href: '/ai-tools' },
-    { label: 'Trust System',  href: '/trust' },
-    { label: 'Pricing',       href: '/pricing' },
-  ],
-  Company: [
-    { label: 'About',         href: '/about' },
-    { label: 'Impact Report', href: '/impact' },
-    { label: 'Press',         href: '/press' },
-    { label: 'Contact',       href: '/contact' },
-  ],
-};
+import { Instagram, Facebook, Youtube, Twitter, Phone, Mail, MapPin, Clock } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-charcoal text-ivory/70" style={{ fontFamily: 'var(--font-sans)' }}>
-      <div className="container">
-
-        {/* Main grid */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-12 py-20 border-b border-white/10">
-
-          {/* Brand col */}
-          <div className="col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-6" aria-label="ALMS — Home">
-              <div className="relative w-9 h-9 flex-shrink-0">
-                <Image
-                  src="/images/logo.png"
-                  alt="ALMS logo"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <span className="font-serif text-ivory text-lg tracking-widest">ALMS</span>
-            </Link>
-            <p className="leading-relaxed text-sm max-w-xs mb-8" style={{ color: 'var(--stone-light)' }}>
-              Connecting India&apos;s master artisans with discerning buyers worldwide.
-              Authentic craft, direct from the source.
-            </p>
-            <p className="overline" style={{ fontSize: '0.6rem', color: 'var(--stone)' }}>
-              Ministry of Social Justice &amp; Empowerment, Govt. of India
-            </p>
+    <footer className="bg-[#24130A] text-stone-300 font-sans border-t border-amber-900/30">
+      {/* Main Footer Container matching Screenshot 2 */}
+      <div className="container py-16 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+          
+          {/* Column 1: Contact */}
+          <div className="space-y-4">
+            <h3 className="font-serif text-xl font-semibold text-white tracking-wide">
+              Contact
+            </h3>
+            <div className="space-y-3 text-xs sm:text-sm text-stone-300 font-light leading-relaxed">
+              <p className="flex items-start gap-2.5">
+                <MapPin size={16} className="text-[#FA7A21] shrink-0 mt-1" />
+                <span>
+                  <strong className="text-white font-medium">Central Office:</strong> ALMS Facilitation Cell, Ministry of Social Justice &amp; Empowerment, Shastri Bhawan, Dr. Rajendra Prasad Rd, New Delhi &mdash; 110001
+                </span>
+              </p>
+              <p className="flex items-center gap-2.5">
+                <Phone size={15} className="text-[#FA7A21] shrink-0" />
+                <span>Phone: <a href="tel:+911123381001" className="hover:text-white transition-colors">+91 11 2338 1001</a> / <a href="tel:+919511909951" className="hover:text-white transition-colors">+91 95119 09951</a></span>
+              </p>
+              <p className="flex items-center gap-2.5">
+                <Mail size={15} className="text-[#FA7A21] shrink-0" />
+                <span>Email: <a href="mailto:support@alms.gov.in" className="hover:text-white transition-colors underline">support@alms.gov.in</a></span>
+              </p>
+            </div>
           </div>
 
-          {/* Link cols */}
-          {Object.entries(LINKS).map(([category, items]) => (
-            <div key={category}>
-              <p className="overline text-ivory/50 mb-6" style={{ fontSize: '0.6rem' }}>
-                {category}
-              </p>
-              <ul className="space-y-3">
-                {items.map(({ label, href }) => (
-                  <li key={label}>
-                    <Link
-                      href={href}
-                      className="text-sm text-ivory/60 hover:text-ivory transition-colors duration-300"
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                ))}
+          {/* Column 2: Helpful Links */}
+          <div className="space-y-4">
+            <h3 className="font-serif text-xl font-semibold text-white tracking-wide">
+              Helpful Links
+            </h3>
+            <ul className="space-y-2.5 text-xs sm:text-sm font-light">
+              <li>
+                <Link href="/b2b/rfq" className="hover:text-white transition-colors underline decoration-stone-500 hover:decoration-white">
+                  B2B Bulk Enquiry
+                </Link>
+              </li>
+              <li>
+                <Link href="/artisan/create-product" className="hover:text-white transition-colors underline decoration-stone-500 hover:decoration-white">
+                  Virtual Business Manager (AI Studio)
+                </Link>
+              </li>
+              <li>
+                <Link href="/explore" className="hover:text-white transition-colors underline decoration-stone-500 hover:decoration-white">
+                  Craft Catalog &amp; Clusters
+                </Link>
+              </li>
+              <li>
+                <Link href="/impact" className="hover:text-white transition-colors underline decoration-stone-500 hover:decoration-white">
+                  MoSJE Impact &amp; Governance
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:text-white transition-colors underline decoration-stone-500 hover:decoration-white">
+                  Privacy Policy &amp; Terms
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Company & Opening Hours */}
+          <div className="space-y-5">
+            <div className="space-y-3">
+              <h3 className="font-serif text-xl font-semibold text-white tracking-wide">
+                Company &amp; Mission
+              </h3>
+              <ul className="space-y-2 text-xs sm:text-sm font-light">
+                <li>
+                  <Link href="/artisans" className="hover:text-white transition-colors underline decoration-stone-500 hover:decoration-white">
+                    Our Story &amp; Master Artisans
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/craft-atlas" className="hover:text-white transition-colors underline decoration-stone-500 hover:decoration-white">
+                    Indigenous Heritage Atlas
+                  </Link>
+                </li>
               </ul>
             </div>
-          ))}
-        </div>
 
-        {/* Bottom bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-7">
-          <p className="text-xs" style={{ color: 'var(--stone)' }}>
-            &copy; {new Date().getFullYear()} ALMS &mdash; Artisan Linkage and Market System.
-            All rights reserved.
-          </p>
-          <div className="flex gap-6">
-            {['Privacy Policy', 'Terms of Use', 'Accessibility'].map((item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
-                className="text-xs hover:text-ivory transition-colors duration-300"
-                style={{ color: 'var(--stone)' }}
+            <div className="space-y-2 pt-2 border-t border-white/10">
+              <h4 className="font-serif text-lg font-medium text-white flex items-center gap-2">
+                <Clock size={16} className="text-[#FA7A21]" />
+                <span>Support &amp; Hub Hours</span>
+              </h4>
+              <p className="text-xs text-stone-300 font-light leading-relaxed">
+                Mon &ndash; Sat: 10:00am &ndash; 07:30pm<br />
+                Sunday: Closed (Online Helpdesk Active)
+              </p>
+            </div>
+          </div>
+
+          {/* Column 4: Follow Us */}
+          <div className="space-y-4">
+            <h3 className="font-serif text-xl font-semibold text-white tracking-wide">
+              Follow Us
+            </h3>
+            <p className="text-xs text-stone-300 font-light leading-relaxed">
+              Stay connected with stories of rural empowerment, master craftspeople, and live exhibitions.
+            </p>
+            <div className="flex items-center gap-3 pt-2">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-full bg-[#361E13] hover:bg-[#FA7A21] text-white flex items-center justify-center transition-colors shadow-sm"
+                aria-label="Instagram"
               >
-                {item}
-              </Link>
-            ))}
+                <Instagram size={18} />
+              </a>
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-full bg-[#361E13] hover:bg-[#FA7A21] text-white flex items-center justify-center transition-colors shadow-sm"
+                aria-label="Facebook"
+              >
+                <Facebook size={18} />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-full bg-[#361E13] hover:bg-[#FA7A21] text-white flex items-center justify-center transition-colors shadow-sm"
+                aria-label="YouTube"
+              >
+                <Youtube size={18} />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-full bg-[#361E13] hover:bg-[#FA7A21] text-white flex items-center justify-center transition-colors shadow-sm"
+                aria-label="Twitter / X"
+              >
+                <Twitter size={18} />
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Decorative Wave/Ridge Background Strip matching bottom of Screenshot 2 */}
+      <div
+        className="w-full h-8 bg-repeat-x opacity-40"
+        style={{
+          backgroundImage: `radial-gradient(circle at 10px 0, rgba(250, 122, 33, 0.4) 6px, transparent 7px)`,
+          backgroundSize: '20px 20px',
+        }}
+      />
+
+      {/* Bottom Copyright Bar matching Screenshot 2 */}
+      <div className="bg-[#180C06] py-5 text-center text-xs text-stone-400 font-light border-t border-white/5">
+        <div className="container flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p>
+            &copy; {new Date().getFullYear()} ALMS &mdash; Artisan Linkage and Market System. Ministry of Social Justice &amp; Empowerment, Govt. of India.
+          </p>
+          <div className="flex gap-6 text-[11px] text-stone-400">
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/impact" className="hover:text-white transition-colors">MoSJE Portal</Link>
           </div>
         </div>
       </div>

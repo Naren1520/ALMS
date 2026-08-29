@@ -4,74 +4,87 @@ import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
 
-const CRAFTS = [
+const TRIBAL_CRAFTS = [
   {
-    name: 'Pashmina Weaving',
-    region: 'Kashmir',
-    img: 'https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=600&q=80&auto=format&fit=crop',
+    name: 'Dokra Lost-Wax Metal Art',
+    region: 'Bastar, Chhattisgarh',
+    category: 'Tribal Metallurgy',
+    giTagged: true,
+    img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80&auto=format&fit=crop',
     wide: true,
   },
   {
-    name: 'Madhubani Painting',
-    region: 'Bihar',
-    img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80&auto=format&fit=crop',
+    name: 'Warli Folk Painting',
+    region: 'Palghar, Maharashtra',
+    category: 'Indigenous Murals',
+    giTagged: true,
+    img: 'https://images.unsplash.com/photo-1504198266287-1659872e6590?w=800&q=80&auto=format&fit=crop',
     wide: false,
   },
   {
-    name: 'Dhokra Casting',
-    region: 'Chhattisgarh',
-    img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80&auto=format&fit=crop',
+    name: 'Sabai Grass & Reed Basketry',
+    region: 'Mayurbhanj, Odisha',
+    category: 'Sustainable Fibers',
+    giTagged: false,
+    img: 'https://images.unsplash.com/photo-1584589167171-541ce45f1eea?w=800&q=80&auto=format&fit=crop',
     wide: false,
   },
   {
-    name: 'Chikankari',
-    region: 'Lucknow',
-    img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop',
+    name: 'Madhubani Sacred Canvas',
+    region: 'Mithila, Bihar',
+    category: 'Natural Pigment Art',
+    giTagged: true,
+    img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80&auto=format&fit=crop',
     wide: false,
   },
   {
-    name: 'Warli Painting',
-    region: 'Maharashtra',
-    img: 'https://images.unsplash.com/photo-1504198266287-1659872e6590?w=600&q=80&auto=format&fit=crop',
+    name: 'Gond Tribal Wildlife Art',
+    region: 'Dindori, Madhya Pradesh',
+    category: 'Folk Storytelling',
+    giTagged: true,
+    img: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&q=80&auto=format&fit=crop',
     wide: false,
   },
   {
-    name: 'Blue Pottery',
-    region: 'Rajasthan',
-    img: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80&auto=format&fit=crop',
+    name: 'Jaipur Blue Pottery Glazes',
+    region: 'Jaipur, Rajasthan',
+    category: 'Clay-Free Ceramics',
+    giTagged: true,
+    img: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80&auto=format&fit=crop',
     wide: true,
   },
 ];
 
 export default function CraftDiscoveryGrid() {
   const sectionRef = useRef<HTMLElement>(null);
-  const headRef    = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
 
   useEffect(() => {
     if (prefersReduced) return;
     let ctx: any;
     (async () => {
-      const { gsap } = await import('gsap');
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      gsap.registerPlugin(ScrollTrigger);
-      ctx = gsap.context(() => {
-        if (headRef.current) {
-          gsap.from(Array.from(headRef.current.children), {
-            opacity: 0, y: 24, stagger: 0.1, duration: 0.7, ease: 'power3.out',
-            scrollTrigger: { trigger: headRef.current, start: 'top 80%' },
-          });
-        }
-        const cards = sectionRef.current?.querySelectorAll<HTMLElement>('[data-craft-card]');
-        if (cards) {
-          gsap.from(Array.from(cards), {
-            opacity: 0, y: 40, stagger: 0.1, duration: 0.8, ease: 'expo.out',
-            scrollTrigger: { trigger: sectionRef.current, start: 'top 65%' },
-          });
-        }
-      });
+      try {
+        const { gsap } = await import('gsap');
+        const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+        gsap.registerPlugin(ScrollTrigger);
+        ctx = gsap.context(() => {
+          if (headRef.current) {
+            gsap.from(Array.from(headRef.current.children), {
+              opacity: 0,
+              y: 24,
+              stagger: 0.1,
+              duration: 0.7,
+              ease: 'power3.out',
+              scrollTrigger: { trigger: headRef.current, start: 'top 80%' },
+            });
+          }
+        });
+      } catch (e) {
+        // fallback
+      }
     })();
     return () => ctx?.revert();
   }, [prefersReduced]);
@@ -79,86 +92,93 @@ export default function CraftDiscoveryGrid() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-32"
-      style={{ background: '#FDFBF7' }}
-      aria-labelledby="discovery-heading"
+      className="py-24 md:py-32 bg-[#3A4A1C] text-white font-sans border-t border-amber-950 relative overflow-hidden"
+      style={{
+        backgroundImage: `radial-gradient(#55692B 1.5px, transparent 1.5px), radial-gradient(#55692B 1.5px, #3A4A1C 1.5px)`,
+        backgroundSize: `40px 40px`,
+        backgroundPosition: `0 0, 20px 20px`
+      }}
+      aria-labelledby="tribal-crafts-heading"
     >
-      <div className="container">
-
+      <div className="container relative z-10">
         {/* Header */}
         <div ref={headRef} className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
           <div>
-            <p className="overline text-gold mb-4">Discover Crafts</p>
+            <div className="mb-4">
+              <span
+                className="font-sans font-semibold text-amber-200 text-xs px-4 py-1.5 bg-black/40 border border-white/20 rounded-full inline-block uppercase tracking-wider backdrop-blur-sm"
+              >
+                Indigenous Masterpieces
+              </span>
+            </div>
             <h2
-              id="discovery-heading"
-              className="font-serif text-charcoal"
-              style={{ fontSize: 'clamp(2rem, 3.5vw, 3.25rem)', fontWeight: 300 }}
+              id="tribal-crafts-heading"
+              className="font-serif text-3xl sm:text-5xl font-light text-white"
             >
-              India's living heritage
+              Curated Tribal &amp; Folk Traditions
             </h2>
+            <p className="text-stone-200 text-sm sm:text-base mt-2 max-w-xl font-light">
+              From the deep forests of Bastar to the sacred walls of Mithila &mdash; certified authentic handicraft traditions.
+            </p>
           </div>
           <Link
             href="/explore"
-            className="flex items-center gap-2 overline text-charcoal hover:text-gold
-              transition-colors duration-300 self-end pb-1"
-            style={{ fontSize: '0.7rem' }}
+            className="px-7 py-3.5 bg-white hover:bg-stone-100 text-[#24130A] transition-all duration-200 text-xs font-semibold rounded-full inline-flex items-center gap-2 shadow-lg shrink-0"
           >
-            View All Crafts <ArrowRight size={12} aria-hidden="true" />
+            <span>Explore Complete Catalog</span>
+            <ArrowRight size={14} />
           </Link>
         </div>
 
-        {/* Mosaic grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {CRAFTS.map((craft, i) => (
-            <article
+        {/* Mosaic Grid Matching Screenshot 4 (White borders + frosted floating tag pill) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {TRIBAL_CRAFTS.map((craft) => (
+            <Link
               key={craft.name}
-              data-craft-card
-              className={`group relative overflow-hidden bg-cream cursor-pointer
-                ${craft.wide ? 'md:col-span-2' : ''}
-              `}
-              style={{ aspectRatio: craft.wide ? '16/7' : '3/4' }}
-              role="button"
-              tabIndex={0}
-              aria-label={`Explore ${craft.name} from ${craft.region}`}
-              onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.click(); }}
+              href={`/explore?craft=${encodeURIComponent(craft.name)}`}
+              className={`group relative overflow-hidden bg-black/40 cursor-pointer border-4 border-white shadow-2xl hover:shadow-green-950/60 transition-all duration-300 rounded-3xl ${
+                craft.wide ? 'md:col-span-2 aspect-[16/9]' : 'aspect-[4/5]'
+              }`}
             >
-              {/* Background image */}
+              {/* Image */}
               <Image
                 src={craft.img}
-                alt={`${craft.name} — traditional craft from ${craft.region}`}
+                alt={craft.name}
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
                 sizes={craft.wide ? '66vw' : '33vw'}
                 unoptimized
               />
 
-              {/* Dark overlay on hover */}
-              <div
-                className="absolute inset-0 transition-opacity duration-400"
-                style={{
-                  background: 'linear-gradient(to top, rgba(26,26,26,0.75) 0%, rgba(26,26,26,0.1) 50%, transparent 100%)',
-                }}
-              />
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
-              {/* Label */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-2
-                group-hover:translate-y-0 transition-transform duration-400 ease-luxury">
-                <h3
-                  className="font-serif text-ivory font-light leading-tight"
-                  style={{ fontSize: 'clamp(1rem, 1.5vw, 1.375rem)' }}
-                >
-                  {craft.name}
-                </h3>
-                <p className="overline text-gold-light mt-1 opacity-0 group-hover:opacity-100
-                  transition-opacity duration-300" style={{ fontSize: '0.6rem' }}>
-                  {craft.region}
-                </p>
+              {/* GI Tag Badge */}
+              {craft.giTagged && (
+                <span className="absolute top-4 right-4 bg-black/80 backdrop-blur-md text-amber-200 text-[10px] font-semibold shadow-md flex items-center gap-1 border border-white/20 px-3 py-1 rounded-full">
+                  <ShieldCheck size={12} className="text-[#FA7A21]" />
+                  GI Certified
+                </span>
+              )}
+
+              {/* Floating Category Pill Matching Screenshot 4 */}
+              <div className="absolute bottom-5 inset-x-5 flex flex-col gap-1.5">
+                <div className="bg-white/95 backdrop-blur-md text-[#24130A] py-2 px-4 rounded-xl shadow-lg flex items-center justify-between">
+                  <div>
+                    <h3 className="font-serif text-base sm:text-lg font-bold text-[#24130A] leading-snug">
+                      {craft.name}
+                    </h3>
+                    <p className="text-[11px] text-stone-600 font-sans font-medium">{craft.region}</p>
+                  </div>
+                  <span className="text-[10px] font-sans font-semibold uppercase tracking-wider px-2.5 py-1 bg-amber-100 text-[#8B2500] rounded-lg shrink-0">
+                    {craft.category}
+                  </span>
+                </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
     </section>
   );
 }
-

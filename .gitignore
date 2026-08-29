@@ -59,3 +59,5 @@ docker-compose.override.yml
 *.tmp
 *.orig
 .kiro
+
+docs
