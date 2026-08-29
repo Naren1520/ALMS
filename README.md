@@ -1,6 +1,6 @@
 # ALMS — Artisan Linkage and Market System
 
-> **Smart India Hackathon 2024 · Problem Statement ID 26090**  
+> **Smart India Hackathon 2026 · Problem Statement ID 26090**  
 > **Organisation:** Ministry of Social Justice and Empowerment (MoSJE)  
 > **Department:** Department of Social Justice and Empowerment  
 > **Theme:** Heritage and Culture
@@ -320,4 +320,4 @@ See `docs.md` for the complete architecture documentation, Mermaid diagrams, and
 
 ## License
 
-Unlicensed — built for Smart India Hackathon 2024, Problem Statement 26090, Ministry of Social Justice and Empowerment.
+Unlicensed — built for Smart India Hackathon 2026, Problem Statement 26090, Ministry of Social Justice and Empowerment.
