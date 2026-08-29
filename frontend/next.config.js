@@ -4,6 +4,8 @@ const nextConfig = {
   // NOTE: 'standalone' is for Docker/self-hosted only.
   // Vercel uses its own output optimisation — do not set output here.
   images: {
+    // Deployments without the Next image optimizer still serve every asset directly.
+    unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: '*.r2.cloudflarestorage.com' },
       { protocol: 'https', hostname: 'pub-*.r2.dev' },
