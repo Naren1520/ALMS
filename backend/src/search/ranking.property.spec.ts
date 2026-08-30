@@ -24,9 +24,9 @@ function rankResults(candidates: SearchCandidate[]): (SearchCandidate & { score:
 
 const candidateArb = fc.record({
   id: fc.uuid(),
-  ftsScore: fc.float({ min: 0, max: 1 }),
-  cosineSim: fc.float({ min: 0, max: 1 }),
-  trustScoreNorm: fc.float({ min: 0, max: 1 }),
+  ftsScore: fc.double({ min: 0, max: 1, noNaN: true }),
+  cosineSim: fc.double({ min: 0, max: 1, noNaN: true }),
+  trustScoreNorm: fc.double({ min: 0, max: 1, noNaN: true }),
 });
 
 describe('Property 8: Search Result Ordering Invariant', () => {
@@ -54,9 +54,9 @@ describe('Property 8: Search Result Ordering Invariant', () => {
   it('higher FTS score always produces higher combined score given equal other factors', () => {
     fc.assert(
       fc.property(
-        fc.float({ min: 0, max: 0.8 }),
-        fc.float({ min: 0, max: 1 }),
-        fc.float({ min: 0, max: 1 }),
+        fc.double({ min: 0, max: 0.8, noNaN: true }),
+        fc.double({ min: 0, max: 1, noNaN: true }),
+        fc.double({ min: 0, max: 1, noNaN: true }),
         (lowFts, cosineSim, trustNorm) => {
           const highFts = Math.min(1, lowFts + 0.2);
           const lowScore = computeSearchScore({ id: 'a', ftsScore: lowFts, cosineSim, trustScoreNorm: trustNorm });

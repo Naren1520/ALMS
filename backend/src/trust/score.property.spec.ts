@@ -36,7 +36,7 @@ function computeTrustScore(
 describe('Property 16: Trust Score Computation Invariant', () => {
   const eventArb = fc.record({
     eventType: fc.constantFrom(...Object.values(TrustEventType)),
-    multiplier: fc.float({ min: 0.1, max: 3.0 }),
+    multiplier: fc.double({ min: 0.1, max: 3.0, noNaN: true }),
   });
 
   it('trust score is always in range [0, 100]', () => {
@@ -65,7 +65,7 @@ describe('Property 16: Trust Score Computation Invariant', () => {
     fc.assert(
       fc.property(
         fc.array(
-          fc.record({ eventType: fc.constantFrom(...positiveEvents), multiplier: fc.float({ min: 0.1, max: 3 }) }),
+          fc.record({ eventType: fc.constantFrom(...positiveEvents), multiplier: fc.double({ min: 0.1, max: 3, noNaN: true }) }),
           { minLength: 0, maxLength: 20 },
         ),
         fc.constantFrom(...positiveEvents),
@@ -91,7 +91,7 @@ describe('Property 16: Trust Score Computation Invariant', () => {
     fc.assert(
       fc.property(
         fc.array(
-          fc.record({ eventType: fc.constantFrom(...negativeEvents), multiplier: fc.float({ min: 0.1, max: 3 }) }),
+          fc.record({ eventType: fc.constantFrom(...negativeEvents), multiplier: fc.double({ min: 0.1, max: 3, noNaN: true }) }),
           { minLength: 1, maxLength: 100 },
         ),
         (events) => {

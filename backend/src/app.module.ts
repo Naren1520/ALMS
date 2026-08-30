@@ -53,6 +53,7 @@ import { CommonModule } from './common/common.module';
             host: r.host,
             port: r.port,
             ...(r.password ? { password: r.password } : {}),
+            ...(r.tls ? { tls: r.tls } : {}),
           },
         };
       },
@@ -75,6 +76,7 @@ import { CommonModule } from './common/common.module';
             host: r.host,
             port: r.port,
             ...(r.password ? { password: r.password } : {}),
+            ...(r.tls ? { tls: r.tls } : {}),
           },
           defaultJobOptions: { removeOnComplete: 100, removeOnFail: 500 },
         };

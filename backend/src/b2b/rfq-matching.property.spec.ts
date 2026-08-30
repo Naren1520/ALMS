@@ -36,11 +36,11 @@ function rankMatches(artisans: ArtisanMatch[]): Array<ArtisanMatch & { score: nu
 
 const artisanArb = fc.record({
   artisanId: fc.uuid(),
-  categoryMatch: fc.float({ min: 0, max: 1 }),
-  capacityScore: fc.float({ min: 0, max: 1 }),
-  trustScoreNorm: fc.float({ min: 0, max: 1 }),
+  categoryMatch: fc.double({ min: 0, max: 1, noNaN: true }),
+  capacityScore: fc.double({ min: 0, max: 1, noNaN: true }),
+  trustScoreNorm: fc.double({ min: 0, max: 1, noNaN: true }),
   proximityScore: fc.constantFrom(0, 0.5, 1),
-  activeInventoryPct: fc.float({ min: 0, max: 1 }),
+  activeInventoryPct: fc.double({ min: 0, max: 1, noNaN: true }),
 });
 
 describe('Property 14: RFQ Match Scores Are Correctly Computed and Sorted', () => {
@@ -73,11 +73,11 @@ describe('Property 14: RFQ Match Scores Are Correctly Computed and Sorted', () =
   it('higher category match always increases score holding other factors equal', () => {
     fc.assert(
       fc.property(
-        fc.float({ min: 0, max: 0.9 }),
-        fc.float({ min: 0, max: 1 }),
-        fc.float({ min: 0, max: 1 }),
+        fc.double({ min: 0, max: 0.9, noNaN: true }),
+        fc.double({ min: 0, max: 1, noNaN: true }),
+        fc.double({ min: 0, max: 1, noNaN: true }),
         fc.constantFrom<0 | 0.5 | 1>(0, 0.5, 1),
-        fc.float({ min: 0, max: 1 }),
+        fc.double({ min: 0, max: 1, noNaN: true }),
         (lowCat, capScore, trustNorm, proxScore, invPct) => {
           const highCat = Math.min(1, lowCat + 0.1);
           const baseFn = (cat: number) =>

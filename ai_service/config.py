@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     r2_endpoint: str = ""
     database_url: str = "postgresql://postgres:password@localhost:5432/postgres"
     redis_url: str = "redis://localhost:6379"
-    backend_url: str = "http://localhost:3001"
+    backend_url: str = "http://localhost:8080"
 
     class Config:
         env_file = ".env"

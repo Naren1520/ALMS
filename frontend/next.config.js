@@ -1,10 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // NOTE: 'standalone' is for Docker/self-hosted only.
-  // Vercel uses its own output optimisation — do not set output here.
   images: {
-    // Deployments without the Next image optimizer still serve every asset directly.
     unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: '*.r2.cloudflarestorage.com' },
@@ -12,6 +9,15 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'plus.unsplash.com' },
     ],
+  },
+  async rewrites() {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${backendUrl}/api/:path*`,
+      },
+    ];
   },
   async headers() {
     return [
@@ -26,7 +32,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'; " +
               "img-src 'self' data: blob: https:; " +
               "font-src 'self' https:; " +
-              "connect-src 'self' wss: https:; " +
+              "connect-src 'self' http://localhost:8080 http://localhost:8000 wss: https:; " +
               "object-src 'none'; " +
               "base-uri 'self';",
           },

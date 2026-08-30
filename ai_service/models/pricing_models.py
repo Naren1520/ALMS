@@ -23,9 +23,9 @@ class PricingResult(BaseModel):
 
 
 class PricingRequest(BaseModel):
-    product_id: str
+    product_id: Optional[str] = None
     category: str
     material: str
     technique: str
-    artisan_district: str
+    artisan_district: str = "India"
     artisan_language: str = "en"

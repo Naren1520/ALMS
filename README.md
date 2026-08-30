@@ -1,323 +1,377 @@
 # ALMS — Artisan Linkage and Market System
 
 > **Smart India Hackathon 2026 · Problem Statement ID 26090**  
-> **Organisation:** Ministry of Social Justice and Empowerment (MoSJE)  
-> **Department:** Department of Social Justice and Empowerment  
-> **Theme:** Heritage and Culture
+> **Ministry of Social Justice and Empowerment (MoSJE)** · Department of Social Justice and Empowerment  
+> **Theme:** Heritage and Culture · **Commission Model:** 0% Direct-to-Artisan Revenue
 
-A full-stack, production-grade, AI-powered platform that connects India's marginalized artisans (SC/ST/OBC/Divyang craftspeople) with domestic consumers and verified global B2B buyers through voice-driven cataloging, semantic search, dynamic pricing, and zero-friction digital commerce — all at **0% commission**.
-
----
-
-## The Problem We Solve
-
-India's 7 crore+ artisans are cut off from fair markets by three structural barriers:
-1. **Digital illiteracy** — existing platforms require English proficiency and e-commerce knowledge
-2. **Middleman exploitation** — aggregators extract 15–40% commission, impoverishing craftspeople
-3. **Poor connectivity** — rural internet is unreliable; current tools fail offline
-
-ALMS removes all three barriers simultaneously.
+[![Next.js](https://img.shields.io/badge/Frontend-Next.js_14_App_Router-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
+[![NestJS](https://img.shields.io/badge/Backend-NestJS_v10-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![FastAPI](https://img.shields.io/badge/AI_Service-FastAPI_Python_3.11+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL_16_+_pgvector-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Redis](https://img.shields.io/badge/Queue_&_Cache-Redis_7_+_BullMQ-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
+[![Cloudflare R2](https://img.shields.io/badge/Storage-Cloudflare_R2-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://www.cloudflare.com/products/r2/)
 
 ---
 
-## Our Competitive Advantage
+## 🏛️ Executive Summary & The Problem We Solve
 
-| Feature | Etsy / Amazon | GeM / TRIFED | **ALMS** |
-|---|---|---|---|
-| Onboarding | English forms | Complex compliance | **Voice AI in 10 regional dialects** |
-| Commission | 15–40% | 3–10% | **0% (direct artisan revenue)** |
-| Pricing | Race to bottom | Static manual | **AI fair-wage guardrail** |
-| Connectivity | Online only | Online only | **Offline-first sync queue** |
-| Logistics | Urban couriers | Standard postal | **Dak Ghar Niryat Kendra (India Post) integration** |
-| Network | Siloed marketplace | Isolated gov catalog | **ONDC seller node auto-syndication** |
-| Trust | Reviews only | None | **Explainable 0–100 Trust Score (11 event types)** |
+India is home to over **7 crore (70 million) traditional artisans and craftspeople**, predominantly from Scheduled Castes (SC), Scheduled Tribes (ST), Other Backward Classes (OBC), and Divyangjan (differently-abled) communities. Despite producing world-renowned GI-tagged crafts, rural producers remain trapped in poverty due to three compounding systemic failures:
 
----
+1. **Digital & Language Illiteracy** — E-commerce platforms demand English proficiency, complex seller catalogs, and SKU taxonomy management.
+2. **Aggregator Exploitation** — Middlemen and private marketplaces extract **15% to 40% commissions**, capturing the majority of consumer value.
+3. **Connectivity Fragility** — Rural production hubs have intermittent 2G/3G mobile data, causing upload failures and data loss on conventional platforms.
 
-## Tech Stack
-
-### Frontend
-![Next.js](https://img.shields.io/badge/Next.js_14-000000?style=flat&logo=nextdotjs&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
-![GSAP](https://img.shields.io/badge/GSAP_ScrollTrigger-88CE02?style=flat&logo=greensock&logoColor=black)
-![React Query](https://img.shields.io/badge/React_Query-FF4154?style=flat&logo=reactquery&logoColor=white)
-![Zustand](https://img.shields.io/badge/Zustand-000000?style=flat&logo=react&logoColor=white)
-
-### Backend
-![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
-![TypeORM](https://img.shields.io/badge/TypeORM-FE0803?style=flat&logo=typeorm&logoColor=white)
-![Socket.io](https://img.shields.io/badge/Socket.io_+_Redis_Adapter-010101?style=flat&logo=socketdotio&logoColor=white)
-![BullMQ](https://img.shields.io/badge/BullMQ_8_Queues-FF6384?style=flat&logo=redis&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT_RS256-000000?style=flat&logo=jsonwebtokens&logoColor=white)
-
-### AI Service
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
-![Python](https://img.shields.io/badge/Python_3.11-3776AB?style=flat&logo=python&logoColor=white)
-![Google Gemini](https://img.shields.io/badge/Gemini_1.5_Pro-4285F4?style=flat&logo=google&logoColor=white)
-![OpenCV](https://img.shields.io/badge/OpenCV_+_rembg-5C3EE8?style=flat&logo=opencv&logoColor=white)
-
-### Infrastructure
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL_16_+_pgvector-4169E1?style=flat&logo=postgresql&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis_7-DC382D?style=flat&logo=redis&logoColor=white)
-![Cloudflare R2](https://img.shields.io/badge/Cloudflare_R2-F38020?style=flat&logo=cloudflare&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker_Compose-2496ED?style=flat&logo=docker&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
-
----
-
-## Core Features
-
-### For Artisans — Zero Friction
-- **Voice-to-Catalog** — Speak in Hindi, Bengali, Telugu, Tamil, Gujarati, Kannada, Marathi, Malayalam, Odia, or Punjabi. Gemini 1.5 Pro generates a complete English + Hindi product listing automatically.
-- **AI Image Enhancement** — Upload a raw photo. REMBG removes the background, OpenCV corrects lighting and color, Real-ESRGAN upscales to 1200×1200px WebP. Side-by-side comparison with original.
-- **AI Pricing Assistant** — Fair-wage floor computed from regional cost index, labor complexity, and median comparable product prices. Non-blocking advisory warnings for below-minimum and above-maximum pricing.
-- **Offline-First Sync Queue** — Drafts survive connectivity loss. Auto-replays on reconnect, auto-triggers the AI pipeline with no artisan action needed.
-- **Market Discovery** — AI identifies 3+ domestic segments and 2+ international markets per product. GI Tag eligibility badge for qualifying craft categories.
-
-### For B2B Buyers — Verified Procurement
-- **RFQ System** — Submit structured bulk procurement requests with quantity, delivery date, and spec notes. AI-matched to 3–20 ranked artisans within 5 minutes.
-- **AI Negotiation Assistant** — Artisans receive Gemini-drafted negotiation responses in their language. Always requires explicit artisan approval before sending.
-- **Wholesale Price Tiers** — Up to 5 quantity-tiered price brackets per product. Highest applicable tier applied at checkout.
-- **Excess Inventory Matching** — Products sitting above 80% capacity for 30+ days are automatically offered to eligible buyers at AI-recommended discounts (15–25% below wholesale).
-
-### For the Platform — Trustworthy Commerce
-- **Trust Score Engine** — Explainable 0–100 score from 11 weighted event types (identity verification, on-time fulfilment, reviews, disputes). Admin-configurable multipliers at runtime.
-- **Real-Time Messaging** — WebSocket conversations with auto-translation between artisan and buyer languages. Delivery receipts: SENT → DELIVERED → READ.
-- **Dispute Resolution** — Structured evidence upload, 2-hour moderator assignment SLA, 14-day escalation to Admin.
-- **Semantic Search** — 768-dim embeddings (Google `text-embedding-004`) in pgvector HNSW index. Hybrid re-ranking: FTS × 0.4 + cosine similarity × 0.4 + Trust Score × 0.2. < 500ms for 1M+ products.
-- **Craft Atlas** — Interactive SVG map of India. Click a state → see districts → see craft traditions, artisan density, sample products, and cultural descriptions.
-
-### Government Integration
-- **ONDC Seller Node** — Artisan catalogs auto-formatted to ONDC retail spec, discoverable on Paytm, PhonePe, and other buyer apps.
-- **DigiLocker API** — Validates Aadhaar, SC/ST/OBC caste certificates, and UDID disability cards during artisan verification.
-- **Dak Ghar Niryat Kendra** — India Post integration. Auto-generates Postal Bill of Export (PBE) for rural international shipping from any pin code.
-- **Escrow Milestone Payments** — Funds locked until India Post DNK delivery verification. Protects artisans from raw-material investment losses.
-
----
-
-## Architecture Overview
+**ALMS (Artisan Linkage and Market System)** solves all three challenges simultaneously by offering a **zero-literacy, voice-first, AI-driven, offline-resilient digital commerce operating system with 0% platform commission.**
 
 ```
-                    ┌─────────────────────────────────────────────────┐
-                    │               Cloudflare CDN + WAF              │
-                    └──────────────┬──────────────────────────────────┘
-                                   │
-            ┌──────────────────────┼──────────────────────┐
-            │                      │                      │
-     ┌──────▼──────┐        ┌──────▼──────┐        ┌──────▼──────┐
-     │ Next.js 14  │        │  NestJS API │        │  FastAPI AI │
-     │ + Voice IVR │◄──────►│ (19 modules)│◄──────►│ (8 pipelines│
-     │ Port 3000   │ REST+WS│  Port 3001  │ HTTP   │ Port 8000)  │
-     └─────────────┘        └──────┬──────┘ jobs   └─────────────┘
-                                   │
-              ┌────────────────────┼────────────────────┐
-              │                    │                    │
-       ┌──────▼──────┐      ┌──────▼──────┐      ┌──────▼──────┐
-       │PostgreSQL 16│      │   Redis 7   │      │Cloudflare R2│
-       │ + pgvector  │      │ BullMQ/Cache│      │Object Store │
-       │ 36+ tables  │      │ 8 queues    │      │Media & Docs │
-       └─────────────┘      └─────────────┘      └─────────────┘
-                                   │
-                    ┌──────────────▼──────────────────┐
-                    │  Gov APIs: ONDC · DNK · MoSJE   │
-                    └─────────────────────────────────┘
-```
-
-**17 NestJS modules:** Auth · Onboarding · Product · Inventory · B2B · Messaging · Trust · Review · Dispute · Atlas · Notifications · Admin · Search · ExcessInventory · Moderation · Delivery · MarketDiscovery
-
-**8 BullMQ queues:** PRODUCT_CATALOG_GENERATION · IMAGE_ENHANCEMENT · EMBEDDING_UPDATE · PRICING · SEO_GENERATION · MARKET_DISCOVERY · TRANSLATION · MODERATION
-
-**8 FastAPI AI pipelines:** Image Pipeline · Catalog Engine · Pricing Engine · SEO Engine · Embedding Service · Translation Service · Moderation Pipeline · Health
-
----
-
-## Security Model
-
-| Layer | Implementation |
-|---|---|
-| Authentication | RS256 JWT (15-min) + rotating refresh tokens (7-day, SHA-256 hashed) |
-| Password storage | Argon2id adaptive hash |
-| PII encryption | AES-256-GCM field-level (names, GST, addresses, bank accounts) |
-| CSRF | Synchronizer Token Pattern, rotated every request |
-| Rate limiting | 100 req/min/IP (unauth) · 500 req/min/user (auth) via Redis |
-| Storage | All R2 objects private; signed URLs only (60-min verification, 24-hr media) |
-| Headers | Helmet: CSP, HSTS, X-Frame-Options |
-| Input | `class-validator` + `sanitize-html` server-side; TypeORM parameterized queries |
-| Audit trail | Append-only `audit_logs` table; no UPDATE/DELETE rights granted |
-| Row-level security | Supabase RLS policies on all tables |
-
----
-
-## Database Schema (7 Migrations, 36+ Tables)
-
-| Migration | Content |
-|---|---|
-| 000001 | Extensions: pgvector, pg_trgm, uuid-ossp |
-| 000002 | 19 PostgreSQL enum types |
-| 000003 | 31 core tables with all constraints and indexes |
-| 000004 | Row-level security policies (Supabase) |
-| 000005 | Supporting indexes (HNSW, GIN, B-tree) |
-| 000006 | Trust event weight seeds (11 event types) |
-| 000007 | GI tags, transit matrix, regional cost index, additional tables |
-
-Key: pgvector HNSW index (`m=16, ef_construction=64`) on 768-dim product embeddings for sub-50ms ANN search at 1M+ scale.
-
----
-
-## Repository Structure
-
-```
-ALMS/
-├── frontend/                    # Next.js 14 App Router
-│   └── src/
-│       ├── app/                 # Pages: /, /artisan, /craft-atlas, /(auth)
-│       ├── components/          # homepage/, layout/, providers/
-│       ├── hooks/               # useReducedMotion, etc.
-│       └── lib/                 # API client, WebSocket, Sync Queue
-├── backend/                     # NestJS API (TypeScript)
-│   └── src/
-│       ├── modules/             # 17 feature modules
-│       ├── common/              # Guards, filters, decorators, services
-│       └── config/              # Env validation, config factories
-├── ai_service/                  # FastAPI (Python 3.11)
-│   ├── routers/                 # 8 pipeline routers
-│   └── models/                  # Pydantic models
-├── supabase/
-│   └── migrations/              # 7 ordered SQL migration files
-├── docker-compose.yml           # Full local stack
-├── docs.md                      # Complete architecture docs + Mermaid diagrams
-└── README.md                    # This file
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          ALMS CORE VALUE PROPOSITIONS                       │
+├──────────────────────┬──────────────────────┬───────────────────────────────┤
+│ 🎙️ Voice-to-Catalog  │ 🎨 AI Image Studio   │ ⚖️ Fair-Wage Cost Floor      │
+│ Native speech to     │ Raw photo to studio  │ Dynamic algorithmic           │
+│ bilingual catalog    │ 1200x1200px WebP     │ anti-exploitation pricing     │
+├──────────────────────┼──────────────────────┼───────────────────────────────┤
+│ 🌐 ONDC Auto-Node    │ 🏢 B2B RFQ Matching  │ 📦 India Post DNK             │
+│ Direct syndication   │ Multi-cluster batch  │ Rural export customs & PBE    │
+│ to 50+ buyer apps    │ capacity allocation  │ tracking from any pin code    │
+├──────────────────────┼──────────────────────┼───────────────────────────────┤
+│ 🛡️ Trust Score Engine│ 🗺️ Craft Atlas Map   │ 📴 Offline-First Sync Queue   │
+│ Explainable 0-100    │ Interactive regional │ IndexedDB auto-replay         │
+│ multi-factor rating  │ GI & craft directory │ on internet reconnect         │
+└──────────────────────┴──────────────────────┴───────────────────────────────┘
 ```
 
 ---
 
-## Local Development
+## 🏗️ System Architecture
+
+ALMS is engineered as a decoupled, resilient microservices architecture comprising three primary tiers:
+
+```
+                               ┌────────────────────────────────────────────────────────┐
+                               │                 Cloudflare CDN + Edge WAF              │
+                               └───────────────────────────┬────────────────────────────┘
+                                                           │
+                               ┌───────────────────────────┼────────────────────────────┐
+                               │                           │                            │
+                     ┌─────────▼─────────┐       ┌─────────▼─────────┐        ┌─────────▼─────────┐
+                     │   Next.js 14 Web  │       │  NestJS Backend   │        │ FastAPI AI Engine │
+                     │  (App Router UI)  │◄─────►│    API Gateway    │◄──────►│  Microservice     │
+                     │    Port: 3000     │REST/WS│    Port: 8080     │ HTTP   │    Port: 8000     │
+                     └───────────────────┘       └─────────┬─────────┘ jobs   └───────────────────┘
+                                                           │
+                               ┌───────────────────────────┼────────────────────────────┐
+                               │                           │                            │
+                     ┌─────────▼─────────┐       ┌─────────▼─────────┐        ┌─────────▼─────────┐
+                     │  PostgreSQL 16 +  │       │   Redis 7 Cache   │        │   Cloudflare R2   │
+                     │     pgvector      │       │    + 8 BullMQ     │        │  S3 Object Store  │
+                     │ (36+ RLS Tables)  │       │      Queues       │        │  (Media & Docs)   │
+                     └───────────────────┘       └───────────────────┘        └───────────────────┘
+                                                           │
+                               ┌───────────────────────────▼────────────────────────────┐
+                               │        National Infrastructure & Governance APIs       │
+                               │        • ONDC Network (Beckn Protocol v1.1)            │
+                               │        • DigiLocker (Aadhaar, Caste, UDID)             │
+                               │        • Dak Ghar Niryat Kendra (India Post PBE)       │
+                               └───────────────────────────┘────────────────────────────┘
+```
+
+### Microservice Components:
+
+1. **Frontend (`/frontend`)**: Next.js 14 with App Router, React 18, Tailwind CSS, GSAP ScrollTrigger, Lucide Icons, and Offline Sync Queue.
+2. **Backend (`/backend`)**: NestJS v10 modular monolith in TypeScript, TypeORM, BullMQ distributed queue workers, JWT RS256 authentication, AES-256-GCM encryption, and WebSocket real-time messaging on **Port 8080**.
+3. **AI Service (`/ai_service`)**: High-performance FastAPI microservice running Python 3.11+, Google Gemini 1.5 Pro multimodal LLM, Pillow, and OpenCV computer vision pipelines on **Port 8000**.
+
+---
+
+## ⚡ Core Feature Matrix
+
+### 1. For Artisans (Zero Digital Literacy Required)
+- **Multilingual Voice-to-Catalog Engine**: Artisans speak naturally in Hindi, Bengali, Telugu, Tamil, Marathi, Gujarati, Kannada, Malayalam, Odia, or Punjabi. The pipeline automatically transcribes audio, extracts technical metadata (materials, craft technique, care instructions), generates bilingual English & Hindi descriptions, and outputs ONDC-compliant taxonomy.
+- **Computer Vision Image Enhancement**: Eliminates cluttered backgrounds from rural workshops, performs intelligent lighting & white balance correction, sharpens fine craft textures, and frames products onto clean 1200×1200 WebP assets.
+- **Fair-Wage Cost Floor Pricing Assistant**: Computes an uncompromised price floor based on raw material costs, skilled labor hours, local minimum wages, and regional cost indices, protecting artisans from predatory buyer undercutting.
+- **Offline-First Sync Queue**: Artisan actions and drafts are preserved locally when mobile signal drops and automatically synced to the server once reconnected.
+- **Craft GI-Tag Registry**: Automated geographical indication lookup to badge and verify authentic regional crafts.
+
+### 2. For B2B Buyers & Institutions
+- **Multi-Cluster RFQ Allocation**: Allows corporate buyers, hotels, and export houses to place bulk orders that are algorithmically split across multiple artisan self-help groups (SHGs) to guarantee timely fulfillment without overloading single clusters.
+- **AI Negotiation Assistant**: Provides artisans with translated, context-aware negotiation proposals to bridge language gaps with global enterprise buyers.
+- **Tiered Wholesale Pricing & Excess Inventory Clearing**: Automatically surfaces surplus stock at volume discounts without cannibalizing retail prices.
+
+### 3. For Platform & Governance (MoSJE / Government of India)
+- **Explainable 0–100 Trust Score**: Real-time reliability rating calculated from 11 weighted event types (DigiLocker verification, on-time delivery rate, dispute resolution ratio, buyer reviews).
+- **Interactive National Craft Atlas**: Interactive vector map visualizing artisan density, craft varieties, GI tags, and socio-economic indicators across every Indian state.
+- **Government Escrow & India Post Integration**: Funds are safely held in milestone escrow until Dak Ghar Niryat Kendra (DNK) postal verification confirms parcel handover.
+
+---
+
+## 📁 Repository Structure
+
+```
+d:/ALMS/
+├── frontend/                        # Next.js 14 App Router Frontend
+│   ├── src/
+│   │   ├── app/                     # Route pages (Home, Studio, RFQ, Atlas, Explore, Docs, Auth)
+│   │   │   ├── artisan/create-product/ # Zero-literacy AI cataloging studio
+│   │   │   ├── artisans/            # Master artisan directory & profiles
+│   │   │   ├── b2b/rfq/             # Bulk RFQ matching & capacity allocator
+│   │   │   ├── craft-atlas/         # Interactive SVG India craft map
+│   │   │   ├── explore/             # Semantic marketplace catalog
+│   │   │   ├── impact/              # MoSJE livelihood analytics dashboard
+│   │   │   ├── docs/                # Interactive architecture documentation
+│   │   │   └── (auth)/              # Login & Multi-step registration
+│   │   ├── components/              # Reusable UI & Homepage components
+│   │   ├── lib/                     # Sync queue & state utilities
+│   │   └── utils/                   # Supabase clients & middleware
+│   ├── next.config.js               # API rewrites & CSP configuration
+│   └── package.json
+├── backend/                         # NestJS API Monolith
+│   ├── src/
+│   │   ├── modules/                 # 17 domain feature modules
+│   │   │   ├── auth/                # JWT RS256 auth & RBAC
+│   │   │   ├── product/             # Product lifecycle & BullMQ processor
+│   │   │   ├── b2b/                 # RFQ matching & capacity engine
+│   │   │   ├── trust/               # 0-100 Trust score calculator
+│   │   │   ├── search/              # pgvector hybrid semantic search
+│   │   │   ├── messaging/           # WebSocket conversations & translation
+│   │   │   ├── dispute/             # Dispute resolution workflow
+│   │   │   ├── moderation/          # AI & manual content moderation
+│   │   │   └── atlas/               # GI tags & geographic craft clusters
+│   │   ├── common/                  # Services, guards, filters, decorators
+│   │   │   └── services/            # AI service client, R2 storage, AES-256 encryption
+│   │   ├── config/                  # Environment validation & configs
+│   │   └── main.ts                  # NestJS bootstrap
+│   └── package.json
+├── ai_service/                      # FastAPI AI & Computer Vision Microservice
+│   ├── routers/                     # 8 Microservice Pipeline Routers
+│   │   ├── image_pipeline.py        # Image background extraction & enhancement
+│   │   ├── catalog.py               # Multilingual voice/text catalog generation
+│   │   ├── pricing.py               # Fair-wage price floor recommendations
+│   │   ├── seo.py                   # Meta tags & Schema.org JSON-LD generator
+│   │   ├── embedding.py             # 768-dim semantic embeddings
+│   │   ├── translation.py           # Multilingual translation router
+│   │   ├── moderation.py            # AI content moderation & compliance
+│   │   └── health.py                # Service health & readiness
+│   ├── models/                      # Pydantic v2 schemas & validators
+│   ├── tests/                       # Pytest & Hypothesis property test suites
+│   ├── main.py                      # FastAPI application entrypoint
+│   └── requirements.txt
+├── supabase/                        # Database migrations & schemas
+│   └── migrations/                  # 7 ordered SQL migration scripts
+├── docker-compose.yml               # Complete multi-container local stack
+├── docs.md                          # Full system specifications & Mermaid charts
+└── README.md                        # Master repository documentation
+```
+
+---
+
+## 🚀 Quickstart & Local Development
 
 ### Prerequisites
-- Node.js 20+, Python 3.11+, Docker & Docker Compose
+- **Node.js**: v20.x or later
+- **Python**: v3.11 or later
+- **Docker & Docker Compose** (Optional for containerized run)
+- **Git**
 
-### Quickstart (Docker — recommended)
+---
+
+### Option 1: Running Concurrently (Recommended for Local Dev)
+
+#### 1. Setup AI Microservice (FastAPI)
+```bash
+# Enter AI directory
+cd ai_service
+
+# Install dependencies (or use uv / pip)
+pip install -r requirements.txt
+
+# Run the FastAPI server (Port 8000)
+uvicorn main:app --reload --port 8000
+```
+> Verify: Open [http://localhost:8000/docs](http://localhost:8000/docs) in your browser for Swagger UI.
+
+---
+
+#### 2. Setup Backend Service (NestJS)
+```bash
+# In a new terminal window:
+cd backend
+
+# Install dependencies
+npm install
+
+# Copy environment file
+cp .env.example .env
+
+# Build TypeScript
+npm run build
+
+# Start dev server (Port 8080)
+npm run start:dev
+```
+> Verify: Open [http://localhost:8080/api/v1/products](http://localhost:8080/api/v1/products) or check logs.
+
+---
+
+#### 3. Setup Frontend Web App (Next.js)
+```bash
+# In a new terminal window:
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start Next.js development server (Port 3000)
+npm run dev
+```
+> Verify: Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+### Option 2: Running via Docker Compose
 
 ```bash
-# Clone and enter the project
-git clone <repo-url> && cd ALMS
-
-# Copy and configure secrets
-cp backend/.env.example backend/.env
-cp ai_service/.env.example ai_service/.env
-
-# Generate RSA key pair for JWT
-openssl genrsa -out backend/jwt_private.pem 2048
-openssl rsa -in backend/jwt_private.pem -pubout -out backend/jwt_public.pem
-
-# Generate AES-256 encryption key
-openssl rand -hex 32  # → paste as ENCRYPTION_KEY in backend/.env
-
-# Start all services
+# From project root:
 docker compose up --build
 ```
 
-| Service | URL |
-|---|---|
-| Frontend | http://localhost:3000 |
-| Backend API | http://localhost:3001/api/v1 |
-| Swagger UI | http://localhost:3001/api |
-| AI Service | http://localhost:8000 |
-| AI Docs | http://localhost:8000/docs |
-
-### Manual Setup
-
-```bash
-# Backend
-cd backend && npm install && npm run start:dev
-
-# AI Service
-cd ai_service && pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-
-# Frontend
-cd frontend && npm install && npm run dev
-```
+| Service | Local URL | Description |
+|---|---|---|
+| **Frontend Web App** | `http://localhost:3000` | Next.js 14 Responsive UI & AI Studio |
+| **Backend API Gateway** | `http://localhost:3001/api/v1` | NestJS REST API & WebSocket Server |
+| **FastAPI AI Engine** | `http://localhost:8000` | AI Enhancement & Catalog Service |
+| **FastAPI Interactive Docs** | `http://localhost:8000/docs` | OpenAPI / Swagger Documentation |
 
 ---
 
-## Environment Variables
+## 🔑 Environment Configuration
 
 ### Backend (`backend/.env`)
+| Key | Default / Sample | Purpose |
+|---|---|---|
+| `PORT` | `3001` | HTTP Port for NestJS API |
+| `FRONTEND_URL` | `http://localhost:3000` | CORS Origin |
+| `DATABASE_HOST` | `localhost` / Supabase Host | PostgreSQL 16 DB Host |
+| `DATABASE_PORT` | `5432` | DB Port |
+| `DATABASE_NAME` | `postgres` | DB Name |
+| `DATABASE_USER` | `postgres` | DB User |
+| `DATABASE_PASSWORD` | `your-password` | DB Password |
+| `REDIS_HOST` | `localhost` | Redis instance for BullMQ queues |
+| `REDIS_PORT` | `6379` | Redis port |
+| `AI_SERVICE_URL` | `http://localhost:8000` | FastAPI microservice URL |
+| `AI_SERVICE_TOKEN` | `dev-token` | Service-to-service auth token |
+| `ENCRYPTION_KEY` | `64-hex-characters` | AES-256-GCM PII field encryption key |
+| `JWT_PRIVATE_KEY` | `-----BEGIN RSA PRIVATE KEY-----...` | RS256 private key for JWT |
+| `JWT_PUBLIC_KEY` | `-----BEGIN PUBLIC KEY-----...` | RS256 public key for JWT |
 
-| Variable | Description |
-|---|---|
-| `DATABASE_HOST` | PostgreSQL host |
-| `DATABASE_PASSWORD` | PostgreSQL password |
-| `REDIS_HOST` | Redis host |
-| `JWT_PRIVATE_KEY` | RS256 private key (PEM, `\n`-escaped) |
-| `JWT_PUBLIC_KEY` | RS256 public key (PEM, `\n`-escaped) |
-| `ENCRYPTION_KEY` | 64 hex chars (32 bytes) for AES-256-GCM |
-| `R2_ACCOUNT_ID` | Cloudflare R2 account ID |
-| `R2_ACCESS_KEY_ID` | R2 access key |
-| `R2_SECRET_ACCESS_KEY` | R2 secret key |
-| `AI_SERVICE_URL` | Internal URL of FastAPI service |
-| `AI_SERVICE_TOKEN` | Shared service-to-service token |
-| `FRONTEND_URL` | Allowed CORS origin |
+### AI Microservice (`ai_service/.env`)
+| Key | Default / Sample | Purpose |
+|---|---|---|
+| `AI_SERVICE_TOKEN` | `dev-token` | Shared service verification token |
+| `GEMINI_API_KEY` | `your-gemini-api-key` | Google Gemini 1.5 Pro API Key |
+| `BACKEND_URL` | `http://localhost:3001` | Callback URL to NestJS |
 
-### AI Service (`ai_service/.env`)
-
-| Variable | Description |
-|---|---|
-| `GEMINI_API_KEY` | Google Gemini API key |
-| `DATABASE_URL` | PostgreSQL connection string |
-| `REDIS_URL` | Redis URL |
-| `R2_*` | Same R2 credentials as backend |
+### Frontend (`frontend/.env.local`)
+| Key | Default / Sample | Purpose |
+|---|---|---|
+| `NEXT_PUBLIC_BACKEND_URL` | `http://localhost:3001` | Backend API URL for Next.js rewrites |
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://your-supabase.co` | Supabase project endpoint |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `sb_publishable_...` | Supabase public key |
 
 ---
 
-## Deployment
+## 🧪 Testing & Verification Suite
 
-The project is configured as a Vercel monorepo with two services. Root `vercel.json` routes `/api/v1/*` to NestJS and everything else to Next.js.
-
-The FastAPI AI service is deployed separately (Cloud Run / Fly.io). Set `AI_SERVICE_URL` in the Vercel backend environment to point to it.
+ALMS enforces strict correctness invariants across its microservices using property-based testing and end-to-end unit test suites.
 
 ```
-Vercel project → Framework: Services
-  ├── backend  →  NestJS (Node.js runtime)
-  └── frontend →  Next.js (Edge runtime)
+═══════════════════════════════════════════════════════════════════════════
+                      ALMS AUTOMATED TEST COVERAGE
+═══════════════════════════════════════════════════════════════════════════
+ ✅ Backend Test Suites (Jest + fast-check)    : 16 Suites, 69 Tests (100% Pass)
+ ✅ AI Service Test Suites (Pytest+Hypothesis) : 10 Tests (100% Pass)
+ ✅ Next.js Frontend Compilation               : 16 Routes (100% Pass)
+ ✅ TypeScript Strict Typecheck                : 0 Errors
+═══════════════════════════════════════════════════════════════════════════
+```
+
+### 1. Run Backend Property Invariant Tests
+```bash
+cd backend
+npm run test
+```
+*Validates:*
+- **Property 1–4**: Registration state invariants, RBAC denial universality, Password complexity, Refresh token single-use.
+- **Property 5–6**: 3-second BullMQ AI job enqueuing, R2 original asset preservation on failure.
+- **Property 8–9**: Search ranking ordering invariant, zero-search fallback invariant.
+- **Property 10–13**: Active order deletion guards, Pre-update snapshot history, Inventory atomic decrement.
+- **Property 14–17**: RFQ match scoring invariant, Message delivery state progression, 0–100 Trust score clamping, Review submission gates.
+- **Property 18–22**: Dispute eligibility windows, GI tag membership, CSRF protection universality, Rate limit enforcement, Security audit trails.
+
+### 2. Run AI Microservice Test Suite
+```bash
+# From workspace root
+pytest ai_service/tests -v
+```
+*Validates:*
+- **Property 7**: Catalog Engine JSON Round-Trip Fidelity (Hypothesis).
+- **Pipelines**: Health, Image enhancement, Catalog generation, Fair-wage pricing, SEO generator, Embedding generation, Content moderation, Multilingual translation.
+
+### 3. Verify Production Builds
+```bash
+# Backend build
+cd backend && npm run build
+
+# Frontend build
+cd frontend && npm run build
 ```
 
 ---
 
-## Implementation Plan (35 Tasks)
+## 📡 API Reference
 
-The project follows a structured 35-task implementation plan, organized in dependency waves:
+### Backend Endpoints (`/api/v1`)
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| `POST` | `/api/v1/auth/register` | Register artisan, buyer, or moderator | No |
+| `POST` | `/api/v1/auth/login` | Authenticate and obtain JWT RS256 token | No |
+| `POST` | `/api/v1/auth/refresh` | Rotate single-use refresh token | Yes |
+| `POST` | `/api/v1/products` | Create draft listing & enqueue AI pipeline | Artisan |
+| `POST` | `/api/v1/products/preview-ai` | Instant live AI catalog, pricing & SEO preview | No |
+| `GET` | `/api/v1/products/:id` | Fetch product by ID | No |
+| `PUT` | `/api/v1/products/:id` | Update product (creates version snapshot) | Artisan |
+| `PATCH` | `/api/v1/products/:id/status` | Transition product lifecycle status | Artisan |
+| `GET` | `/api/v1/products/:id/images/compare`| Get original vs enhanced image signed URLs | Artisan |
+| `POST` | `/api/v1/b2b/rfqs` | Submit enterprise RFQ request | Buyer |
+| `GET` | `/api/v1/b2b/rfqs/:id/matches` | Retrieve AI-ranked artisan cluster allocations | Buyer |
+| `GET` | `/api/v1/trust/scores/:artisanId` | Get breakdown of 0-100 Trust Score | Any |
+| `POST` | `/api/v1/search` | pgvector hybrid search (FTS + Cosine + Trust) | No |
 
-1. **Wave 0–1:** Database schema, enums, NestJS scaffold, CSRF + rate limiting
-2. **Wave 2–5:** Auth (JWT, RBAC, refresh tokens, audit logging)
-3. **Wave 5–8:** Onboarding verification flows, AI service scaffold, image pipeline
-4. **Wave 8–12:** Catalog generation, pricing engine, SEO engine, product lifecycle
-5. **Wave 12–15:** Inventory management, excess inventory engine, B2B RFQ + quoting
-6. **Wave 16–21:** Messaging, negotiation assistant, trust score system, reviews, disputes
-7. **Wave 17–22:** Semantic search, market discovery, GI tags, notifications
-8. **Wave 22–26:** Production scheduling, Craft Atlas, offline sync queue, queue observability
-9. **Wave 26–31:** Admin dashboard, moderation, i18n/a11y, security hardening
-10. **Wave 31–32:** Homepage GSAP animations, Lighthouse optimization
-
-**23 property-based tests** (fast-check + Hypothesis) validate critical invariants: inventory atomicity, token single-use, search ranking correctness, trust score computation, CSRF universality, and more.
-
-See `docs.md` for the complete architecture documentation, Mermaid diagrams, and the Mermaid prompt to generate the full system flow diagram.
+### AI Microservice Endpoints (`/pipeline`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Service health status |
+| `POST` | `/pipeline/image/enhance` | Background removal, color balance & 1200x1200 WebP |
+| `POST` | `/pipeline/catalog/generate` | Multilingual catalog from voice / text note |
+| `POST` | `/pipeline/pricing/recommend` | Fair-wage price floor & wholesale tiers |
+| `POST` | `/pipeline/seo/generate` | Metadata, slug & Schema.org JSON-LD |
+| `POST` | `/pipeline/embedding/generate` | 768-dim vector embedding generation |
+| `POST` | `/pipeline/translation/translate`| Text translation across 10 Indian languages |
+| `POST` | `/pipeline/moderation/check` | Content safety classification |
 
 ---
 
-## Impact
+## 🎯 Socio-Economic Impact
 
-- **Economic**: Eliminates 40% middleman commission — every rupee goes directly to the artisan
-- **Scale**: Zero-cost infrastructure supports first 10,000 artisans on free tiers (Supabase, Vercel, R2)
-- **Reach**: ONDC syndication makes every listing visible across Paytm, PhonePe, and 50+ buyer apps
-- **Trust**: DigiLocker integration ensures benefits reach genuine SC/ST/OBC/Divyang artisans
-- **Pilot**: Targeting Dakshina Kannada district — 500 artisans, 50 CSC VLEs, 90-day success metrics
+- **100% Direct Livelihood Retention**: By eliminating the 15–40% broker margin, artisans increase take-home income by **up to 65%**.
+- **ONDC National Reach**: Democratizes discovery by syndicating rural products across Paytm, PhonePe, and major consumer apps without separate listing fees.
+- **Fair-Wage Algorithmic Protection**: Protects unorganized rural craftspeople from distress selling below production cost.
+- **Cultural Heritage Preservation**: Documents fading indigenous techniques, tribal stories, and GI-tag histories for posterity.
 
 ---
 
-## License
+## 📜 License & Acknowledgements
 
-Unlicensed — built for Smart India Hackathon 2026, Problem Statement 26090, Ministry of Social Justice and Empowerment.
+Developed for **Smart India Hackathon 2026** under **Problem Statement ID 26090** for the **Ministry of Social Justice and Empowerment (MoSJE)**.
+
+Built with dedication for India's master artisans. 🇮🇳

@@ -4,6 +4,7 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ProductService } from './product.service';
+import { AiServiceClient } from '../../common/services/ai-service.client';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles, CurrentUser } from '../../common/decorators';
@@ -11,14 +12,51 @@ import { UserRole, ProductStatus } from '../../common/enums';
 import { JwtPayload } from '../../common/interfaces';
 
 @Controller('products')
-@UseGuards(JwtAuthGuard)
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly aiClient: AiServiceClient,
+  ) {}
+
+  /** POST /products/preview-ai — instant live AI studio generation */
+  @Post('preview-ai')
+  async previewAi(
+    @Body() body: { textInput?: string; voiceBase64?: string; categoryHint?: string; materialCost?: number; labourHours?: number; hourlyWage?: number; overhead?: number },
+  ) {
+    const catalog = await this.aiClient.generateCatalog({
+      textInput: body.textInput,
+      voiceBase64: body.voiceBase64,
+      categoryHint: body.categoryHint,
+    });
+
+    const baseCost = (body.materialCost ?? 200) + (body.labourHours ?? 10) * (body.hourlyWage ?? 50) + (body.overhead ?? 50);
+
+    const pricing = await this.aiClient.recommendPricing({
+      category: catalog.category,
+      material: catalog.material,
+      technique: catalog.technique,
+      baseCost,
+    });
+
+    const seo = await this.aiClient.generateSeo({
+      productId: 'preview-id',
+      title: catalog.title,
+      descriptionEn: catalog.description_en,
+      category: catalog.category,
+      material: catalog.material,
+    });
+
+    return {
+      catalog,
+      pricing,
+      seo,
+    };
+  }
 
   /** POST /products — create product and enqueue AI pipeline */
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ARTISAN)
-  @UseGuards(RolesGuard)
   @UseInterceptors(FilesInterceptor('images', 10))
   createProduct(
     @CurrentUser() user: JwtPayload,
@@ -27,7 +65,7 @@ export class ProductController {
   ) {
     return this.productService.createProduct(
       user.sub,
-      files.map((f) => ({
+      (files || []).map((f) => ({
         buffer: f.buffer,
         mimetype: f.mimetype,
         originalname: f.originalname,
@@ -46,8 +84,8 @@ export class ProductController {
 
   /** PUT /products/:id */
   @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ARTISAN)
-  @UseGuards(RolesGuard)
   updateProduct(
     @CurrentUser() user: JwtPayload,
     @Param('id') id: string,
@@ -58,8 +96,8 @@ export class ProductController {
 
   /** PATCH /products/:id/status */
   @Patch(':id/status')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ARTISAN)
-  @UseGuards(RolesGuard)
   changeStatus(
     @CurrentUser() user: JwtPayload,
     @Param('id') id: string,
@@ -70,16 +108,16 @@ export class ProductController {
 
   /** DELETE /products/:id */
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ARTISAN)
-  @UseGuards(RolesGuard)
   deleteProduct(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.productService.deleteProduct(user.sub, id);
   }
 
   /** POST /products/bulk */
   @Post('bulk')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ARTISAN)
-  @UseGuards(RolesGuard)
   bulkUpdateStatus(
     @CurrentUser() user: JwtPayload,
     @Body() body: { productIds: string[]; targetStatus: ProductStatus },
@@ -89,16 +127,16 @@ export class ProductController {
 
   /** GET /products/:id/images/compare */
   @Get(':id/images/compare')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ARTISAN)
-  @UseGuards(RolesGuard)
   getImageComparison(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.productService.getImageComparison(user.sub, id);
   }
 
   /** POST /products/:id/images/revert */
   @Post(':id/images/revert')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ARTISAN)
-  @UseGuards(RolesGuard)
   revertImage(
     @CurrentUser() user: JwtPayload,
     @Param('id') id: string,

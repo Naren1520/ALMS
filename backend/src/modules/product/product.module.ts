@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
 import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
+import { ProductProcessor } from './product.processor';
 import { ProductEntity } from './entities/product.entity';
 import { ProductMediaEntity } from './entities/product-media.entity';
 import { ProductAttributeSnapshotEntity } from './entities/product-attribute-snapshot.entity';
@@ -25,7 +26,7 @@ import { CommonModule } from '../../common/common.module';
     CommonModule,
   ],
   controllers: [ProductController],
-  providers: [ProductService],
+  providers: [ProductService, ProductProcessor],
   exports: [ProductService, TypeOrmModule],
 })
 export class ProductModule {}
