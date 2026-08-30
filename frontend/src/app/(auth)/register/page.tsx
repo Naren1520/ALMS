@@ -56,6 +56,7 @@ function RegisterFormComponent() {
   const onSubmit = async (data: RegisterForm) => {
     setServerError(null);
     try {
+      // 1. Register Account
       const res = await fetch('/api/v1/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,31 +64,40 @@ function RegisterFormComponent() {
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.message ?? 'Registration failed');
-      setSuccess(true);
+
+      // 2. Auto-login immediately
+      try {
+        const loginRes = await fetch('/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email: data.email, password: data.password }),
+        });
+        const loginBody = await loginRes.json();
+        if (loginRes.ok && loginBody.accessToken) {
+          localStorage.setItem('access_token', loginBody.accessToken);
+          if (loginBody.user) {
+            localStorage.setItem('alms_user', JSON.stringify(loginBody.user));
+          }
+          let destination = '/artisan/create-product';
+          if (data.role === 'BUYER') {
+            destination = '/b2b/rfq';
+          } else if (data.role === 'CONSUMER') {
+            destination = '/explore';
+          }
+          window.location.href = destination;
+          return;
+        }
+      } catch {
+        // If auto-login fails, redirect to login page
+      }
+
+      // Fallback: Redirect to login page
+      window.location.href = '/login';
     } catch (err: unknown) {
       setServerError(err instanceof Error ? err.message : 'Something went wrong during registration.');
     }
   };
-
-  if (success) {
-    return (
-      <div className="w-full max-w-md bg-[#1C0E07] border border-white/15 p-8 sm:p-10 rounded-2xl shadow-2xl text-center space-y-4">
-        <div className="w-16 h-16 rounded-full bg-[#FA7A21]/10 border border-[#FA7A21]/30 flex items-center justify-center mx-auto mb-4 text-[#FA7A21]">
-          <MailCheck size={32} />
-        </div>
-        <h1 className="font-serif text-3xl font-normal text-white">Check Your Email</h1>
-        <p className="text-stone-400 text-sm leading-relaxed font-light">
-          We&apos;ve sent an activation link to your email address. Please verify to access your ALMS portal.
-        </p>
-        <div className="pt-2">
-          <Link href="/login" className="w-full py-3.5 px-6 bg-[#FA7A21] hover:bg-[#e06917] text-white font-semibold text-xs rounded-full shadow-md transition-all inline-flex items-center justify-center gap-2">
-            <span>Proceed to Sign In</span>
-            <ArrowRight size={14} />
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full max-w-lg bg-[#1C0E07] border border-white/15 p-8 sm:p-10 md:p-12 rounded-2xl shadow-2xl relative text-white">
@@ -124,7 +134,16 @@ function RegisterFormComponent() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+      <form
+        action="#"
+        method="POST"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(onSubmit)(e);
+        }}
+        noValidate
+        className="space-y-5"
+      >
         {/* Role Selector Cards */}
         <div>
           <label className="block text-xs uppercase tracking-wider font-semibold text-stone-100 mb-2">

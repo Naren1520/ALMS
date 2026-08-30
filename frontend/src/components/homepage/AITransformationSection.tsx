@@ -120,7 +120,7 @@ export default function AITransformationSection() {
           <div className="grid grid-cols-2 gap-4">
             <div className="relative aspect-[3/4] overflow-hidden border border-white/10 rounded-2xl bg-black/40">
               <Image
-                src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=70&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&q=70&auto=format&fit=crop"
                 alt="Raw unedited artisan smartphone photo"
                 fill
                 className="object-cover grayscale contrast-75"
@@ -133,7 +133,7 @@ export default function AITransformationSection() {
             </div>
             <div className="relative aspect-[3/4] overflow-hidden border-2 border-[#FA7A21]/60 rounded-2xl shadow-xl shadow-orange-950/40">
               <Image
-                src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=95&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&q=95&auto=format&fit=crop"
                 alt="AI-enhanced studio listing"
                 fill
                 className="object-cover contrast-105"

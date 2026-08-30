@@ -25,7 +25,7 @@ const CRAFT_TEMPLATES = [
   {
     name: 'Bastar Bamboo Basket',
     region: 'Bastar, Chhattisgarh',
-    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80&auto=format&fit=crop',
     voiceSample: '"ನಮ್ಮ ಕಾಡಿನ ಬಿದಿರಿನಿಂದ ಕೈಯಿಂದ ನೇಯ್ದ ಬುಟ್ಟಿ ಇದು. ಮೂರು ದಿನ ಬೇಕಾಗುತ್ತದೆ..."',
     material: 'Natural Seasoned Bamboo & Cane',
     labourHours: 18,
@@ -36,7 +36,7 @@ const CRAFT_TEMPLATES = [
   {
     name: 'Mithila Madhubani Silk Scroll',
     region: 'Mithila, Bihar',
-    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&q=80&auto=format&fit=crop',
     voiceSample: '"ई मिथिलाक पारंपरिक कोहबर पेंटिंग छी। सात दिन लागल..."',
     material: 'Tussar Silk & Organic Floral Dyes',
     labourHours: 42,
@@ -47,7 +47,7 @@ const CRAFT_TEMPLATES = [
   {
     name: 'Jaipur Blue Pottery Urn',
     region: 'Jaipur, Rajasthan',
-    image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&q=80&auto=format&fit=crop',
     voiceSample: '"यो जयपुर को खास ब्लू पॉटरी को फूलदान छे। क्वार्ट्ज और कांच स्यूं बण्यो है..."',
     material: 'Ground Quartz, Fuller Earth & Cobalt Glaze',
     labourHours: 24,
@@ -63,6 +63,7 @@ export default function CreateProductPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(0);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(CRAFT_TEMPLATES[0].image);
   const [showEnhanced, setShowEnhanced] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
   const [selectedDialect, setSelectedDialect] = useState('Hindi');
   const [recording, setRecording] = useState(false);
   const [voiceFile, setVoiceFile] = useState<File | null>(null);
@@ -76,6 +77,7 @@ export default function CreateProductPage() {
   const [submitting, setSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const mediaRef = useRef<MediaRecorder | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -94,12 +96,44 @@ export default function CreateProductPage() {
     setOverhead(t.overhead);
   }
 
+  function handleFileProcess(file: File) {
+    const isImage = file.type.startsWith('image/') || /\.(jpe?g|png|webp|avif|gif|bmp|svg)$/i.test(file.name);
+    if (!isImage) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (typeof event.target?.result === 'string') {
+        setImagePreviewUrl(event.target.result);
+        setSelectedTemplate(null);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
   function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? []);
-    if (files.length > 0) {
-      const url = URL.createObjectURL(files[0]);
-      setImagePreviewUrl(url);
-      setSelectedTemplate(null);
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileProcess(file);
+      e.target.value = ''; // Reset input to allow re-uploading same file
+    }
+  }
+
+  function handleDrop(e: React.DragEvent<HTMLElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    let file: File | null = null;
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      file = e.dataTransfer.files[0];
+    } else if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      const item = e.dataTransfer.items[0];
+      if (item.kind === 'file') {
+        file = item.getAsFile();
+      }
+    }
+    
+    if (file) {
+      handleFileProcess(file);
     }
   }
 
@@ -259,17 +293,35 @@ export default function CreateProductPage() {
                 </button>
               </div>
               <div className="grid md:grid-cols-2 gap-6 items-center">
-                <div
-                  className="border-2 border-dashed border-white/20 hover:border-[#FA7A21]/60 bg-black/30 hover:bg-[#FA7A21]/5 rounded-2xl p-8 text-center cursor-pointer transition-all group flex flex-col items-center min-h-[240px] justify-center"
-                  onClick={() => document.getElementById('craft-photo-input')?.click()}
+                <label
+                  htmlFor="craft-photo-input"
+                  className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all group flex flex-col items-center min-h-[240px] justify-center select-none ${
+                    isDragging
+                      ? 'border-[#FA7A21] bg-[#FA7A21]/15 scale-[1.01]'
+                      : 'border-white/20 hover:border-[#FA7A21]/60 bg-black/30 hover:bg-[#FA7A21]/5'
+                  }`}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={handleDrop}
                 >
-                  <input id="craft-photo-input" type="file" accept="image/*" className="sr-only" onChange={handleImageUpload} />
-                  <div className="w-14 h-14 rounded-full bg-[#FA7A21]/20 border border-[#FA7A21]/40 flex items-center justify-center text-[#FA7A21] mb-3 group-hover:scale-110 transition-transform">
+                  <input
+                    id="craft-photo-input"
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    onChange={handleImageUpload}
+                  />
+                  <div className="w-14 h-14 rounded-full bg-[#FA7A21]/20 border border-[#FA7A21]/40 flex items-center justify-center text-[#FA7A21] mb-3 group-hover:scale-110 transition-transform pointer-events-none">
                     <UploadCloud size={26} />
                   </div>
-                  <p className="font-serif text-lg text-white font-light">Click to Upload Raw Photo</p>
-                  <p className="text-xs text-stone-300 mt-1">Any budget smartphone photo</p>
-                </div>
+                  <p className="font-serif text-lg text-white font-light pointer-events-none">
+                    {isDragging ? 'Drop Image Here' : 'Click or Drag to Upload Photo'}
+                  </p>
+                  <p className="text-xs text-stone-300 mt-1 pointer-events-none">Supports JPEG, PNG, WebP from any device</p>
+                </label>
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-black/40 shadow-xl">
                   <Image
                     src={imagePreviewUrl}

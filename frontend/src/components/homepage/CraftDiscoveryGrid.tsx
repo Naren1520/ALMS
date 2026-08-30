@@ -12,7 +12,7 @@ const TRIBAL_CRAFTS = [
     region: 'Bastar, Chhattisgarh',
     category: 'Tribal Metallurgy',
     giTagged: true,
-    img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80&auto=format&fit=crop',
     wide: true,
   },
   {
@@ -20,7 +20,7 @@ const TRIBAL_CRAFTS = [
     region: 'Palghar, Maharashtra',
     category: 'Indigenous Murals',
     giTagged: true,
-    img: 'https://images.unsplash.com/photo-1504198266287-1659872e6590?w=800&q=80&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&q=80&auto=format&fit=crop',
     wide: false,
   },
   {
@@ -28,7 +28,7 @@ const TRIBAL_CRAFTS = [
     region: 'Mayurbhanj, Odisha',
     category: 'Sustainable Fibers',
     giTagged: false,
-    img: 'https://images.unsplash.com/photo-1584589167171-541ce45f1eea?w=800&q=80&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80&auto=format&fit=crop',
     wide: false,
   },
   {
@@ -36,7 +36,7 @@ const TRIBAL_CRAFTS = [
     region: 'Mithila, Bihar',
     category: 'Natural Pigment Art',
     giTagged: true,
-    img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&q=80&auto=format&fit=crop',
     wide: false,
   },
   {
@@ -52,7 +52,7 @@ const TRIBAL_CRAFTS = [
     region: 'Jaipur, Rajasthan',
     category: 'Clay-Free Ceramics',
     giTagged: true,
-    img: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80&auto=format&fit=crop',
+    img: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&q=80&auto=format&fit=crop',
     wide: true,
   },
 ];

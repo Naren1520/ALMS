@@ -35,8 +35,26 @@ export default function LoginPage() {
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.message ?? 'Login failed');
-      localStorage.setItem('access_token', body.accessToken);
-      router.push('/dashboard');
+      
+      if (body.accessToken) {
+        localStorage.setItem('access_token', body.accessToken);
+      }
+      if (body.user) {
+        localStorage.setItem('alms_user', JSON.stringify(body.user));
+      }
+
+      // Role-based redirection
+      let destination = '/artisan/create-product';
+      if (body.user?.role === 'BUYER') {
+        destination = '/b2b/rfq';
+      } else if (body.user?.role === 'CONSUMER') {
+        destination = '/explore';
+      } else if (body.user?.role === 'ADMIN' || body.user?.role === 'MODERATOR') {
+        destination = '/craft-atlas';
+      }
+
+      // Use window.location for full state hydration
+      window.location.href = destination;
     } catch (err: unknown) {
       setServerError(err instanceof Error ? err.message : 'Invalid credentials. Please try again.');
     }
@@ -66,7 +84,7 @@ export default function LoginPage() {
             <h1 className="font-serif text-3xl sm:text-4xl font-normal text-white tracking-tight">
               Welcome Back
             </h1>
-            <p className="text-stone-200 text-xs sm:text-sm font-light leading-relaxed">
+            <p className="text-white text-xs sm:text-sm font-light leading-relaxed">
               Sign in to your ALMS artisan, buyer, or government portal
             </p>
           </div>
@@ -81,9 +99,18 @@ export default function LoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+          <form
+            action="#"
+            method="POST"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(onSubmit)(e);
+            }}
+            noValidate
+            className="space-y-5"
+          >
             <div>
-              <label htmlFor="email" className="block text-xs uppercase tracking-wider font-semibold text-stone-100 mb-1.5">
+              <label htmlFor="email" className="block text-xs uppercase tracking-wider font-semibold text-white mb-1.5">
                 Email Address
               </label>
               <div className="relative">
@@ -94,14 +121,14 @@ export default function LoginPage() {
                   autoComplete="email"
                   {...register('email', { required: 'Email is required' })}
                   placeholder="artisan@domain.com"
-                  className="w-full bg-black/30 border border-white/15 pl-11 pr-4 py-3 text-xs text-white placeholder:text-stone-400 rounded-xl focus:outline-none focus:border-[#FA7A21]/60 transition-colors"
+                  className="w-full bg-black/40 border border-white/20 pl-11 pr-4 py-3 text-xs text-white placeholder:text-stone-400 rounded-xl focus:outline-none focus:border-[#FA7A21] focus:ring-1 focus:ring-[#FA7A21] transition-all"
                   style={{ borderColor: errors.email ? '#dc2626' : undefined }}
                   aria-describedby={errors.email ? 'email-err' : undefined}
                   aria-invalid={!!errors.email}
                 />
               </div>
               {errors.email && (
-                <p id="email-err" className="mt-1 text-xs text-red-600">
+                <p id="email-err" className="mt-1 text-xs text-red-400">
                   {errors.email.message}
                 </p>
               )}
@@ -109,10 +136,10 @@ export default function LoginPage() {
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label htmlFor="password" className="block text-xs uppercase tracking-wider font-semibold text-stone-100">
+                <label htmlFor="password" className="block text-xs uppercase tracking-wider font-semibold text-white">
                   Password
                 </label>
-                <Link href="/forgot-password" className="text-[11px] text-stone-300 hover:text-amber-200 transition-colors">
+                <Link href="/forgot-password" className="text-[11px] text-white hover:text-amber-200 transition-colors">
                   Forgot?
                 </Link>
               </div>
@@ -124,14 +151,14 @@ export default function LoginPage() {
                   autoComplete="current-password"
                   {...register('password', { required: 'Password is required' })}
                   placeholder="••••••••••••"
-                  className="w-full bg-black/30 border border-white/15 pl-11 pr-4 py-3 text-xs text-white placeholder:text-stone-400 rounded-xl focus:outline-none focus:border-[#FA7A21]/60 transition-colors"
+                  className="w-full bg-black/40 border border-white/20 pl-11 pr-4 py-3 text-xs text-white placeholder:text-stone-400 rounded-xl focus:outline-none focus:border-[#FA7A21] focus:ring-1 focus:ring-[#FA7A21] transition-all"
                   style={{ borderColor: errors.password ? '#dc2626' : undefined }}
                   aria-describedby={errors.password ? 'pwd-err' : undefined}
                   aria-invalid={!!errors.password}
                 />
               </div>
               {errors.password && (
-                <p id="pwd-err" className="mt-1 text-xs text-red-600">
+                <p id="pwd-err" className="mt-1 text-xs text-red-400">
                   {errors.password.message}
                 </p>
               )}
@@ -148,7 +175,7 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-8 pt-6 border-t border-white/10 text-center">
-            <p className="text-xs text-stone-300">
+            <p className="text-xs text-white">
               Don&apos;t have an account yet?{' '}
               <Link href="/register" className="font-semibold text-[#FA7A21] hover:text-amber-200 transition-colors ml-1">
                 Create an account

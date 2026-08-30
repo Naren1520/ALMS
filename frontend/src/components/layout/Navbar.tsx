@@ -53,9 +53,9 @@ export default function Navbar() {
               <span className="font-serif text-2xl md:text-[26px] font-bold tracking-tight text-[#24130A] group-hover:text-[#FA7A21] transition-colors">
                 ALMS
               </span>
-              <span className="text-[9px] font-sans font-semibold uppercase tracking-wider px-2 py-0.5 bg-orange-100 text-[#8B2500] rounded-full border border-orange-200">
+              {/* <span className="text-[9px] font-sans font-semibold uppercase tracking-wider px-2 py-0.5 bg-orange-100 text-[#8B2500] rounded-full border border-orange-200">
                 MoSJE Govt.
-              </span>
+              </span> */}
             </div>
             <span
               className="text-stone-600 font-sans mt-0.5 font-normal text-[0.65rem] tracking-[0.04em]"

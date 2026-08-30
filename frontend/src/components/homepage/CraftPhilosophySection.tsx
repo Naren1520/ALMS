@@ -56,7 +56,7 @@ export default function CraftPhilosophySection() {
         <div className="relative h-[520px] lg:h-[620px] overflow-hidden bg-cream">
           <div ref={imgRef} className="absolute inset-0 scale-110">
             <Image
-              src="https://images.unsplash.com/photo-1604423975750-e1e9a729ef8e?w=1200&q=85&auto=format&fit=crop"
+              src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=1200&q=85&auto=format&fit=crop"
               alt="Artisan hands shaping a clay vessel using traditional pottery techniques"
               fill
               className="object-cover object-center"

@@ -51,7 +51,7 @@ export default function FinalCTASection() {
       {/* Full-bleed background image */}
       <div ref={bgRef} className="absolute inset-0 z-0 scale-110">
         <Image
-          src="https://images.unsplash.com/photo-1504198266287-1659872e6590?w=2000&q=85&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=2000&q=85&auto=format&fit=crop"
           alt=""
           fill
           className="object-cover object-center"
