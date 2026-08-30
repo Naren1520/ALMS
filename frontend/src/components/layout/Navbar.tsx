@@ -10,25 +10,25 @@ const ROLE_NAV_LINKS: Record<string, Array<{ label: string; href: string }>> = {
   ARTISAN: [
     { label: 'AI Studio', href: '/artisan/create-product' },
     { label: 'Marketplace', href: '/explore' },
-    { label: 'B2B RFQ Quotes', href: '/b2b/rfq' },
-    { label: 'Artisan Directory', href: '/artisans' },
+    { label: 'B2B RFQ ', href: '/b2b/rfq' },
+    { label: 'Artisan ', href: '/artisans' },
     { label: 'Impact & Trust', href: '/impact' },
   ],
   BUYER: [
     { label: 'B2B RFQ ', href: '/b2b/rfq' },
-    { label: 'Wholesale Catalog', href: '/explore' },
-    { label: 'Craft Clusters', href: '/craft-atlas' },
-    { label: 'Artisans Guild', href: '/artisans' },
+    { label: 'Wholesale ', href: '/explore' },
+    { label: 'Craft ', href: '/craft-atlas' },
+    { label: 'Artisans ', href: '/artisans' },
     { label: 'ESG Impact', href: '/impact' },
   ],
   CONSUMER: [
-    { label: 'Explore Marketplace', href: '/explore' },
-    { label: 'Craft Atlas', href: '/craft-atlas' },
-    { label: 'Master Artisans', href: '/artisans' },
+    { label: ' Marketplace', href: '/explore' },
+    { label: 'Craft ', href: '/craft-atlas' },
+    { label: ' Artisans', href: '/artisans' },
     { label: 'Heritage Stories', href: '/impact' },
   ],
   DEFAULT: [
-    { label: 'Explore Crafts', href: '/explore' },
+    { label: 'Explore ', href: '/explore' },
     { label: 'Craft Atlas', href: '/craft-atlas' },
     { label: 'Artisans', href: '/artisans' },
     { label: 'Impact', href: '/impact' },
@@ -58,8 +58,8 @@ export default function Navbar() {
   }, []);
 
   const activeUser = mounted ? user : null;
-  const navLinks = activeUser?.role && ROLE_NAV_LINKS[activeUser.role] 
-    ? ROLE_NAV_LINKS[activeUser.role] 
+  const navLinks = activeUser?.role && ROLE_NAV_LINKS[activeUser.role]
+    ? ROLE_NAV_LINKS[activeUser.role]
     : ROLE_NAV_LINKS['DEFAULT'];
 
   return (
@@ -68,7 +68,7 @@ export default function Navbar() {
       style={{ fontFamily: 'var(--font-sans)' }}
     >
       <div className="container max-w-7xl mx-auto flex items-center justify-between h-16 md:h-20 px-4 sm:px-6">
-        
+
         {/* Typographic Brand Logo */}
         <Link
           href="/"
@@ -85,7 +85,7 @@ export default function Navbar() {
               priority
             />
           </div>
-          
+
           <div className="flex flex-col leading-none">
             <div className="flex items-center gap-2">
               <span className="font-serif text-2xl md:text-[26px] font-bold tracking-tight text-[#24130A] group-hover:text-[#FA7A21] transition-colors">
@@ -108,11 +108,10 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-3.5 py-1.5 text-sm font-semibold tracking-normal transition-all duration-200 rounded-full ${
-                  isActive
+                className={`relative px-3.5 py-1.5 text-sm font-semibold tracking-normal transition-all duration-200 rounded-full ${isActive
                     ? 'text-[#FA7A21] font-bold'
                     : 'text-stone-800 hover:text-[#FA7A21]'
-                }`}
+                  }`}
               >
                 {link.label}
                 {isActive && (
@@ -125,7 +124,7 @@ export default function Navbar() {
 
         {/* Desktop Controls */}
         <div className="hidden md:flex items-center gap-3">
-          
+
           {/* Language Selector Dropdown */}
           <div className="relative">
             <button
@@ -147,9 +146,8 @@ export default function Navbar() {
                       setCurrentLang(lang);
                       setLangDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-4 py-2 text-xs hover:bg-orange-50 hover:text-[#FA7A21] transition-colors cursor-pointer ${
-                      currentLang === lang ? 'font-semibold text-[#FA7A21] bg-orange-50/60' : 'text-stone-700'
-                    }`}
+                    className={`w-full text-left px-4 py-2 text-xs hover:bg-orange-50 hover:text-[#FA7A21] transition-colors cursor-pointer ${currentLang === lang ? 'font-semibold text-[#FA7A21] bg-orange-50/60' : 'text-stone-700'
+                      }`}
                   >
                     {lang}
                   </button>
@@ -239,16 +237,15 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`font-serif text-lg py-2.5 px-4 flex items-center justify-between rounded-2xl transition-all ${
-                    isActive ? 'text-[#FA7A21] bg-orange-50 font-bold' : 'text-stone-800 hover:bg-stone-50 hover:text-[#FA7A21]'
-                  }`}
+                  className={`font-serif text-lg py-2.5 px-4 flex items-center justify-between rounded-2xl transition-all ${isActive ? 'text-[#FA7A21] bg-orange-50 font-bold' : 'text-stone-800 hover:bg-stone-50 hover:text-[#FA7A21]'
+                    }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   <span>{link.label}</span>
                 </Link>
               );
             })}
-            
+
             <div className="flex gap-3 pt-4 mt-2 border-t border-stone-200">
               {activeUser ? (
                 <button
@@ -270,7 +267,7 @@ export default function Navbar() {
                   Log In
                 </Link>
               )}
-              
+
               {activeUser?.role === 'ARTISAN' ? (
                 <Link
                   href="/artisan/create-product"

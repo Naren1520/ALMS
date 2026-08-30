@@ -191,11 +191,6 @@ function ExploreContent() {
   const [directOrderPlaced, setDirectOrderPlaced] = useState(false);
 
   function handleOrderDirect(product: CraftProduct) {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
-    if (!token) {
-      router.push(`/login?redirect=/explore`);
-      return;
-    }
     setDirectOrderProduct(product);
     setDirectOrderPlaced(false);
   }
