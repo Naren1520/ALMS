@@ -1,34 +1,35 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Globe, Menu, X, Sparkles, User, Briefcase, ShoppingBag } from 'lucide-react';
 
-const ROLE_NAV_LINKS: Record<string, Array<{ label: string; href: string }>> = {
+export type UserRoleType = 'ARTISAN' | 'BUYER' | 'CONSUMER' | 'DEFAULT';
+
+const ROLE_NAV_LINKS: Record<UserRoleType, Array<{ label: string; href: string }>> = {
   ARTISAN: [
     { label: 'AI Studio', href: '/artisan/create-product' },
-    { label: 'Marketplace', href: '/explore' },
-    { label: 'B2B RFQ ', href: '/b2b/rfq' },
-    { label: 'Artisan ', href: '/artisans' },
+    { label: 'My Products', href: '/explore' },
+    { label: 'B2B RFQ Quotes', href: '/b2b/rfq' },
     { label: 'Impact & Trust', href: '/impact' },
   ],
   BUYER: [
-    { label: 'B2B RFQ ', href: '/b2b/rfq' },
-    { label: 'Wholesale ', href: '/explore' },
-    { label: 'Craft ', href: '/craft-atlas' },
-    { label: 'Artisans ', href: '/artisans' },
+    { label: 'B2B RFQ Engine', href: '/b2b/rfq' },
+    { label: 'Wholesale Catalog', href: '/explore' },
+    { label: 'Craft Clusters', href: '/craft-atlas' },
+    { label: 'Artisans Guild', href: '/artisans' },
     { label: 'ESG Impact', href: '/impact' },
   ],
   CONSUMER: [
-    { label: ' Marketplace', href: '/explore' },
-    { label: 'Craft ', href: '/craft-atlas' },
-    { label: ' Artisans', href: '/artisans' },
+    { label: 'Explore Marketplace', href: '/explore' },
+    { label: 'Craft Atlas', href: '/craft-atlas' },
+    { label: 'Master Artisans', href: '/artisans' },
     { label: 'Heritage Stories', href: '/impact' },
   ],
   DEFAULT: [
-    { label: 'Explore ', href: '/explore' },
+    { label: 'Explore Crafts', href: '/explore' },
     { label: 'Craft Atlas', href: '/craft-atlas' },
     { label: 'Artisans', href: '/artisans' },
     { label: 'Impact', href: '/impact' },
@@ -45,22 +46,56 @@ export default function Navbar() {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<{ email: string; role: string } | null>(null);
 
-  useEffect(() => {
-    setMounted(true);
+  const syncUserFromStorage = useCallback(() => {
     try {
       const stored = localStorage.getItem('alms_user');
       if (stored) {
-        setUser(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        if (parsed && typeof parsed === 'object' && parsed.role) {
+          setUser(parsed);
+          return;
+        }
       }
-    } catch (e) {
-      console.error('Error parsing user data', e);
+      setUser(null);
+    } catch {
+      setUser(null);
     }
   }, []);
 
-  const activeUser = mounted ? user : null;
-  const navLinks = activeUser?.role && ROLE_NAV_LINKS[activeUser.role]
-    ? ROLE_NAV_LINKS[activeUser.role]
-    : ROLE_NAV_LINKS['DEFAULT'];
+  useEffect(() => {
+    setMounted(true);
+    syncUserFromStorage();
+
+    const handleStorageChange = () => syncUserFromStorage();
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('alms-auth-change', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('alms-auth-change', handleStorageChange);
+    };
+  }, [pathname, syncUserFromStorage]);
+
+  // Determine normalized role (ARTISAN, BUYER, CONSUMER, or DEFAULT)
+  const activeRole: UserRoleType = (() => {
+    if (!mounted || !user?.role) return 'DEFAULT';
+    const clean = String(user.role).trim().toUpperCase();
+    if (clean === 'ARTISAN' || clean === 'BUYER' || clean === 'CONSUMER') {
+      return clean as UserRoleType;
+    }
+    return 'DEFAULT';
+  })();
+
+  const navLinks = ROLE_NAV_LINKS[activeRole];
+
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem('alms_user');
+      localStorage.removeItem('access_token');
+      window.dispatchEvent(new Event('alms-auth-change'));
+    } catch {}
+    window.location.href = '/login';
+  };
 
   return (
     <header
@@ -68,7 +103,7 @@ export default function Navbar() {
       style={{ fontFamily: 'var(--font-sans)' }}
     >
       <div className="container max-w-7xl mx-auto flex items-center justify-between h-16 md:h-20 px-4 sm:px-6">
-
+        
         {/* Typographic Brand Logo */}
         <Link
           href="/"
@@ -108,10 +143,11 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-3.5 py-1.5 text-sm font-semibold tracking-normal transition-all duration-200 rounded-full ${isActive
+                className={`relative px-3.5 py-1.5 text-sm font-semibold tracking-normal transition-all duration-200 rounded-full ${
+                  isActive
                     ? 'text-[#FA7A21] font-bold'
                     : 'text-stone-800 hover:text-[#FA7A21]'
-                  }`}
+                }`}
               >
                 {link.label}
                 {isActive && (
@@ -124,13 +160,12 @@ export default function Navbar() {
 
         {/* Desktop Controls */}
         <div className="hidden md:flex items-center gap-3">
-
+          
           {/* Language Selector Dropdown */}
           <div className="relative">
             <button
-              type="button"
               onClick={() => setLangDropdownOpen((v) => !v)}
-              className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-stone-200 bg-stone-50 text-stone-700 hover:text-[#24130A] hover:border-stone-400 transition-all cursor-pointer shadow-2xs"
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full border border-stone-200 text-stone-700 hover:bg-stone-50 hover:border-stone-300 transition-colors cursor-pointer"
               aria-label="Select Language"
             >
               <Globe size={13} className="text-[#FA7A21]" />
@@ -138,7 +173,7 @@ export default function Navbar() {
             </button>
 
             {langDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-36 bg-white border border-stone-200 py-1.5 z-50 rounded-2xl shadow-xl animate-in fade-in zoom-in-95">
+              <div className="absolute right-0 mt-2 w-36 bg-white border border-stone-200 rounded-2xl shadow-xl py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                 {LANGUAGES.map((lang) => (
                   <button
                     key={lang}
@@ -146,8 +181,9 @@ export default function Navbar() {
                       setCurrentLang(lang);
                       setLangDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-4 py-2 text-xs hover:bg-orange-50 hover:text-[#FA7A21] transition-colors cursor-pointer ${currentLang === lang ? 'font-semibold text-[#FA7A21] bg-orange-50/60' : 'text-stone-700'
-                      }`}
+                    className={`w-full text-left px-4 py-2 text-xs hover:bg-orange-50 hover:text-[#FA7A21] transition-colors cursor-pointer ${
+                      currentLang === lang ? 'font-semibold text-[#FA7A21] bg-orange-50/60' : 'text-stone-700'
+                    }`}
                   >
                     {lang}
                   </button>
@@ -157,20 +193,16 @@ export default function Navbar() {
           </div>
 
           {/* User Controls */}
-          {activeUser ? (
+          {mounted && user ? (
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-stone-200 bg-stone-50" title={activeUser.email}>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-stone-200 bg-stone-50" title={user.email}>
                 <div className="w-6 h-6 rounded-full bg-[#FA7A21]/20 flex items-center justify-center text-[#FA7A21]">
                   <User size={13} />
                 </div>
-                <span className="text-[10px] font-semibold text-stone-700 uppercase tracking-wider">{activeUser.role}</span>
+                <span className="text-[10px] font-semibold text-stone-700 uppercase tracking-wider">{activeRole}</span>
               </div>
               <button
-                onClick={() => {
-                  localStorage.removeItem('alms_user');
-                  localStorage.removeItem('access_token');
-                  window.location.href = '/login';
-                }}
+                onClick={handleLogout}
                 className="text-xs font-semibold text-stone-500 hover:text-red-500 transition-colors cursor-pointer"
               >
                 Log Out
@@ -189,7 +221,7 @@ export default function Navbar() {
           )}
 
           {/* Role-Adaptive Signature CTA */}
-          {activeUser?.role === 'ARTISAN' ? (
+          {activeRole === 'ARTISAN' ? (
             <Link
               href="/artisan/create-product"
               className="px-5 py-2 text-xs font-semibold bg-[#FA7A21] text-white hover:bg-[#e06917] transition-all duration-200 rounded-full shadow-md hover:shadow-orange-500/25 flex items-center gap-1.5 transform hover:-translate-y-0.5 active:translate-y-0"
@@ -197,7 +229,7 @@ export default function Navbar() {
               <Sparkles size={13} />
               <span>AI Studio</span>
             </Link>
-          ) : activeUser?.role === 'BUYER' ? (
+          ) : activeRole === 'BUYER' ? (
             <Link
               href="/b2b/rfq"
               className="px-5 py-2 text-xs font-semibold bg-[#8B2500] text-white hover:bg-[#721e00] transition-all duration-200 rounded-full shadow-md hover:shadow-amber-900/25 flex items-center gap-1.5 transform hover:-translate-y-0.5 active:translate-y-0"
@@ -237,26 +269,23 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`font-serif text-lg py-2.5 px-4 flex items-center justify-between rounded-2xl transition-all ${isActive ? 'text-[#FA7A21] bg-orange-50 font-bold' : 'text-stone-800 hover:bg-stone-50 hover:text-[#FA7A21]'
-                    }`}
+                  className={`font-serif text-lg py-2.5 px-4 flex items-center justify-between rounded-2xl transition-all ${
+                    isActive ? 'text-[#FA7A21] bg-orange-50 font-bold' : 'text-stone-800 hover:bg-stone-50 hover:text-[#FA7A21]'
+                  }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   <span>{link.label}</span>
                 </Link>
               );
             })}
-
+            
             <div className="flex gap-3 pt-4 mt-2 border-t border-stone-200">
-              {activeUser ? (
+              {mounted && user ? (
                 <button
-                  onClick={() => {
-                    localStorage.removeItem('alms_user');
-                    localStorage.removeItem('access_token');
-                    window.location.href = '/login';
-                  }}
+                  onClick={handleLogout}
                   className="px-4 py-3 text-xs font-semibold border border-stone-300 bg-white text-red-500 hover:bg-red-50 rounded-full flex-1 text-center cursor-pointer"
                 >
-                  Log Out ({activeUser.role})
+                  Log Out ({activeRole})
                 </button>
               ) : (
                 <Link
@@ -267,8 +296,8 @@ export default function Navbar() {
                   Log In
                 </Link>
               )}
-
-              {activeUser?.role === 'ARTISAN' ? (
+              
+              {activeRole === 'ARTISAN' ? (
                 <Link
                   href="/artisan/create-product"
                   className="px-4 py-3 text-xs font-semibold bg-[#FA7A21] text-white rounded-full flex-1 text-center shadow-md hover:bg-[#e06917]"
@@ -276,7 +305,7 @@ export default function Navbar() {
                 >
                   AI Studio
                 </Link>
-              ) : activeUser?.role === 'BUYER' ? (
+              ) : activeRole === 'BUYER' ? (
                 <Link
                   href="/b2b/rfq"
                   className="px-4 py-3 text-xs font-semibold bg-[#8B2500] text-white rounded-full flex-1 text-center shadow-md hover:bg-[#721e00]"

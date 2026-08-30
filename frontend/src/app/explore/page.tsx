@@ -25,6 +25,7 @@ interface CraftProduct {
   isEcoFriendly: boolean;
   leadTime: string;
   material: string;
+  justPublished?: boolean;
 }
 
 const FALLBACK_PRODUCTS: CraftProduct[] = [
@@ -229,11 +230,26 @@ function ExploreContent() {
               material: item.material || 'Natural indigenous materials',
             };
           });
-          setProducts(mapped);
+          let combined = mapped;
+          try {
+            const custom = JSON.parse(localStorage.getItem('alms_custom_products') || '[]');
+            if (Array.isArray(custom) && custom.length > 0) {
+              combined = [...custom, ...mapped];
+            }
+          } catch (e) {
+            console.error('Error reading custom products', e);
+          }
+          setProducts(combined);
           setIsLiveFromSupabase(true);
         }
       } catch (err) {
         console.warn('Using seeded offline cache:', err);
+        try {
+          const custom = JSON.parse(localStorage.getItem('alms_custom_products') || '[]');
+          if (Array.isArray(custom) && custom.length > 0) {
+            setProducts([...custom, ...FALLBACK_PRODUCTS]);
+          }
+        } catch (e) {}
       } finally {
         setLoading(false);
       }
@@ -396,7 +412,12 @@ function ExploreContent() {
                         unoptimized
                       />
                       {/* Badges */}
-                      <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                      <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
+                        {product.justPublished && (
+                          <span className="bg-[#FA7A21] text-white uppercase tracking-wider px-3 py-1 text-[10px] font-bold rounded-full flex items-center gap-1 shadow-lg shadow-orange-500/50">
+                            <Sparkles size={11} className="animate-spin" /> Just Published
+                          </span>
+                        )}
                         {product.giCertified && (
                           <span className="bg-black/70 backdrop-blur-sm text-amber-200 uppercase tracking-wider px-3 py-1 text-[10px] font-bold border border-[#FA7A21]/40 rounded-full flex items-center gap-1">
                             <ShieldCheck size={12} className="text-[#FA7A21]" />
@@ -409,7 +430,7 @@ function ExploreContent() {
                           </span>
                         )}
                       </div>
-                      <span className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md text-amber-200 text-xs font-semibold px-3 py-1 rounded-full border border-white/15">
+                      <span className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md text-amber-200 text-xs font-semibold px-3 py-1 rounded-full border border-white/15 z-10">
                         {product.reliabilityScore}% Reliable
                       </span>
                     </div>

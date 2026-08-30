@@ -53,6 +53,31 @@ export class ProductController {
     };
   }
 
+  /** POST /products/publish-direct — publish directly into Supabase database */
+  @Post('publish-direct')
+  publishDirect(
+    @Body() body: {
+      artisanId?: string;
+      title: string;
+      descriptionEn?: string;
+      descriptionHi?: string;
+      category?: string;
+      material?: string;
+      craftTechnique?: string;
+      retailPrice: number;
+      wholesalePrice: number;
+      moq?: number;
+      inventoryQty?: number;
+      leadTimeDays?: number;
+      giEligible?: boolean;
+      imageUrl?: string;
+      state?: string;
+      district?: string;
+    },
+  ) {
+    return this.productService.publishDirectProduct(body);
+  }
+
   /** POST /products — create product and enqueue AI pipeline */
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
