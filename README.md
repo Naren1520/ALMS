@@ -374,4 +374,6 @@ cd frontend && npm run build
 
 Developed for **Smart India Hackathon 2026** under **Problem Statement ID 26090** for the **Ministry of Social Justice and Empowerment (MoSJE)**.
 
-Built with dedication for India's master artisans. 🇮🇳
+<div align="center">
+  <sub>Built by team AlgoVectors · 2026</sub>
+</div>
