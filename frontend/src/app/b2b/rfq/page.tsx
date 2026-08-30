@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import FolkArtBanner from '@/components/homepage/FolkArtBanner';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import Link from 'next/link';
 import {
@@ -267,6 +268,9 @@ function B2BRfqContent() {
         </div>
       </section>
 
+      {/* Heritage Folk Art Ribbon Divider */}
+      <FolkArtBanner height={75} variant="border-2" alt="Indian heritage tapestry border" />
+
       {/* Progressive Step Progress Bar */}
       <nav aria-label="RFQ Pipeline Stages" className="bg-[#1C0E07] border-y border-white/10 sticky top-16 md:top-20 z-40">
         <div className="container max-w-7xl mx-auto px-4 py-3.5">
@@ -291,14 +295,14 @@ function B2BRfqContent() {
                       ? 'bg-[#FA7A21]/20 border-[#FA7A21] text-white shadow-lg'
                       : isDone
                       ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-300'
-                      : 'bg-black/30 border-white/10 text-stone-400 opacity-60'
+                      : 'bg-black/30 border-white/10 text-white opacity-60'
                   }`}
                 >
                   <div className="flex items-center gap-1.5 font-semibold">
                     {isDone ? <CheckCircle2 size={13} className="text-emerald-400 shrink-0" /> : null}
                     <span className="truncate">{step.label}</span>
                   </div>
-                  <p className="text-[10px] text-stone-300 truncate mt-0.5">{step.sub}</p>
+                  <p className="text-[10px] text-white truncate mt-0.5">{step.sub}</p>
                 </button>
               );
             })}
@@ -319,7 +323,7 @@ function B2BRfqContent() {
                   <div className="border-b border-white/10 pb-4">
                     <span className="text-[11px] uppercase tracking-wider text-[#FA7A21] font-semibold">Stage 1 of 4</span>
                     <h2 className="font-serif text-2xl font-light text-white mt-1">Configure Bulk Demand Specification</h2>
-                    <p className="text-xs text-stone-300 mt-1">
+                    <p className="text-xs text-white mt-1">
                       Select a standard institutional template or customize custom craft dimensions, volume, and target budget.
                     </p>
                   </div>
@@ -343,7 +347,7 @@ function B2BRfqContent() {
                           className="p-3 bg-black/40 border border-white/10 hover:border-[#FA7A21]/60 hover:bg-[#FA7A21]/10 rounded-xl text-left transition-all text-xs cursor-pointer group"
                         >
                           <p className="font-semibold text-white group-hover:text-amber-200">{preset.label}</p>
-                          <p className="text-[11px] text-stone-400 mt-0.5">{preset.qty} units &bull; ₹{preset.budget}/u</p>
+                          <p className="text-[11px] text-white mt-0.5">{preset.qty} units &bull; ₹{preset.budget}/u</p>
                         </button>
                       ))}
                     </div>
@@ -358,7 +362,7 @@ function B2BRfqContent() {
                         type="text"
                         value={rfqTitle}
                         onChange={(e) => setRfqTitle(e.target.value)}
-                        className="w-full p-3.5 bg-black/40 border border-white/15 rounded-xl text-xs text-white placeholder:text-stone-400 focus:outline-none focus:border-[#FA7A21]/60 transition-colors"
+                        className="w-full p-3.5 bg-black/40 border border-white/15 rounded-xl text-xs text-white placeholder:text-white focus:outline-none focus:border-[#FA7A21]/60 transition-colors"
                       />
                     </div>
 
@@ -458,7 +462,7 @@ function B2BRfqContent() {
                       <Calculator size={18} className="text-[#FA7A21]" />
                       <h3 className="font-serif text-lg font-normal text-white">Estimated Sourcing Economics</h3>
                     </div>
-                    <div className="space-y-2.5 text-xs text-stone-200">
+                    <div className="space-y-2.5 text-xs text-white">
                       <div className="flex justify-between py-2 border-b border-white/10">
                         <span>Total Requirement Volume:</span>
                         <span className="font-mono text-white font-bold">{targetQuantity.toLocaleString('en-IN')} units</span>
@@ -484,7 +488,7 @@ function B2BRfqContent() {
                     <div className="flex items-center gap-2 text-emerald-400 font-semibold uppercase tracking-wider text-[10px]">
                       <ShieldCheck size={14} /> Anti-Exploitation Floor Guarantee
                     </div>
-                    <p className="text-stone-300 leading-relaxed">
+                    <p className="text-white leading-relaxed">
                       ALMS algorithmically disallows buyer predatory bidding below standard labor and raw material benchmarks. All orders are backed by an automated 3-stage milestone escrow smart contract.
                     </p>
                   </div>
@@ -504,7 +508,7 @@ function B2BRfqContent() {
                       <h2 className="font-serif text-2xl sm:text-3xl font-light text-white mt-1">
                         Algorithmic Multi-Cluster Allocation Matrix
                       </h2>
-                      <p className="text-xs text-stone-300 mt-1">
+                      <p className="text-xs text-white mt-1">
                         Demand of <strong className="text-white">{targetQuantity} units</strong> split across 3 verified cooperatives for zero delivery bottleneck.
                       </p>
                     </div>
@@ -532,7 +536,7 @@ function B2BRfqContent() {
                               {cluster.state}
                             </span>
                             <h3 className="font-serif text-lg text-white font-normal mt-1 leading-snug">{cluster.name}</h3>
-                            <p className="text-[11px] text-stone-400 mt-0.5">{cluster.district} Cluster &bull; {cluster.artisansCount} Artisans</p>
+                            <p className="text-[11px] text-white mt-0.5">{cluster.district} Cluster &bull; {cluster.artisansCount} Artisans</p>
                           </div>
                           <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/60 px-2 py-1 rounded-lg border border-emerald-500/40">
                             {cluster.matchScore}% Match
@@ -541,26 +545,26 @@ function B2BRfqContent() {
 
                         <div className="p-3 bg-black/40 border border-white/10 rounded-xl space-y-2 text-xs">
                           <div className="flex justify-between">
-                            <span className="text-stone-400">Allocated Quota:</span>
+                            <span className="text-white">Allocated Quota:</span>
                             <span className="font-mono text-white font-bold">{cluster.allocatedUnits} units</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-stone-400">Unit Price:</span>
+                            <span className="text-white">Unit Price:</span>
                             <span className="font-mono text-[#FA7A21] font-bold">₹{cluster.unitPrice}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-stone-400">Monthly Throughput:</span>
-                            <span className="font-mono text-stone-200">{cluster.maxMonthlyCapacity} units/mo</span>
+                            <span className="text-white">Monthly Throughput:</span>
+                            <span className="font-mono text-white">{cluster.maxMonthlyCapacity} units/mo</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-stone-400">Delivery Lead:</span>
-                            <span className="font-mono text-stone-200">{cluster.deliveryDays} Days</span>
+                            <span className="text-white">Delivery Lead:</span>
+                            <span className="font-mono text-white">{cluster.deliveryDays} Days</span>
                           </div>
                         </div>
 
                         {customizingCluster && (
                           <div className="space-y-1">
-                            <label className="block text-[10px] uppercase font-bold text-stone-300">
+                            <label className="block text-[10px] uppercase font-bold text-white">
                               Adjust Quota: {cluster.allocatedUnits}
                             </label>
                             <input
@@ -582,15 +586,15 @@ function B2BRfqContent() {
                   <div className="p-5 bg-black/40 border border-white/15 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
                     <div className="flex flex-wrap items-center gap-6">
                       <div>
-                        <p className="text-[10px] uppercase text-stone-400">Total Allocated Units</p>
+                        <p className="text-[10px] uppercase text-white">Total Allocated Units</p>
                         <p className="font-mono text-lg font-bold text-white mt-0.5">{totalAllocated} / {targetQuantity}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase text-stone-400">Weighted Average Unit Cost</p>
+                        <p className="text-[10px] uppercase text-white">Weighted Average Unit Cost</p>
                         <p className="font-mono text-lg font-bold text-[#FA7A21] mt-0.5">₹{weightedUnitPrice} / unit</p>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase text-stone-400">Total Estimated Contract</p>
+                        <p className="text-[10px] uppercase text-white">Total Estimated Contract</p>
                         <p className="font-mono text-lg font-bold text-emerald-400 mt-0.5">₹{totalEstimatedCost.toLocaleString('en-IN')}</p>
                       </div>
                     </div>
@@ -628,7 +632,7 @@ function B2BRfqContent() {
                     <h2 className="font-serif text-2xl sm:text-3xl font-light text-white mt-1">
                       ONDC Smart Contract Escrow Terms
                     </h2>
-                    <p className="text-xs text-stone-300 mt-1">
+                    <p className="text-xs text-white mt-1">
                       Automated 3-stage milestone release guarantees artisan working capital while protecting buyer delivery risk.
                     </p>
                   </div>
@@ -636,19 +640,19 @@ function B2BRfqContent() {
                   {/* Contract Snapshot */}
                   <div className="p-4 bg-black/40 border border-white/10 rounded-2xl grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
                     <div>
-                      <p className="text-stone-400">Total Purchase Order:</p>
+                      <p className="text-white">Total Purchase Order:</p>
                       <p className="font-serif text-base font-semibold text-white mt-0.5">{totalAllocated} Handcrafted Units</p>
                     </div>
                     <div>
-                      <p className="text-stone-400">Aggregated Total:</p>
+                      <p className="text-white">Aggregated Total:</p>
                       <p className="font-serif text-base font-semibold text-[#FA7A21] mt-0.5">₹{totalEstimatedCost.toLocaleString('en-IN')}</p>
                     </div>
                     <div>
-                      <p className="text-stone-400">Lead Delivery Window:</p>
+                      <p className="text-white">Lead Delivery Window:</p>
                       <p className="font-serif text-base font-semibold text-white mt-0.5">{maxLeadDays} Days</p>
                     </div>
                     <div>
-                      <p className="text-stone-400">Target Destination:</p>
+                      <p className="text-white">Target Destination:</p>
                       <p className="font-serif text-base font-semibold text-white mt-0.5">{deliveryCity}, {deliveryState}</p>
                     </div>
                   </div>
@@ -665,7 +669,7 @@ function B2BRfqContent() {
                         </div>
                         <div>
                           <p className="font-semibold text-white text-sm">Milestone 1: 30% Raw Material Advance</p>
-                          <p className="text-stone-300 mt-0.5">Disbursed immediately to cluster bank accounts to purchase brass ingots &amp; coal.</p>
+                          <p className="text-white mt-0.5">Disbursed immediately to cluster bank accounts to purchase brass ingots &amp; coal.</p>
                         </div>
                       </div>
                       <span className="font-mono font-bold text-emerald-400 text-base">
@@ -681,7 +685,7 @@ function B2BRfqContent() {
                         </div>
                         <div>
                           <p className="font-semibold text-white text-sm">Milestone 2: 40% Mid-Production QC Inspection</p>
-                          <p className="text-stone-300 mt-0.5">Released after MoSJE certified field auditor verifies 50% finished batch dimensions &amp; casting purity.</p>
+                          <p className="text-white mt-0.5">Released after MoSJE certified field auditor verifies 50% finished batch dimensions &amp; casting purity.</p>
                         </div>
                       </div>
                       <span className="font-mono font-bold text-amber-300 text-base">
@@ -697,7 +701,7 @@ function B2BRfqContent() {
                         </div>
                         <div>
                           <p className="font-semibold text-white text-sm">Milestone 3: 30% Consolidated Final Dispatch</p>
-                          <p className="text-stone-300 mt-0.5">Released upon barcode arrival scan at buyer warehouse in {deliveryCity}.</p>
+                          <p className="text-white mt-0.5">Released upon barcode arrival scan at buyer warehouse in {deliveryCity}.</p>
                         </div>
                       </div>
                       <span className="font-mono font-bold text-amber-300 text-base">
@@ -753,7 +757,7 @@ function B2BRfqContent() {
                       <button
                         type="button"
                         onClick={downloadPOJson}
-                        className="px-4 py-2.5 bg-black/40 border border-white/20 hover:border-[#FA7A21]/60 text-stone-200 hover:text-white text-xs font-semibold rounded-full transition-all flex items-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2.5 bg-black/40 border border-white/20 hover:border-[#FA7A21]/60 text-white hover:text-white text-xs font-semibold rounded-full transition-all flex items-center gap-1.5 cursor-pointer"
                       >
                         <Download size={13} />
                         <span>Export Contract Manifest</span>
@@ -764,19 +768,19 @@ function B2BRfqContent() {
                   {/* Summary Bar */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-black/40 border border-white/10 p-4 rounded-2xl text-xs">
                     <div>
-                      <p className="text-stone-400">Total Units:</p>
+                      <p className="text-white">Total Units:</p>
                       <p className="font-mono text-base font-bold text-white mt-0.5">{totalAllocated} Units</p>
                     </div>
                     <div>
-                      <p className="text-stone-400">Total Escrow Pool:</p>
+                      <p className="text-white">Total Escrow Pool:</p>
                       <p className="font-mono text-base font-bold text-[#FA7A21] mt-0.5">₹{totalEstimatedCost.toLocaleString('en-IN')}</p>
                     </div>
                     <div>
-                      <p className="text-stone-400">Participating Clusters:</p>
+                      <p className="text-white">Participating Clusters:</p>
                       <p className="font-mono text-base font-bold text-emerald-400 mt-0.5">3 Artisan Collectives</p>
                     </div>
                     <div>
-                      <p className="text-stone-400">Destination:</p>
+                      <p className="text-white">Destination:</p>
                       <p className="font-mono text-base font-bold text-white mt-0.5">{deliveryCity}</p>
                     </div>
                   </div>
@@ -804,7 +808,7 @@ function B2BRfqContent() {
                         </div>
                         <h4 className="font-serif text-lg text-white mt-1">Raw Material Advance</h4>
                         <p className="font-mono text-xs text-[#FA7A21] font-bold mt-0.5">₹{Math.round(totalEstimatedCost * 0.3).toLocaleString('en-IN')}</p>
-                        <p className="text-xs text-stone-300 mt-2">Enables 3 clusters to buy raw materials without predatory local moneylenders.</p>
+                        <p className="text-xs text-white mt-2">Enables 3 clusters to buy raw materials without predatory local moneylenders.</p>
 
                         {!advancePaid ? (
                           <button
@@ -833,14 +837,14 @@ function B2BRfqContent() {
                               <CheckCircle size={11} /> Auditor Assigned
                             </span>
                           ) : (
-                            <span className="text-[10px] text-stone-400 bg-black/40 px-2 py-0.5 rounded-md font-semibold">
+                            <span className="text-[10px] text-white bg-black/40 px-2 py-0.5 rounded-md font-semibold">
                               Awaiting Mid-Term
                             </span>
                           )}
                         </div>
                         <h4 className="font-serif text-lg text-white mt-1">MoSJE Quality Audit</h4>
                         <p className="font-mono text-xs text-[#FA7A21] font-bold mt-0.5">₹{Math.round(totalEstimatedCost * 0.4).toLocaleString('en-IN')}</p>
-                        <p className="text-xs text-stone-300 mt-2">Field quality inspector visits Bastar &amp; Kondagaon casting sites for batch sample test.</p>
+                        <p className="text-xs text-white mt-2">Field quality inspector visits Bastar &amp; Kondagaon casting sites for batch sample test.</p>
 
                         {!qcAuditScheduled ? (
                           <button
@@ -862,15 +866,15 @@ function B2BRfqContent() {
                       <div className="p-5 rounded-2xl border bg-[#24130A] border-white/10">
                         <div className="flex justify-between items-start">
                           <span className="text-[10px] uppercase font-bold text-amber-300">Stage 3 (30%)</span>
-                          <span className="text-[10px] text-stone-400 bg-black/40 px-2 py-0.5 rounded-md font-semibold">
+                          <span className="text-[10px] text-white bg-black/40 px-2 py-0.5 rounded-md font-semibold">
                             Scheduled on Dispatch
                           </span>
                         </div>
                         <h4 className="font-serif text-lg text-white mt-1">Final Consolidated Delivery</h4>
                         <p className="font-mono text-xs text-[#FA7A21] font-bold mt-0.5">₹{Math.round(totalEstimatedCost * 0.3).toLocaleString('en-IN')}</p>
-                        <p className="text-xs text-stone-300 mt-2">Integrated logistics vehicle collects from all 3 clusters and delivers to {deliveryCity}.</p>
+                        <p className="text-xs text-white mt-2">Integrated logistics vehicle collects from all 3 clusters and delivers to {deliveryCity}.</p>
                         
-                        <div className="mt-4 text-[11px] text-stone-400 font-mono bg-black/30 p-2.5 rounded-xl border border-white/10 flex items-center gap-1.5">
+                        <div className="mt-4 text-[11px] text-white font-mono bg-black/30 p-2.5 rounded-xl border border-white/10 flex items-center gap-1.5">
                           <Truck size={13} className="text-[#FA7A21]" />
                           <span>Hub: Raipur Central Hub</span>
                         </div>
@@ -906,6 +910,8 @@ function B2BRfqContent() {
           </ScrollReveal>
         </div>
       </main>
+
+      <FolkArtBanner height={65} variant="border-4" alt="Indian heritage tapestry border ribbon" />
 
       <Footer />
     </>

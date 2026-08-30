@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import FolkArtBanner from '@/components/homepage/FolkArtBanner';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -328,6 +329,9 @@ function ExploreContent() {
           </div>
         </div>
       </section>
+
+      {/* Heritage Folk Art Ribbon Divider */}
+      <FolkArtBanner height={75} variant="border-3" alt="Indian heritage tapestry border" />
 
       <main className="bg-[#2B1810] text-white font-sans pb-0 min-h-screen">
         <div className="container max-w-7xl py-14">
@@ -656,6 +660,9 @@ function ExploreContent() {
           </div>
         </div>
       )}
+
+      {/* Bottom Heritage Ribbon */}
+      <FolkArtBanner height={65} variant="border-1" alt="Heritage tapestry border" />
 
       <Footer />
     </>

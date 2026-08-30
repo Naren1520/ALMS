@@ -93,7 +93,7 @@ export default function ImpactPreviewSection() {
       </div>
 
       {/* Folk Art Banner on Bottom */}
-      <FolkArtBanner height={90} />
+      <FolkArtBanner height={90} variant="border-4" />
     </section>
   );
 }

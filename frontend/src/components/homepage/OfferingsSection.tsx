@@ -47,8 +47,8 @@ const ALMS_OFFERINGS = [
 export default function OfferingsSection() {
   return (
     <section id="offerings" className="relative bg-[#2B1810] text-white">
-      {/* Folk Art Banner on top matching Screenshot 1 */}
-      <FolkArtBanner height={85} />
+      {/* Folk Art Banner on top matching background cut */}
+      <FolkArtBanner height={85} variant="border-2" />
 
       <div className="container py-20 md:py-28">
         {/* Main Section Heading */}

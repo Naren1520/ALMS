@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Camera, Mic, Calculator, CheckCircle2, Sparkles, Volume2, ArrowRight, ShieldCheck, AlertTriangle, RefreshCw, Code2 } from 'lucide-react';
 
 interface CraftPreset {
@@ -284,6 +285,29 @@ export default function LiveAIStudioDemo() {
                     <Sparkles size={11} /> AI Enhanced &bull; 0.8s
                   </div>
                 )}
+              </div>
+
+              {/* Action Banner to full AI Studio Analyzer */}
+              <div className="md:col-span-2 p-5 bg-gradient-to-r from-amber-950/80 via-[#2B1810] to-orange-950/80 border-2 border-[#FA7A21] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+                <div className="space-y-1 text-center sm:text-left">
+                  <div className="flex items-center justify-center sm:justify-start gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#FA7A21] animate-ping" />
+                    <p className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                      Live AI Craft &amp; Market Valuation Studio
+                    </p>
+                  </div>
+                  <p className="text-xs text-white">
+                    Upload your own custom smartphone photo, extract GI metadata, and compute defensible B2C/B2B fair-wage price floors.
+                  </p>
+                </div>
+                <Link
+                  href="/artisan/create-product"
+                  className="px-6 py-3 bg-gradient-to-r from-[#FA7A21] via-orange-500 to-amber-500 hover:from-[#e06917] hover:to-orange-600 text-white font-bold text-xs rounded-full shadow-lg shadow-orange-500/30 transition-all flex items-center gap-2 shrink-0 transform hover:-translate-y-0.5"
+                >
+                  <Sparkles size={15} />
+                  <span>🧠 Open Full AI Studio &amp; Upload Craft</span>
+                  <ArrowRight size={15} />
+                </Link>
               </div>
             </div>
           )}

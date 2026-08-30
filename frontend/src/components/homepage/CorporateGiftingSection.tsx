@@ -158,8 +158,8 @@ export default function CorporateGiftingSection() {
         </div>
       </div>
 
-      {/* Full-width Folk Art Banner on Bottom Matching Screenshot 1 */}
-      <FolkArtBanner height={90} />
+      {/* Full-width Folk Art Banner on Bottom Matching background cut */}
+      <FolkArtBanner height={90} variant="border-3" />
     </section>
   );
 }
