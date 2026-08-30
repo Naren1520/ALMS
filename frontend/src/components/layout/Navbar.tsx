@@ -10,12 +10,14 @@ export type UserRoleType = 'ARTISAN' | 'BUYER' | 'CONSUMER' | 'DEFAULT';
 
 const ROLE_NAV_LINKS: Record<UserRoleType, Array<{ label: string; href: string }>> = {
   ARTISAN: [
+    { label: 'Home', href: '/' },
     { label: 'AI Studio', href: '/artisan/create-product' },
     { label: 'My Products', href: '/explore' },
     { label: 'B2B RFQ Quotes', href: '/b2b/rfq' },
     { label: 'Impact & Trust', href: '/impact' },
   ],
   BUYER: [
+    { label: 'Home', href: '/' },
     { label: 'B2B RFQ Engine', href: '/b2b/rfq' },
     { label: 'Wholesale Catalog', href: '/explore' },
     { label: 'Craft Clusters', href: '/craft-atlas' },
@@ -23,12 +25,14 @@ const ROLE_NAV_LINKS: Record<UserRoleType, Array<{ label: string; href: string }
     { label: 'ESG Impact', href: '/impact' },
   ],
   CONSUMER: [
+    { label: 'Home', href: '/' },
     { label: 'Explore Marketplace', href: '/explore' },
     { label: 'Craft Atlas', href: '/craft-atlas' },
     { label: 'Master Artisans', href: '/artisans' },
     { label: 'Heritage Stories', href: '/impact' },
   ],
   DEFAULT: [
+    { label: 'Home', href: '/' },
     { label: 'Explore Crafts', href: '/explore' },
     { label: 'Craft Atlas', href: '/craft-atlas' },
     { label: 'Artisans', href: '/artisans' },
