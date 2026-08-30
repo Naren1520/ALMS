@@ -231,25 +231,34 @@ function ExploreContent() {
               material: item.material || 'Natural indigenous materials',
             };
           });
-          let combined = mapped;
+          const dedupeMap = new Map<string, CraftProduct>();
+          // Insert mapped from Supabase
+          mapped.forEach((item) => dedupeMap.set(item.id, item));
+          
           try {
             const custom = JSON.parse(localStorage.getItem('alms_custom_products') || '[]');
             if (Array.isArray(custom) && custom.length > 0) {
-              combined = [...custom, ...mapped];
+              // Custom items take precedence or are added uniquely
+              custom.forEach((c: CraftProduct) => dedupeMap.set(c.id, c));
             }
           } catch (e) {
             console.error('Error reading custom products', e);
           }
+
+          const combined = Array.from(dedupeMap.values());
           setProducts(combined);
           setIsLiveFromSupabase(true);
         }
       } catch (err) {
         console.warn('Using seeded offline cache:', err);
         try {
+          const dedupeMap = new Map<string, CraftProduct>();
+          FALLBACK_PRODUCTS.forEach(p => dedupeMap.set(p.id, p));
           const custom = JSON.parse(localStorage.getItem('alms_custom_products') || '[]');
           if (Array.isArray(custom) && custom.length > 0) {
-            setProducts([...custom, ...FALLBACK_PRODUCTS]);
+            custom.forEach((c: CraftProduct) => dedupeMap.set(c.id, c));
           }
+          setProducts(Array.from(dedupeMap.values()));
         } catch (e) {}
       } finally {
         setLoading(false);
@@ -402,7 +411,7 @@ function ExploreContent() {
           {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProducts.map((product, index) => (
-              <ScrollReveal key={product.id} delay={(index % 3) * 0.08}>
+              <ScrollReveal key={`${product.id}-${index}`} delay={(index % 3) * 0.08}>
                 <article className="group bg-[#1C0E07] border border-white/10 hover:border-[#FA7A21]/40 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5">
                   <div>
                     {/* Photo with hover zoom */}
