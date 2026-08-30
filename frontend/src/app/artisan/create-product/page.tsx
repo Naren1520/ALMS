@@ -24,6 +24,7 @@ import {
 const CRAFT_TEMPLATES = [
   {
     name: 'Bastar Bamboo Basket',
+    category: 'Natural Basketry',
     region: 'Bastar, Chhattisgarh',
     image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80&auto=format&fit=crop',
     voiceSample: '"ನಮ್ಮ ಕಾಡಿನ ಬಿದಿರಿನಿಂದ ಕೈಯಿಂದ ನೇಯ್ದ ಬುಟ್ಟಿ ಇದು. ಮೂರು ದಿನ ಬೇಕಾಗುತ್ತದೆ..."',
@@ -35,6 +36,7 @@ const CRAFT_TEMPLATES = [
   },
   {
     name: 'Mithila Madhubani Silk Scroll',
+    category: 'Folk Paintings',
     region: 'Mithila, Bihar',
     image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&q=80&auto=format&fit=crop',
     voiceSample: '"ई मिथिलाक पारंपरिक कोहबर पेंटिंग छी। सात दिन लागल..."',
@@ -46,6 +48,7 @@ const CRAFT_TEMPLATES = [
   },
   {
     name: 'Jaipur Blue Pottery Urn',
+    category: 'Blue Pottery',
     region: 'Jaipur, Rajasthan',
     image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&q=80&auto=format&fit=crop',
     voiceSample: '"यो जयपुर को खास ब्लू पॉटरी को फूलदान छे। क्वार्ट्ज और कांच स्यूं बण्यो है..."',
@@ -60,7 +63,13 @@ const CRAFT_TEMPLATES = [
 const DIALECTS = ['Hindi', 'ಕನ್ನಡ (Kannada)', 'বাংলা (Bengali)', 'தமிழ் (Tamil)', 'मराठी (Marathi)', 'ગુજરાતી (Gujarati)'];
 
 export default function CreateProductPage() {
-  const [selectedTemplate, setSelectedTemplate] = useState<number | null>(0);
+  const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
+  const [isCustomUpload, setIsCustomUpload] = useState<boolean>(true);
+  const [customTitle, setCustomTitle] = useState<string>('');
+  const [customCategory, setCustomCategory] = useState<string>('Dokra & Brass');
+  const [customRegion, setCustomRegion] = useState<string>('Bastar, Chhattisgarh');
+  const [customArtisanName, setCustomArtisanName] = useState<string>('Master Artisan Collective');
+  const [customMaterial, setCustomMaterial] = useState<string>('Natural Indigenous Material');
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(CRAFT_TEMPLATES[0].image);
   const [showEnhanced, setShowEnhanced] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
@@ -68,11 +77,11 @@ export default function CreateProductPage() {
   const [recording, setRecording] = useState(false);
   const [voiceFile, setVoiceFile] = useState<File | null>(null);
   const [voiceSeconds, setVoiceSeconds] = useState(0);
-  const [textInput, setTextInput] = useState(CRAFT_TEMPLATES[0].voiceSample);
-  const [materialCost, setMaterialCost] = useState<number>(CRAFT_TEMPLATES[0].materialCost);
-  const [labourHours, setLabourHours] = useState<number>(CRAFT_TEMPLATES[0].labourHours);
-  const [hourlyWage, setHourlyWage] = useState<number>(CRAFT_TEMPLATES[0].hourlyWage);
-  const [overhead, setOverhead] = useState<number>(CRAFT_TEMPLATES[0].overhead);
+  const [textInput, setTextInput] = useState('Authentic handmade traditional craft item with natural pigments and zero-carbon ancestral methods.');
+  const [materialCost, setMaterialCost] = useState<number>(350);
+  const [labourHours, setLabourHours] = useState<number>(14);
+  const [hourlyWage, setHourlyWage] = useState<number>(55);
+  const [overhead, setOverhead] = useState<number>(80);
   const [jobStatus, setJobStatus] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -88,12 +97,24 @@ export default function CreateProductPage() {
   function applyTemplate(index: number) {
     const t = CRAFT_TEMPLATES[index];
     setSelectedTemplate(index);
+    setIsCustomUpload(false);
+    setCustomTitle(t.name);
+    setCustomCategory(t.category);
+    setCustomRegion(t.region);
+    setCustomMaterial(t.material);
     setImagePreviewUrl(t.image);
     setTextInput(t.voiceSample);
     setMaterialCost(t.materialCost);
     setLabourHours(t.labourHours);
     setHourlyWage(t.hourlyWage);
     setOverhead(t.overhead);
+  }
+
+  function activateCustomMode() {
+    setSelectedTemplate(null);
+    setIsCustomUpload(true);
+    setCustomTitle('');
+    setTextInput('');
   }
 
   function handleFileProcess(file: File) {
@@ -109,18 +130,25 @@ export default function CreateProductPage() {
         if (typeof event.target?.result === 'string') {
           setImagePreviewUrl(event.target.result);
           setSelectedTemplate(null);
+          setIsCustomUpload(true);
+          if (!customTitle) {
+            const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+            setCustomTitle(cleanName.charAt(0).toUpperCase() + cleanName.slice(1));
+          }
         }
       };
       reader.onerror = () => {
         const url = URL.createObjectURL(file);
         setImagePreviewUrl(url);
         setSelectedTemplate(null);
+        setIsCustomUpload(true);
       };
       reader.readAsDataURL(file);
     } catch {
       const url = URL.createObjectURL(file);
       setImagePreviewUrl(url);
       setSelectedTemplate(null);
+      setIsCustomUpload(true);
     }
   }
 
@@ -199,18 +227,21 @@ export default function CreateProductPage() {
     }
 
     try {
-      let catalogTitle = 'Bastar Dokra Bell Metal Sculpture';
-      let descEn = textInput;
+      let finalTitle = customTitle.trim() || 'Bastar Dokra Bell Metal Sculpture';
+      let descEn = textInput || 'Authentic handmade masterpiece created by master artisan with natural materials.';
       let descHi = 'पारंपरिक हस्तनिर्मित उत्कृष्ट कृति।';
-      let category = selectedTemplate !== null ? CRAFT_TEMPLATES[selectedTemplate]?.name : 'Dokra & Brass';
-      let craftTechnique = 'Lost Wax Bell Metal Casting';
+      let category = customCategory || (selectedTemplate !== null ? CRAFT_TEMPLATES[selectedTemplate]?.name : 'Dokra & Brass');
+      let craftTechnique = 'Authentic Traditional Crafting Technique';
+      const regionParts = (customRegion || 'Bastar, Chhattisgarh').split(',');
+      const district = regionParts[0]?.trim() || 'Bastar';
+      const state = regionParts[1]?.trim() || 'Chhattisgarh';
 
       // 1. Generate AI catalog & pricing
       const res = await fetch('/api/v1/products/preview-ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          textInput,
+          textInput: descEn,
           materialCost,
           labourHours,
           hourlyWage,
@@ -221,7 +252,9 @@ export default function CreateProductPage() {
 
       if (res.ok) {
         const data = await res.json();
-        catalogTitle = data.catalog?.title || catalogTitle;
+        if (!customTitle.trim()) {
+          finalTitle = data.catalog?.title || finalTitle;
+        }
         descEn = data.catalog?.description_en || descEn;
         descHi = data.catalog?.description_hi || descHi;
         craftTechnique = data.catalog?.technique || craftTechnique;
@@ -234,11 +267,11 @@ export default function CreateProductPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            title: catalogTitle,
+            title: finalTitle,
             descriptionEn: descEn,
             descriptionHi: descHi,
             category: category,
-            material: 'Authentic Bell Metal & Natural Wax Clay Mould',
+            material: customMaterial || 'Authentic Handcrafted Natural Materials',
             craftTechnique: craftTechnique,
             retailPrice: recommendedRetail,
             wholesalePrice: recommendedWholesale,
@@ -247,8 +280,8 @@ export default function CreateProductPage() {
             leadTimeDays: 12,
             giEligible: true,
             imageUrl: imagePreviewUrl,
-            state: 'Chhattisgarh',
-            district: 'Bastar',
+            state: state,
+            district: district,
           }),
         });
         if (dbRes.ok) {
@@ -262,17 +295,17 @@ export default function CreateProductPage() {
       setJobStatus(
         savedSupabaseId 
           ? `✓ Uploaded to Supabase Database (ID: ${savedSupabaseId}) & Published to ONDC with fair floor ₹${recommendedRetail}!`
-          : `✓ Published "${catalogTitle}" to ONDC & Marketplace with fair price floor ₹${recommendedRetail}!`
+          : `✓ Published "${finalTitle}" to ONDC & Marketplace with fair price floor ₹${recommendedRetail}!`
       );
 
       // Persist product for instant display in /explore marketplace
       const newProduct = {
         id: savedSupabaseId || `custom-artisan-${Date.now()}`,
-        name: catalogTitle,
+        name: finalTitle,
         category: category,
-        region: 'Bastar, Chhattisgarh',
-        state: 'Chhattisgarh',
-        artisan: 'Meera Devi / Bastar Guild',
+        region: customRegion || 'Bastar, Chhattisgarh',
+        state: state,
+        artisan: customArtisanName || 'Master Artisan Collective',
         reliabilityScore: 99,
         retailPrice: recommendedRetail,
         wholesaleMoq: 10,
@@ -281,7 +314,7 @@ export default function CreateProductPage() {
         giCertified: true,
         isEcoFriendly: true,
         leadTime: '12 days',
-        material: 'Authentic Bell Metal & Natural Wax Clay Mould',
+        material: customMaterial || 'Authentic Handcrafted Natural Materials',
         justPublished: true,
         publishedAt: new Date().toISOString(),
       };
@@ -348,16 +381,39 @@ export default function CreateProductPage() {
       <main className="bg-[#2B1810] text-white font-sans pb-0">
         <div className="container max-w-4xl py-14">
 
-          {/* Preset Pickers */}
+          {/* Preset / Custom Work Mode Selector */}
           <ScrollReveal className="mb-8 p-5 bg-[#1C0E07] border border-white/10 rounded-2xl" delay={0.05}>
-            <p className="text-xs font-semibold text-amber-300 uppercase tracking-widest mb-3">Select Sample Craft Preset:</p>
+            <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+              <p className="text-xs font-semibold text-amber-300 uppercase tracking-widest">
+                Choose Mode: Custom Artisan Work or Sample Template
+              </p>
+              <span className="text-[11px] text-stone-400">
+                {isCustomUpload ? '✨ Custom Craft Mode (Upload your own photo)' : '📋 Sample Preset Mode'}
+              </span>
+            </div>
+
             <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={activateCustomMode}
+                className={`px-4 py-2 text-xs rounded-full font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+                  isCustomUpload
+                    ? 'bg-[#FA7A21] text-white font-bold shadow-lg shadow-orange-500/25 ring-2 ring-orange-400/50'
+                    : 'bg-white/10 border border-amber-500/40 text-amber-200 hover:bg-[#FA7A21]/20'
+                }`}
+              >
+                <Sparkles size={13} />
+                <span>+ Upload My Own Custom Craft</span>
+              </button>
+
+              <div className="w-px h-6 bg-white/20 my-auto hidden sm:block" />
+
               {CRAFT_TEMPLATES.map((t, idx) => (
                 <button
                   type="button"
                   key={t.name}
                   onClick={() => applyTemplate(idx)}
-                  className={`px-4 py-2 text-xs rounded-full font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-3.5 py-2 text-xs rounded-full font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
                     selectedTemplate === idx
                       ? 'bg-[#FA7A21] text-white font-semibold shadow-md'
                       : 'bg-white/10 border border-white/20 text-stone-100 hover:border-[#FA7A21]/60 hover:text-amber-200'
@@ -379,16 +435,97 @@ export default function CreateProductPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5 pb-4 border-b border-white/10">
                 <div className="flex items-center gap-2.5">
                   <span className="w-7 h-7 rounded-full bg-[#FA7A21] text-white text-xs font-bold flex items-center justify-center shrink-0">1</span>
-                  <h2 className="font-serif text-xl text-white font-light">AI Image Studio &bull; Photography</h2>
+                  <div>
+                    <h2 className="font-serif text-xl text-white font-light">AI Image Studio &bull; Photography &amp; Details</h2>
+                    <p className="text-xs text-stone-400 mt-0.5">Upload a smartphone photo of your craft — AI enhances lighting, removes background clutter, and extracts metadata.</p>
+                  </div>
                 </div>
                 <button type="button" onClick={() => setShowEnhanced(v => !v)}
-                  className="text-xs text-stone-200 bg-white/5 border border-white/15 hover:border-[#FA7A21]/60 hover:text-amber-200 rounded-full px-3.5 py-1.5 flex items-center gap-1.5 cursor-pointer transition-all">
+                  className="text-xs text-stone-200 bg-white/5 border border-white/15 hover:border-[#FA7A21]/60 hover:text-amber-200 rounded-full px-3.5 py-1.5 flex items-center gap-1.5 cursor-pointer transition-all self-start sm:self-auto">
                   <RefreshCw size={12} className="text-[#FA7A21]" />
                   Toggle {showEnhanced ? 'Raw' : 'AI Enhanced'} View
                 </button>
               </div>
+
+              {/* Custom Craft Metadata Inputs */}
+              <div className="p-5 bg-black/40 border border-amber-500/20 rounded-2xl mb-6 grid sm:grid-cols-2 gap-4">
+                <div className="space-y-1 sm:col-span-2">
+                  <label className="text-xs font-semibold text-amber-200 flex items-center gap-1.5">
+                    <span>Craft Title / Name:</span>
+                    <span className="text-[10px] text-stone-400 font-normal">(e.g., Hand-Carved Walnut Wood Jewellery Box)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={customTitle}
+                    onChange={(e) => {
+                      setCustomTitle(e.target.value);
+                      setIsCustomUpload(true);
+                    }}
+                    placeholder="Enter craft name or let AI generate from photo..."
+                    className="w-full bg-[#1C0E07] border border-white/20 p-3 text-xs text-white rounded-xl focus:outline-none focus:border-[#FA7A21]"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-stone-200">Craft Category:</label>
+                  <select
+                    value={customCategory}
+                    onChange={(e) => {
+                      setCustomCategory(e.target.value);
+                      setIsCustomUpload(true);
+                    }}
+                    className="w-full bg-[#1C0E07] border border-white/20 p-3 text-xs text-white rounded-xl focus:outline-none focus:border-[#FA7A21] cursor-pointer"
+                  >
+                    <option value="Dokra & Brass">Dokra &amp; Brass</option>
+                    <option value="Natural Basketry">Natural Basketry</option>
+                    <option value="Folk Paintings">Folk Paintings</option>
+                    <option value="Ethnic Stationery">Ethnic Stationery</option>
+                    <option value="Handloom & Silk">Handloom &amp; Silk</option>
+                    <option value="Blue Pottery">Blue Pottery</option>
+                    <option value="Terracotta & Pottery">Terracotta &amp; Pottery</option>
+                    <option value="Woodcraft & Carving">Woodcraft &amp; Carving</option>
+                    <option value="Leather & Footwear">Leather &amp; Footwear</option>
+                    <option value="Stone & Marble Craft">Stone &amp; Marble Craft</option>
+                    <option value="Other Heritage Craft">Other Heritage Craft</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-stone-200">Artisan Guild / Collective Name:</label>
+                  <input
+                    type="text"
+                    value={customArtisanName}
+                    onChange={(e) => setCustomArtisanName(e.target.value)}
+                    placeholder="e.g. Bastar Dokra Collective"
+                    className="w-full bg-[#1C0E07] border border-white/20 p-3 text-xs text-white rounded-xl focus:outline-none focus:border-[#FA7A21]"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-stone-200">Region &amp; State:</label>
+                  <input
+                    type="text"
+                    value={customRegion}
+                    onChange={(e) => setCustomRegion(e.target.value)}
+                    placeholder="e.g. Kondagaon, Chhattisgarh"
+                    className="w-full bg-[#1C0E07] border border-white/20 p-3 text-xs text-white rounded-xl focus:outline-none focus:border-[#FA7A21]"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-stone-200">Primary Material Used:</label>
+                  <input
+                    type="text"
+                    value={customMaterial}
+                    onChange={(e) => setCustomMaterial(e.target.value)}
+                    placeholder="e.g. Pure Changthangi Cashmere, Recycled Bell Metal"
+                    className="w-full bg-[#1C0E07] border border-white/20 p-3 text-xs text-white rounded-xl focus:outline-none focus:border-[#FA7A21]"
+                  />
+                </div>
+              </div>
+
               <div className="grid md:grid-cols-2 gap-6 items-center">
-                {/* Upload drop zone — absolute input overlay is bulletproof across all browsers/extensions */}
+                {/* Upload drop zone */}
                 <div
                   className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all flex flex-col items-center min-h-[260px] justify-center select-none overflow-hidden ${
                     isDragging
@@ -400,7 +537,6 @@ export default function CreateProductPage() {
                   onDragLeave={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(false); }}
                   onDrop={handleDrop}
                 >
-                  {/* Transparent file input covers entire drop zone — most reliable approach */}
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -415,19 +551,20 @@ export default function CreateProductPage() {
                       cursor: 'pointer',
                       zIndex: 10,
                     }}
-                    aria-label="Upload craft photo"
+                    aria-label="Upload your custom craft photo"
                   />
                   <div className="w-16 h-16 rounded-full bg-[#FA7A21]/20 border border-[#FA7A21]/40 flex items-center justify-center text-[#FA7A21] mb-3 pointer-events-none">
                     <UploadCloud size={28} />
                   </div>
                   <p className="font-serif text-lg text-white font-light pointer-events-none">
-                    {isDragging ? 'Release to Upload Image' : 'Click or Drag & Drop Photo'}
+                    {isDragging ? 'Release to Upload Image' : 'Click or Drag & Drop Any Photo'}
                   </p>
                   <p className="text-xs text-stone-300 mt-1 pointer-events-none">Supports smartphone photos, JPEG, PNG, WebP</p>
                   <div className="mt-4 px-4 py-1.5 bg-[#FA7A21]/20 border border-[#FA7A21]/40 text-[#FA7A21] text-xs font-medium rounded-full pointer-events-none">
                     <span>Browse Device Files</span>
                   </div>
                 </div>
+
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-black/40 shadow-xl flex flex-col justify-between">
                   <Image
                     src={imagePreviewUrl}
