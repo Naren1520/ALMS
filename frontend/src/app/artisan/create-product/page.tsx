@@ -293,35 +293,55 @@ export default function CreateProductPage() {
                 </button>
               </div>
               <div className="grid md:grid-cols-2 gap-6 items-center">
-                <label
-                  htmlFor="craft-photo-input"
+                <div
+                  role="button"
+                  tabIndex={0}
                   className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all group flex flex-col items-center min-h-[240px] justify-center select-none ${
                     isDragging
-                      ? 'border-[#FA7A21] bg-[#FA7A21]/15 scale-[1.01]'
+                      ? 'border-[#FA7A21] bg-[#FA7A21]/20 scale-[1.02] shadow-lg shadow-orange-500/20'
                       : 'border-white/20 hover:border-[#FA7A21]/60 bg-black/30 hover:bg-[#FA7A21]/5'
                   }`}
-                  onDragOver={(e) => {
+                  onClick={() => fileInputRef.current?.click()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      fileInputRef.current?.click();
+                    }
+                  }}
+                  onDragEnter={(e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     setIsDragging(true);
                   }}
-                  onDragLeave={() => setIsDragging(false)}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.dataTransfer.dropEffect = 'copy';
+                    if (!isDragging) setIsDragging(true);
+                  }}
+                  onDragLeave={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDragging(false);
+                  }}
                   onDrop={handleDrop}
                 >
                   <input
+                    ref={fileInputRef}
                     id="craft-photo-input"
                     type="file"
                     accept="image/*"
-                    className="sr-only"
+                    className="hidden"
                     onChange={handleImageUpload}
                   />
                   <div className="w-14 h-14 rounded-full bg-[#FA7A21]/20 border border-[#FA7A21]/40 flex items-center justify-center text-[#FA7A21] mb-3 group-hover:scale-110 transition-transform pointer-events-none">
                     <UploadCloud size={26} />
                   </div>
                   <p className="font-serif text-lg text-white font-light pointer-events-none">
-                    {isDragging ? 'Drop Image Here' : 'Click or Drag to Upload Photo'}
+                    {isDragging ? 'Drop Photo to Upload Now' : 'Click or Drag & Drop Photo'}
                   </p>
                   <p className="text-xs text-stone-300 mt-1 pointer-events-none">Supports JPEG, PNG, WebP from any device</p>
-                </label>
+                </div>
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-black/40 shadow-xl">
                   <Image
                     src={imagePreviewUrl}
