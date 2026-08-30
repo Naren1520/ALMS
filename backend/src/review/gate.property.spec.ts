@@ -62,7 +62,7 @@ describe('Property 17: Review Submission Gate is Universally Enforced', () => {
         fc.oneof(
           fc.integer({ min: 6, max: 100 }),
           fc.integer({ min: -100, max: 0 }),
-          fc.float({ min: 1.1, max: 4.9 }).filter((n) => !Number.isInteger(n)),
+          fc.double({ min: 1.1, max: 4.9, noNaN: true }).filter((n) => !Number.isInteger(n)),
         ),
         (invalidRating) => {
           const result = canSubmitReview('DELIVERED', 0, invalidRating, 100);

@@ -90,8 +90,8 @@ class CatalogOutput(BaseModel):
 
 
 class CatalogRequest(BaseModel):
-    product_id: str
-    image_keys: list[str]
+    product_id: Optional[str] = None
+    image_keys: list[str] = Field(default_factory=list)
     voice_base64: Optional[str] = None
     voice_mimetype: Optional[str] = None
     text_input: Optional[str] = None
