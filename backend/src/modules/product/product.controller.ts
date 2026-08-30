@@ -76,6 +76,12 @@ export class ProductController {
     );
   }
 
+  /** GET /products — list all published products with artisan info & media */
+  @Get()
+  getAllProducts() {
+    return this.productService.findAllPublished();
+  }
+
   /** GET /products/:id */
   @Get(':id')
   getProduct(@Param('id') id: string) {

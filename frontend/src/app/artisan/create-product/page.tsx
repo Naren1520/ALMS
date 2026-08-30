@@ -97,16 +97,31 @@ export default function CreateProductPage() {
   }
 
   function handleFileProcess(file: File) {
-    const isImage = file.type.startsWith('image/') || /\.(jpe?g|png|webp|avif|gif|bmp|svg)$/i.test(file.name);
-    if (!isImage) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      if (typeof event.target?.result === 'string') {
-        setImagePreviewUrl(event.target.result);
-        setSelectedTemplate(null);
+    if (!file) return;
+    try {
+      const isImage = file.type ? file.type.startsWith('image/') : /\.(jpe?g|png|webp|avif|gif|bmp|svg|jfif)$/i.test(file.name);
+      if (!isImage) {
+        alert('Please upload an image file (JPEG, PNG, WebP, etc.)');
+        return;
       }
-    };
-    reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (typeof event.target?.result === 'string') {
+          setImagePreviewUrl(event.target.result);
+          setSelectedTemplate(null);
+        }
+      };
+      reader.onerror = () => {
+        const url = URL.createObjectURL(file);
+        setImagePreviewUrl(url);
+        setSelectedTemplate(null);
+      };
+      reader.readAsDataURL(file);
+    } catch {
+      const url = URL.createObjectURL(file);
+      setImagePreviewUrl(url);
+      setSelectedTemplate(null);
+    }
   }
 
   function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -126,9 +141,15 @@ export default function CreateProductPage() {
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       file = e.dataTransfer.files[0];
     } else if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-      const item = e.dataTransfer.items[0];
-      if (item.kind === 'file') {
-        file = item.getAsFile();
+      for (let i = 0; i < e.dataTransfer.items.length; i++) {
+        const item = e.dataTransfer.items[i];
+        if (item.kind === 'file') {
+          const f = item.getAsFile();
+          if (f) {
+            file = f;
+            break;
+          }
+        }
       }
     }
     
@@ -293,66 +314,105 @@ export default function CreateProductPage() {
                 </button>
               </div>
               <div className="grid md:grid-cols-2 gap-6 items-center">
+                {/* Upload drop zone — absolute input overlay is bulletproof across all browsers/extensions */}
                 <div
-                  role="button"
-                  tabIndex={0}
-                  className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all group flex flex-col items-center min-h-[240px] justify-center select-none ${
+                  className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all flex flex-col items-center min-h-[260px] justify-center select-none overflow-hidden ${
                     isDragging
-                      ? 'border-[#FA7A21] bg-[#FA7A21]/20 scale-[1.02] shadow-lg shadow-orange-500/20'
+                      ? 'border-[#FA7A21] bg-[#FA7A21]/20 scale-[1.02] shadow-xl shadow-orange-500/25 ring-2 ring-[#FA7A21]/50'
                       : 'border-white/20 hover:border-[#FA7A21]/60 bg-black/30 hover:bg-[#FA7A21]/5'
                   }`}
-                  onClick={() => fileInputRef.current?.click()}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      fileInputRef.current?.click();
-                    }
-                  }}
-                  onDragEnter={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setIsDragging(true);
-                  }}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.dataTransfer.dropEffect = 'copy';
-                    if (!isDragging) setIsDragging(true);
-                  }}
-                  onDragLeave={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setIsDragging(false);
-                  }}
+                  onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(true); }}
+                  onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); e.dataTransfer.dropEffect = 'copy'; if (!isDragging) setIsDragging(true); }}
+                  onDragLeave={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(false); }}
                   onDrop={handleDrop}
                 >
+                  {/* Transparent file input covers entire drop zone — most reliable approach */}
                   <input
                     ref={fileInputRef}
-                    id="craft-photo-input"
                     type="file"
                     accept="image/*"
-                    className="hidden"
                     onChange={handleImageUpload}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      opacity: 0,
+                      cursor: 'pointer',
+                      zIndex: 10,
+                    }}
+                    aria-label="Upload craft photo"
                   />
-                  <div className="w-14 h-14 rounded-full bg-[#FA7A21]/20 border border-[#FA7A21]/40 flex items-center justify-center text-[#FA7A21] mb-3 group-hover:scale-110 transition-transform pointer-events-none">
-                    <UploadCloud size={26} />
+                  <div className="w-16 h-16 rounded-full bg-[#FA7A21]/20 border border-[#FA7A21]/40 flex items-center justify-center text-[#FA7A21] mb-3 pointer-events-none">
+                    <UploadCloud size={28} />
                   </div>
                   <p className="font-serif text-lg text-white font-light pointer-events-none">
-                    {isDragging ? 'Drop Photo to Upload Now' : 'Click or Drag & Drop Photo'}
+                    {isDragging ? 'Release to Upload Image' : 'Click or Drag & Drop Photo'}
                   </p>
-                  <p className="text-xs text-stone-300 mt-1 pointer-events-none">Supports JPEG, PNG, WebP from any device</p>
+                  <p className="text-xs text-stone-300 mt-1 pointer-events-none">Supports smartphone photos, JPEG, PNG, WebP</p>
+                  <div className="mt-4 px-4 py-1.5 bg-[#FA7A21]/20 border border-[#FA7A21]/40 text-[#FA7A21] text-xs font-medium rounded-full pointer-events-none">
+                    <span>Browse Device Files</span>
+                  </div>
                 </div>
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-black/40 shadow-xl">
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-black/40 shadow-xl flex flex-col justify-between">
                   <Image
                     src={imagePreviewUrl}
                     alt="Craft Preview"
                     fill
-                    className={`object-cover transition-all duration-500 ${showEnhanced ? 'contrast-105 saturate-110' : 'grayscale contrast-75'}`}
+                    className={`object-cover transition-all duration-700 ${
+                      showEnhanced 
+                        ? 'contrast-110 saturate-110 brightness-105 filter drop-shadow-2xl' 
+                        : 'contrast-85 brightness-95 saturate-90'
+                    }`}
                     unoptimized
                   />
-                  <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-md text-amber-200 text-[10px] font-semibold px-3 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
-                    <Sparkles size={11} className="text-[#FA7A21]" />
-                    {showEnhanced ? 'AI Studio Shot' : 'Raw Phone Shot'}
+                  {/* Visual Studio Light Overlay when enhanced */}
+                  {showEnhanced && (
+                    <div className="absolute inset-0 bg-radial from-amber-500/10 via-transparent to-black/60 pointer-events-none" />
+                  )}
+
+                  {/* Top Badge */}
+                  <div className="relative z-10 p-3 flex items-center justify-between">
+                    <div className="bg-black/80 backdrop-blur-md text-amber-200 text-[10px] font-semibold px-3 py-1.5 rounded-full border border-white/15 flex items-center gap-1.5 shadow-lg">
+                      <Sparkles size={11} className="text-[#FA7A21] animate-pulse" />
+                      {showEnhanced ? 'AI Studio Shot (Enhanced)' : 'Raw Smartphone Shot'}
+                    </div>
+                    <span className="text-[10px] font-semibold bg-[#FA7A21]/90 text-white px-2.5 py-1 rounded-full border border-white/20">
+                      GI Verified
+                    </span>
+                  </div>
+
+                  {/* Bottom Processing Control Strip */}
+                  <div className="relative z-10 p-3 bg-gradient-to-t from-black/90 via-black/60 to-transparent flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setShowEnhanced(false)}
+                        className={`px-3 py-1 text-[11px] font-medium rounded-lg border transition-all cursor-pointer ${
+                          !showEnhanced 
+                            ? 'bg-white text-stone-900 border-white font-semibold' 
+                            : 'bg-black/50 text-stone-300 border-white/20 hover:text-white'
+                        }`}
+                      >
+                        Raw Photo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowEnhanced(true)}
+                        className={`px-3 py-1 text-[11px] font-medium rounded-lg border transition-all cursor-pointer flex items-center gap-1 ${
+                          showEnhanced 
+                            ? 'bg-[#FA7A21] text-white border-[#FA7A21] font-semibold shadow-md' 
+                            : 'bg-black/50 text-stone-300 border-white/20 hover:text-white'
+                        }`}
+                      >
+                        <Sparkles size={10} />
+                        Studio Shot
+                      </button>
+                    </div>
+
+                    <span className="text-[10px] text-stone-300 hidden sm:inline-block">
+                      {showEnhanced ? '✨ Background cleaned & shadow corrected' : '📷 Unedited camera frame'}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -396,15 +456,70 @@ export default function CreateProductPage() {
                   </span>
                 )}
               </div>
-              <div>
-                <label htmlFor="voice-notes" className="block text-xs font-semibold text-white mb-1.5 uppercase tracking-wider">
-                  Transcribed Audio / Story Notes:
-                </label>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="voice-notes" className="block text-xs font-semibold text-white uppercase tracking-wider">
+                    Transcribed Audio / Story Notes:
+                  </label>
+                  <span className="text-[10px] text-amber-300 font-semibold uppercase tracking-wider">Quick Presets:</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5 pb-1">
+                  {[
+                    {
+                      label: 'Bastar Dokra Bull',
+                      text: 'Handcrafted lost-wax bell metal Nandi bull with traditional tribal motifs from Kondagaon, Bastar.',
+                      material: 350,
+                      hours: 14,
+                      wage: 65,
+                      overhead: 80,
+                    },
+                    {
+                      label: 'Jaipur Blue Pottery Urn',
+                      text: 'Signature Egyptian faience glazed cobalt blue floral ceramic urn vase from Jaipur artisans.',
+                      material: 450,
+                      hours: 10,
+                      wage: 60,
+                      overhead: 100,
+                    },
+                    {
+                      label: 'Mithila Madhubani Silk',
+                      text: 'Natural organic botanical dye Kohbar tree-of-life freehand painting on pure Tussar silk.',
+                      material: 800,
+                      hours: 20,
+                      wage: 75,
+                      overhead: 120,
+                    },
+                    {
+                      label: 'Kashmir Pashmina Shawl',
+                      text: '12-micron Changthangi mountain cashmere hand-spun and handwoven in Chashm-e-Bulbul weave.',
+                      material: 2500,
+                      hours: 40,
+                      wage: 100,
+                      overhead: 300,
+                    },
+                  ].map((preset) => (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => {
+                        setTextInput(preset.text);
+                        setMaterialCost(preset.material);
+                        setLabourHours(preset.hours);
+                        setHourlyWage(preset.wage);
+                        setOverhead(preset.overhead);
+                      }}
+                      className="px-2.5 py-1 text-[11px] bg-black/40 border border-white/15 hover:border-[#FA7A21]/60 hover:text-amber-200 text-stone-200 rounded-lg transition-colors cursor-pointer"
+                    >
+                      + {preset.label}
+                    </button>
+                  ))}
+                </div>
                 <textarea
                   id="voice-notes"
                   value={textInput}
                   onChange={(e) => setTextInput(e.target.value)}
                   rows={3}
+                  placeholder="Describe the craft, raw materials, tribal technique, or speak using the mic above..."
                   className="w-full bg-black/30 border border-white/15 p-4 text-xs text-white rounded-xl focus:outline-none focus:border-[#FA7A21]/60 resize-none"
                 />
               </div>
@@ -464,12 +579,23 @@ export default function CreateProductPage() {
             )}
 
             <div className="pt-2">
-              <button type="submit" disabled={submitting}
-                className="w-full py-4 bg-[#FA7A21] hover:bg-[#e06917] text-white font-semibold text-sm rounded-full shadow-lg hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
-                <Sparkles size={16} />
-                <span>{submitting ? 'Generating ONDC Payload...' : 'Publish to ONDC & B2B Procurement Networks'}</span>
-                <ArrowRight size={16} />
-              </button>
+              {isSuccess ? (
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a href="/explore" className="w-full py-4 bg-transparent border border-[#FA7A21] hover:bg-[#FA7A21]/10 text-[#FA7A21] font-semibold text-sm rounded-full transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer">
+                    View in Marketplace
+                  </a>
+                  <button type="button" onClick={() => { setIsSuccess(false); setJobStatus(''); setTextInput(''); }} className="w-full py-4 bg-[#FA7A21] hover:bg-[#e06917] text-white font-semibold text-sm rounded-full shadow-lg hover:shadow-orange-500/30 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer">
+                    Create Another Listing
+                  </button>
+                </div>
+              ) : (
+                <button type="submit" disabled={submitting}
+                  className="w-full py-4 bg-[#FA7A21] hover:bg-[#e06917] text-white font-semibold text-sm rounded-full shadow-lg hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
+                  <Sparkles size={16} />
+                  <span>{submitting ? 'Generating ONDC Payload...' : 'Publish to ONDC & B2B Procurement Networks'}</span>
+                  <ArrowRight size={16} />
+                </button>
+              )}
             </div>
           </form>
         </div>

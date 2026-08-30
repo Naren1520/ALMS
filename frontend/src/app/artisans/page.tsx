@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, ShieldCheck, Award, ArrowRight, MapPin, Sparkles } from 'lucide-react';
+import { Search, ShieldCheck, Award, ArrowRight, MapPin, Sparkles, Building2 } from 'lucide-react';
 
 interface ArtisanProfile {
   id: string;
@@ -112,10 +113,16 @@ const ARTISANS: ArtisanProfile[] = [
 
 const STATES = ['All States', 'Bihar', 'Chhattisgarh', 'Uttar Pradesh', 'Jammu & Kashmir', 'Rajasthan', 'Karnataka'];
 
-export default function ArtisansPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedState, setSelectedState] = useState('All States');
+function ArtisansContent() {
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('state') || searchParams.get('q') || '');
+  const [selectedState, setSelectedState] = useState(searchParams.get('state') || 'All States');
   const [giOnly, setGiOnly] = useState(false);
+
+  useEffect(() => {
+    const stateParam = searchParams.get('state');
+    if (stateParam) setSelectedState(stateParam);
+  }, [searchParams]);
 
   const filteredArtisans = useMemo(() => {
     return ARTISANS.filter((a) => {
@@ -292,14 +299,20 @@ export default function ArtisansPage() {
                     </div>
                   </div>
 
-                  {/* Card Action Button */}
-                  <div className="p-6 sm:p-7 pt-0">
+                  {/* Card Action Buttons */}
+                  <div className="p-6 sm:p-7 pt-0 flex flex-col sm:flex-row gap-2">
                     <Link
-                      href={`/explore?artisan=${encodeURIComponent(artisan.name)}`}
-                      className="w-full py-3 px-6 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-orange-500/25"
+                      href={`/explore?q=${encodeURIComponent(artisan.craft)}`}
+                      className="flex-1 py-2.5 px-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold rounded-full text-center transition-all flex items-center justify-center gap-1.5"
                     >
-                      <span>Explore Master Catalogue</span>
-                      <ArrowRight size={13} />
+                      <span>Catalogue</span>
+                    </Link>
+                    <Link
+                      href={`/b2b/rfq?craft=${encodeURIComponent(artisan.craft)}&artisan=${encodeURIComponent(artisan.name)}`}
+                      className="flex-1 py-2.5 px-4 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full text-center transition-all flex items-center justify-center gap-1.5 shadow-md hover:shadow-orange-500/25"
+                    >
+                      <span>B2B RFQ</span>
+                      <ArrowRight size={12} />
                     </Link>
                   </div>
                 </article>
@@ -310,5 +323,13 @@ export default function ArtisansPage() {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function ArtisansPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#24130A] text-white flex items-center justify-center">Loading artisans...</div>}>
+      <ArtisansContent />
+    </Suspense>
   );
 }

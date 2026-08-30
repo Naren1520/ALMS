@@ -1,28 +1,66 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Globe, Menu, X, Sparkles, User, BookOpen } from 'lucide-react';
+import { Globe, Menu, X, Sparkles, User, Briefcase, ShoppingBag } from 'lucide-react';
 
-const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'AI Studio', href: '/artisan/create-product' },
-  { label: 'B2B RFQ', href: '/b2b/rfq' },
-  { label: 'Explore Crafts', href: '/explore' },
-  { label: 'Artisans', href: '/artisans' },
-  { label: 'Impact', href: '/impact' },
-  { label: 'Docs', href: '/docs' },
-];
+const ROLE_NAV_LINKS: Record<string, Array<{ label: string; href: string }>> = {
+  ARTISAN: [
+    { label: 'AI Studio', href: '/artisan/create-product' },
+    { label: 'Marketplace', href: '/explore' },
+    { label: 'B2B RFQ Quotes', href: '/b2b/rfq' },
+    { label: 'Artisan Directory', href: '/artisans' },
+    { label: 'Impact & Trust', href: '/impact' },
+  ],
+  BUYER: [
+    { label: 'B2B RFQ ', href: '/b2b/rfq' },
+    { label: 'Wholesale Catalog', href: '/explore' },
+    { label: 'Craft Clusters', href: '/craft-atlas' },
+    { label: 'Artisans Guild', href: '/artisans' },
+    { label: 'ESG Impact', href: '/impact' },
+  ],
+  CONSUMER: [
+    { label: 'Explore Marketplace', href: '/explore' },
+    { label: 'Craft Atlas', href: '/craft-atlas' },
+    { label: 'Master Artisans', href: '/artisans' },
+    { label: 'Heritage Stories', href: '/impact' },
+  ],
+  DEFAULT: [
+    { label: 'Explore Crafts', href: '/explore' },
+    { label: 'Craft Atlas', href: '/craft-atlas' },
+    { label: 'Artisans', href: '/artisans' },
+    { label: 'Impact', href: '/impact' },
+  ],
+};
 
 const LANGUAGES = ['English', 'हिन्दी', 'ಕನ್ನಡ', 'বাংলা', 'தமிழ்'];
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('English');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [user, setUser] = useState<{ email: string; role: string } | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    try {
+      const stored = localStorage.getItem('alms_user');
+      if (stored) {
+        setUser(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.error('Error parsing user data', e);
+    }
+  }, []);
+
+  const activeUser = mounted ? user : null;
+  const navLinks = activeUser?.role && ROLE_NAV_LINKS[activeUser.role] 
+    ? ROLE_NAV_LINKS[activeUser.role] 
+    : ROLE_NAV_LINKS['DEFAULT'];
 
   return (
     <header
@@ -53,9 +91,6 @@ export default function Navbar() {
               <span className="font-serif text-2xl md:text-[26px] font-bold tracking-tight text-[#24130A] group-hover:text-[#FA7A21] transition-colors">
                 ALMS
               </span>
-              {/* <span className="text-[9px] font-sans font-semibold uppercase tracking-wider px-2 py-0.5 bg-orange-100 text-[#8B2500] rounded-full border border-orange-200">
-                MoSJE Govt.
-              </span> */}
             </div>
             <span
               className="text-stone-600 font-sans mt-0.5 font-normal text-[0.65rem] tracking-[0.04em]"
@@ -65,9 +100,9 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Typographic Desktop Navigation Links matching Screenshot 1 */}
+        {/* Dynamic Desktop Navigation Links */}
         <nav className="hidden lg:flex items-center gap-1 xl:gap-2" aria-label="Primary navigation">
-          {NAV_LINKS.map((link) => {
+          {navLinks.map((link) => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href));
             return (
               <Link
@@ -88,7 +123,7 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Desktop Controls (Truly Tribal Pill Theme: Log In & Launch Studio) */}
+        {/* Desktop Controls */}
         <div className="hidden md:flex items-center gap-3">
           
           {/* Language Selector Dropdown */}
@@ -123,25 +158,64 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Truly Tribal Style 'Log In 👤' Pill matching Screenshot 1 */}
-          <Link
-            href="/login"
-            className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border border-stone-300 bg-white text-stone-800 hover:bg-stone-50 hover:border-stone-400 transition-all shadow-2xs"
-          >
-            <span>Log In</span>
-            <div className="w-5 h-5 rounded-full bg-stone-900 flex items-center justify-center text-white">
-              <User size={11} />
+          {/* User Controls */}
+          {activeUser ? (
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-stone-200 bg-stone-50" title={activeUser.email}>
+                <div className="w-6 h-6 rounded-full bg-[#FA7A21]/20 flex items-center justify-center text-[#FA7A21]">
+                  <User size={13} />
+                </div>
+                <span className="text-[10px] font-semibold text-stone-700 uppercase tracking-wider">{activeUser.role}</span>
+              </div>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('alms_user');
+                  localStorage.removeItem('access_token');
+                  window.location.href = '/login';
+                }}
+                className="text-xs font-semibold text-stone-500 hover:text-red-500 transition-colors cursor-pointer"
+              >
+                Log Out
+              </button>
             </div>
-          </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border border-stone-300 bg-white text-stone-800 hover:bg-stone-50 hover:border-stone-400 transition-all shadow-2xs"
+            >
+              <span>Log In</span>
+              <div className="w-5 h-5 rounded-full bg-stone-900 flex items-center justify-center text-white">
+                <User size={11} />
+              </div>
+            </Link>
+          )}
 
-          {/* Signature Studio CTA */}
-          <Link
-            href="/artisan/create-product"
-            className="px-5 py-2 text-xs font-semibold bg-[#FA7A21] text-white hover:bg-[#e06917] transition-all duration-200 rounded-full shadow-md hover:shadow-orange-500/25 flex items-center gap-1.5 transform hover:-translate-y-0.5 active:translate-y-0"
-          >
-            <Sparkles size={13} />
-            <span>Launch Studio</span>
-          </Link>
+          {/* Role-Adaptive Signature CTA */}
+          {activeUser?.role === 'ARTISAN' ? (
+            <Link
+              href="/artisan/create-product"
+              className="px-5 py-2 text-xs font-semibold bg-[#FA7A21] text-white hover:bg-[#e06917] transition-all duration-200 rounded-full shadow-md hover:shadow-orange-500/25 flex items-center gap-1.5 transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <Sparkles size={13} />
+              <span>AI Studio</span>
+            </Link>
+          ) : activeUser?.role === 'BUYER' ? (
+            <Link
+              href="/b2b/rfq"
+              className="px-5 py-2 text-xs font-semibold bg-[#8B2500] text-white hover:bg-[#721e00] transition-all duration-200 rounded-full shadow-md hover:shadow-amber-900/25 flex items-center gap-1.5 transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <Briefcase size={13} />
+              <span>Post Bulk RFQ</span>
+            </Link>
+          ) : (
+            <Link
+              href="/explore"
+              className="px-5 py-2 text-xs font-semibold bg-[#FA7A21] text-white hover:bg-[#e06917] transition-all duration-200 rounded-full shadow-md hover:shadow-orange-500/25 flex items-center gap-1.5 transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <ShoppingBag size={13} />
+              <span>Explore Crafts</span>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Hamburger Button */}
@@ -159,7 +233,7 @@ export default function Navbar() {
       {menuOpen && (
         <div className="lg:hidden bg-white text-stone-900 border-t border-stone-200 shadow-2xl">
           <nav className="container flex flex-col py-6 px-4 gap-1" aria-label="Mobile navigation">
-            {NAV_LINKS.map((link) => {
+            {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href));
               return (
                 <Link
@@ -176,20 +250,52 @@ export default function Navbar() {
             })}
             
             <div className="flex gap-3 pt-4 mt-2 border-t border-stone-200">
-              <Link
-                href="/login"
-                className="px-4 py-3 text-xs font-semibold border border-stone-300 bg-white text-stone-800 rounded-full flex-1 text-center"
-                onClick={() => setMenuOpen(false)}
-              >
-                Log In
-              </Link>
-              <Link
-                href="/artisan/create-product"
-                className="px-4 py-3 text-xs font-semibold bg-[#FA7A21] text-white rounded-full flex-1 text-center shadow-md hover:bg-[#e06917]"
-                onClick={() => setMenuOpen(false)}
-              >
-                Launch Studio
-              </Link>
+              {activeUser ? (
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('alms_user');
+                    localStorage.removeItem('access_token');
+                    window.location.href = '/login';
+                  }}
+                  className="px-4 py-3 text-xs font-semibold border border-stone-300 bg-white text-red-500 hover:bg-red-50 rounded-full flex-1 text-center cursor-pointer"
+                >
+                  Log Out ({activeUser.role})
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  className="px-4 py-3 text-xs font-semibold border border-stone-300 bg-white text-stone-800 rounded-full flex-1 text-center"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Log In
+                </Link>
+              )}
+              
+              {activeUser?.role === 'ARTISAN' ? (
+                <Link
+                  href="/artisan/create-product"
+                  className="px-4 py-3 text-xs font-semibold bg-[#FA7A21] text-white rounded-full flex-1 text-center shadow-md hover:bg-[#e06917]"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  AI Studio
+                </Link>
+              ) : activeUser?.role === 'BUYER' ? (
+                <Link
+                  href="/b2b/rfq"
+                  className="px-4 py-3 text-xs font-semibold bg-[#8B2500] text-white rounded-full flex-1 text-center shadow-md hover:bg-[#721e00]"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Post Bulk RFQ
+                </Link>
+              ) : (
+                <Link
+                  href="/explore"
+                  className="px-4 py-3 text-xs font-semibold bg-[#FA7A21] text-white rounded-full flex-1 text-center shadow-md hover:bg-[#e06917]"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Explore Crafts
+                </Link>
+              )}
             </div>
           </nav>
         </div>

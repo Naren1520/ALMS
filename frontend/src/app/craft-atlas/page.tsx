@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, Sparkles, ArrowRight, ShieldCheck, Search } from 'lucide-react';
+import { MapPin, Sparkles, ArrowRight, ShieldCheck, Search, Database } from 'lucide-react';
 
 interface RegionData {
   regionCode: string;
@@ -146,20 +146,48 @@ const INDIA_STATES = [
 export default function CraftAtlasPage() {
   const [selectedRegion, setSelectedRegion] = useState<string>('RJ');
   const [searchFilter, setSearchFilter] = useState('');
+  const [liveCounts, setLiveCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    async function loadLiveRegionStats() {
+      try {
+        const res = await fetch('/api/v1/craft-atlas/regions');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            const map: Record<string, number> = {};
+            data.forEach((r: any) => {
+              if (r.state) map[r.state] = Number(r.artisan_count) || 0;
+            });
+            setLiveCounts(map);
+          }
+        }
+      } catch (err) {
+        console.warn('Using offline atlas cache');
+      }
+    }
+    loadLiveRegionStats();
+  }, []);
 
   const handleRegionSelect = useCallback((code: string) => {
     setSelectedRegion(code);
     window.history.replaceState(null, '', `#state=${code}`);
   }, []);
 
-  const activeData: RegionData =
-    REGION_DETAILS[selectedRegion] ?? {
-      regionCode: INDIA_STATES.find((s) => s.code === selectedRegion)?.name ?? selectedRegion,
-      artisanCount: 3400,
-      crafts: ['Traditional Handloom', 'Pottery', 'Folk Paintings', 'Wood Carving'],
-      sampleImages: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop'],
-      culturalDescription: 'Heritage artisan clusters preserving ancestral craft methodologies passed down over multiple generations.',
-    };
+  const stateName = INDIA_STATES.find((s) => s.code === selectedRegion)?.name ?? selectedRegion;
+  const baseData = REGION_DETAILS[selectedRegion];
+  const activeData: RegionData = baseData
+    ? {
+        ...baseData,
+        artisanCount: liveCounts[baseData.regionCode] ?? baseData.artisanCount,
+      }
+    : {
+        regionCode: stateName,
+        artisanCount: liveCounts[stateName] ?? 3400,
+        crafts: ['Traditional Handloom', 'Pottery', 'Folk Paintings', 'Wood Carving'],
+        sampleImages: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop'],
+        culturalDescription: 'Heritage artisan clusters preserving ancestral craft methodologies passed down over multiple generations.',
+      };
 
   const filteredStates = INDIA_STATES.filter(
     (s) =>
@@ -357,15 +385,15 @@ export default function CraftAtlasPage() {
                 {/* CTAs */}
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <Link
-                    href={`/explore?region=${selectedRegion}`}
-                    className="flex-1 py-3 px-6 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full text-center shadow-md hover:shadow-orange-500/25 transition-all flex items-center justify-center gap-2"
+                    href={`/explore?state=${encodeURIComponent(activeData.regionCode)}`}
+                    className="flex-1 py-3 px-6 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full text-center shadow-md hover:shadow-orange-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <span>View Products</span>
+                    <span>Explore {activeData.regionCode} Crafts</span>
                     <ArrowRight size={13} />
                   </Link>
                   <Link
-                    href={`/artisans?region=${selectedRegion}`}
-                    className="flex-1 py-3 px-6 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold rounded-full text-center transition-all flex items-center justify-center gap-2"
+                    href={`/artisans?state=${encodeURIComponent(activeData.regionCode)}`}
+                    className="flex-1 py-3 px-6 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold rounded-full text-center transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>Meet Artisans</span>
                   </Link>

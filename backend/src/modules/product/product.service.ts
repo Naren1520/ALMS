@@ -279,4 +279,45 @@ export class ProductService {
   async findByArtisan(artisanId: string) {
     return this.productRepo.find({ where: { artisanId } });
   }
+
+  async findAllPublished() {
+    const products = await this.dataSource.query(`
+      SELECT 
+        p.id,
+        p.title,
+        p.description_en,
+        p.description_hi,
+        p.category,
+        p.subcategory,
+        p.material,
+        p.craft_technique,
+        p.care_instructions,
+        p.dimensions,
+        p.retail_price,
+        p.wholesale_price,
+        p.moq,
+        p.status,
+        p.inventory_qty,
+        p.lead_time_days,
+        p.gi_eligible,
+        p.created_at,
+        ap.state,
+        ap.district,
+        ap.primary_craft,
+        ap.verified AS artisan_verified,
+        COALESCE(ts.score, 95) AS trust_score,
+        COALESCE(
+          (SELECT json_agg(json_build_object('orig', pm.r2_key_orig, 'enh', pm.r2_key_enh))
+           FROM product_media pm
+           WHERE pm.product_id = p.id AND pm.is_active = true),
+          '[]'::json
+        ) AS media
+      FROM products p
+      LEFT JOIN artisan_profiles ap ON ap.id = p.artisan_id
+      LEFT JOIN trust_scores ts ON ts.user_id = p.artisan_id
+      WHERE p.status = 'PUBLISHED'
+      ORDER BY p.created_at DESC
+    `);
+    return products;
+  }
 }

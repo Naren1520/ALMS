@@ -21,6 +21,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LoginForm>();
 
@@ -98,6 +99,22 @@ export default function LoginPage() {
               <span>{serverError}</span>
             </div>
           )}
+
+          {/* MOCK LOGIN HELPERS */}
+          <div className="mb-6 p-4 bg-[#FA7A21]/10 border border-[#FA7A21]/20 rounded-xl space-y-2">
+            <p className="text-[10px] text-amber-200 uppercase tracking-widest font-semibold mb-2">Dev Helpers: Auto-fill Seeded Accounts</p>
+            <div className="flex flex-wrap gap-2">
+              <button onClick={() => { setValue('email', 'artisan.bastar@alms.in'); setValue('password', 'Password123!'); }} className="px-3 py-1.5 bg-black/40 border border-white/10 hover:border-[#FA7A21]/50 text-white text-[11px] rounded-lg transition-all">
+                Artisan
+              </button>
+              <button onClick={() => { setValue('email', 'procurement@fabindia.com'); setValue('password', 'Password123!'); }} className="px-3 py-1.5 bg-black/40 border border-white/10 hover:border-[#FA7A21]/50 text-white text-[11px] rounded-lg transition-all">
+                B2B Buyer
+              </button>
+              <button onClick={() => { setValue('email', 'consumer@alms.in'); setValue('password', 'Password123!'); }} className="px-3 py-1.5 bg-black/40 border border-white/10 hover:border-[#FA7A21]/50 text-white text-[11px] rounded-lg transition-all">
+                Consumer
+              </button>
+            </div>
+          </div>
 
           <form
             action="#"

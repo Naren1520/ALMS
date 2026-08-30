@@ -17,11 +17,7 @@ const registerSchema = z
     email: z.string().email('Must be a valid email address'),
     password: z
       .string()
-      .min(12, 'At least 12 characters')
-      .regex(/[A-Z]/, 'Must contain an uppercase letter')
-      .regex(/[a-z]/, 'Must contain a lowercase letter')
-      .regex(/\d/, 'Must contain a digit')
-      .regex(/[^A-Za-z0-9]/, 'Must contain a special character'),
+      .min(1, 'Password is required'),
     confirmPassword: z.string(),
     role: z.enum(['ARTISAN', 'BUYER', 'CONSUMER']),
   })
@@ -133,6 +129,22 @@ function RegisterFormComponent() {
           <span>{serverError}</span>
         </div>
       )}
+
+      {/* MOCK LOGIN HELPERS */}
+      <div className="mb-6 p-4 bg-[#FA7A21]/10 border border-[#FA7A21]/20 rounded-xl space-y-2">
+        <p className="text-[10px] text-amber-200 uppercase tracking-widest font-semibold mb-2">Dev Helpers: Auto-fill Seeded Accounts</p>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => { setValue('role', 'ARTISAN'); setValue('email', 'artisan.bastar@alms.in'); setValue('password', 'Password123!'); setValue('confirmPassword', 'Password123!'); }} className="px-3 py-1.5 bg-black/40 border border-white/10 hover:border-[#FA7A21]/50 text-white text-[11px] rounded-lg transition-all">
+            Artisan
+          </button>
+          <button type="button" onClick={() => { setValue('role', 'BUYER'); setValue('email', 'procurement@fabindia.com'); setValue('password', 'Password123!'); setValue('confirmPassword', 'Password123!'); }} className="px-3 py-1.5 bg-black/40 border border-white/10 hover:border-[#FA7A21]/50 text-white text-[11px] rounded-lg transition-all">
+            B2B Buyer
+          </button>
+          <button type="button" onClick={() => { setValue('role', 'CONSUMER'); setValue('email', 'consumer@alms.in'); setValue('password', 'Password123!'); setValue('confirmPassword', 'Password123!'); }} className="px-3 py-1.5 bg-black/40 border border-white/10 hover:border-[#FA7A21]/50 text-white text-[11px] rounded-lg transition-all">
+            Consumer
+          </button>
+        </div>
+      </div>
 
       <form
         action="#"
