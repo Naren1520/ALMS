@@ -66,7 +66,7 @@ export default function AITransformationSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-32 overflow-hidden bg-[#24130A] text-white border-t border-amber-900/30"
+      className="pt-24 md:pt-32 pb-12 md:pb-16 overflow-hidden bg-[#24130A] text-white border-t border-amber-900/30"
       aria-labelledby="ai-pillars-heading"
     >
       <div className="container grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
