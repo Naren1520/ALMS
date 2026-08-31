@@ -40,7 +40,7 @@ export default function B2BSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-32 overflow-hidden bg-[#24130A] text-white border-t border-white/10"
+      className="pt-12 md:pt-16 pb-24 md:pb-32 overflow-hidden bg-[#24130A] text-white"
       aria-labelledby="b2b-matching-heading"
     >
       <div className="container grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
