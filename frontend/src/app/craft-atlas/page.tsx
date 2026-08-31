@@ -179,16 +179,16 @@ export default function CraftAtlasPage() {
   const baseData = REGION_DETAILS[selectedRegion];
   const activeData: RegionData = baseData
     ? {
-        ...baseData,
-        artisanCount: liveCounts[baseData.regionCode] ?? baseData.artisanCount,
-      }
+      ...baseData,
+      artisanCount: liveCounts[baseData.regionCode] ?? baseData.artisanCount,
+    }
     : {
-        regionCode: stateName,
-        artisanCount: liveCounts[stateName] ?? 3400,
-        crafts: ['Traditional Handloom', 'Pottery', 'Folk Paintings', 'Wood Carving'],
-        sampleImages: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop'],
-        culturalDescription: 'Heritage artisan clusters preserving ancestral craft methodologies passed down over multiple generations.',
-      };
+      regionCode: stateName,
+      artisanCount: liveCounts[stateName] ?? 3400,
+      crafts: ['Traditional Handloom', 'Pottery', 'Folk Paintings', 'Wood Carving'],
+      sampleImages: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop'],
+      culturalDescription: 'Heritage artisan clusters preserving ancestral craft methodologies passed down over multiple generations.',
+    };
 
   const filteredStates = INDIA_STATES.filter(
     (s) =>
@@ -251,11 +251,10 @@ export default function CraftAtlasPage() {
                   <button
                     key={state.code}
                     onClick={() => handleRegionSelect(state.code)}
-                    className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 cursor-pointer font-medium ${
-                      selectedRegion === state.code
+                    className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 cursor-pointer font-medium ${selectedRegion === state.code
                         ? 'bg-[#FA7A21] text-white font-semibold shadow-xs'
                         : 'bg-white/10 border border-white/20 text-stone-100 hover:border-[#FA7A21]/60 hover:text-amber-200'
-                    }`}
+                      }`}
                   >
                     {state.name}
                   </button>
