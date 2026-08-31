@@ -41,7 +41,7 @@ const FALLBACK_PRODUCTS: CraftProduct[] = [
     retailPrice: 1850,
     wholesaleMoq: 25,
     wholesalePrice: 1250,
-    image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80&auto=format&fit=crop',
+    image: '/images/dokra_metal_art.jpg',
     giCertified: true,
     isEcoFriendly: true,
     leadTime: '15 days',
@@ -58,7 +58,7 @@ const FALLBACK_PRODUCTS: CraftProduct[] = [
     retailPrice: 650,
     wholesaleMoq: 50,
     wholesalePrice: 420,
-    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80&auto=format&fit=crop',
+    image: '/images/sabai_grass_basketry.jpg',
     giCertified: false,
     isEcoFriendly: true,
     leadTime: '10 days',
@@ -75,7 +75,7 @@ const FALLBACK_PRODUCTS: CraftProduct[] = [
     retailPrice: 4200,
     wholesaleMoq: 10,
     wholesalePrice: 2800,
-    image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&q=80&auto=format&fit=crop',
+    image: '/images/madhubani_sacred_canvas.jpg',
     giCertified: true,
     isEcoFriendly: true,
     leadTime: '18 days',
@@ -143,7 +143,7 @@ const FALLBACK_PRODUCTS: CraftProduct[] = [
     retailPrice: 2800,
     wholesaleMoq: 15,
     wholesalePrice: 1750,
-    image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&q=80&auto=format&fit=crop',
+    image: '/images/warli_folk_painting.jpg',
     giCertified: true,
     isEcoFriendly: true,
     leadTime: '10 days',
@@ -160,7 +160,7 @@ const FALLBACK_PRODUCTS: CraftProduct[] = [
     retailPrice: 5600,
     wholesaleMoq: 10,
     wholesalePrice: 3800,
-    image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80&auto=format&fit=crop',
+    image: '/images/bidriware_silver_craft.jpg',
     giCertified: true,
     isEcoFriendly: true,
     leadTime: '14 days',
@@ -294,44 +294,70 @@ function ExploreContent() {
 
       {/* Dark Hero Banner */}
       <section
-        className="relative min-h-[45vh] flex items-center overflow-hidden pt-20"
-        style={{ background: 'linear-gradient(135deg, #1A0D06 0%, #2B1810 60%, #1A0D06 100%)' }}
+        className="relative min-h-[48vh] flex items-center overflow-hidden pt-24 pb-16 bg-[#180A04] text-white"
       >
-        <div className="absolute inset-0 opacity-15"
-          style={{ backgroundImage: 'radial-gradient(circle at 20% 60%, #FA7A21 0%, transparent 50%), radial-gradient(circle at 80% 20%, #B8965A 0%, transparent 40%)' }}
-        />
-        <div className="container relative z-10 py-16 md:py-20">
-          <div className="max-w-3xl space-y-5">
+        {/* Background Image with Balanced Opacity */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/explore_hero_bg.jpg"
+            alt="Handcrafted Indian artisan materials and brass tools"
+            fill
+            priority
+            className="object-cover object-center opacity-60 brightness-[0.85]"
+            sizes="100vw"
+          />
+          {/* Subtle gradient overlay to enhance visibility while keeping text readable */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(
+                to right,
+                rgba(24, 10, 4, 0.88) 0%,
+                rgba(28, 14, 7, 0.65) 50%,
+                rgba(24, 10, 4, 0.45) 100%
+              )`,
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-25 pointer-events-none"
+            style={{
+              backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(250, 122, 33, 0.20) 0%, transparent 60%)',
+            }}
+          />
+        </div>
+
+        <div className="container relative z-10 py-12 md:py-16">
+          <div className="max-w-3xl space-y-6">
             <div className="flex flex-wrap items-center gap-2.5">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-xs text-amber-200">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#FA7A21]/15 backdrop-blur-md border border-[#FA7A21]/30 rounded-full text-xs text-amber-300">
                 <Gift size={14} className="text-[#FA7A21]" />
-                <span className="font-sans font-medium tracking-wide">Curated Tribal & Folk Crafts &bull; Zero Middlemen</span>
+                <span className="font-sans font-semibold tracking-wider uppercase text-[11px]">Curated Tribal &amp; Folk Crafts &bull; Zero Middlemen</span>
               </div>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-950/50 backdrop-blur-md border border-emerald-500/50 rounded-full text-xs text-emerald-300">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-950/60 backdrop-blur-md border border-emerald-500/40 rounded-full text-xs text-emerald-300">
                 <Database size={13} className="text-emerald-400" />
-                <span className="font-sans font-medium">{isLiveFromSupabase ? `Live Supabase Connected (${products.length} Products)` : 'Supabase PostgreSQL'}</span>
+                <span className="font-sans font-medium text-[11px]">{isLiveFromSupabase ? `Live Supabase Connected (${products.length} Items)` : 'PostgreSQL Verified Catalog'}</span>
               </div>
             </div>
             <h1
-              className="font-serif text-white font-normal"
-              style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)', lineHeight: 1.08, letterSpacing: '-0.015em' }}
+              className="font-serif text-white font-light tracking-tight leading-tight"
+              style={{ fontSize: 'clamp(2.5rem, 5.5vw, 4.25rem)' }}
             >
               Authentic Handcrafted<br />
-              <em className="font-light text-amber-200" style={{ fontStyle: 'italic' }}>Treasures of India.</em>
+              <em className="text-amber-200" style={{ fontStyle: 'italic' }}>Treasures of India.</em>
             </h1>
-            <p className="text-white font-sans text-base font-light max-w-2xl leading-relaxed">
-              Sourced directly from indigenous artisan collectives, self-help groups (SHGs), and master craftspersons across India — available for direct consumer orders and bulk corporate gifting.
+            <p className="text-stone-300 font-sans text-base font-light max-w-2xl leading-relaxed">
+              Sourced directly from indigenous artisan collectives, self-help groups (SHGs), and master craftspersons across India — available for direct consumer orders and bulk corporate procurement.
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-white/15">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-white/10">
               {[
                 { n: '9+', l: 'Craft Categories' },
-                { n: 'GI Tagged', l: 'Authenticated Crafts' },
-                { n: 'Direct', l: 'Artisan to Buyer' },
-                { n: 'B2B Ready', l: 'Corporate Gifting' },
+                { n: 'GI Tagged', l: 'Authenticated Clusters' },
+                { n: 'Direct Pay', l: 'Zero Platform Commission' },
+                { n: 'B2B Ready', l: 'Tiered Bulk Pricing' },
               ].map(({ n, l }) => (
-                <div key={l}>
-                  <p className="font-serif text-amber-200 text-xl sm:text-2xl font-light">{n}</p>
-                  <p className="text-white text-[11px] font-sans mt-0.5">{l}</p>
+                <div key={l} className="space-y-1">
+                  <p className="font-serif text-amber-300 text-2xl sm:text-3xl font-light">{n}</p>
+                  <p className="text-stone-400 text-xs font-sans font-light">{l}</p>
                 </div>
               ))}
             </div>
@@ -340,23 +366,34 @@ function ExploreContent() {
       </section>
 
       {/* Heritage Folk Art Ribbon Divider */}
-      <FolkArtBanner height={75} variant="border-3" alt="Indian heritage tapestry border" />
+      <FolkArtBanner height={65} variant="border-3" alt="Indian heritage tapestry border" />
 
-      <main className="bg-[#2B1810] text-white font-sans pb-0 min-h-screen">
-        <div className="container max-w-7xl py-14">
+      <main className="bg-[#1C0E07] text-white font-sans min-h-screen relative">
+        {/* Subtle background texture */}
+        <div 
+          className="absolute inset-0 opacity-40 pointer-events-none"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 80% 20%, rgba(250, 122, 33, 0.05) 0%, transparent 40%),
+              radial-gradient(circle at 20% 80%, rgba(217, 119, 6, 0.04) 0%, transparent 40%)
+            `,
+          }}
+        />
+
+        <div className="container max-w-7xl py-14 relative z-10 space-y-10">
 
           {/* Filter Bar */}
-          <ScrollReveal className="bg-[#1C0E07] border border-white/10 p-6 mb-12 rounded-2xl space-y-4" delay={0.1}>
+          <div className="bg-[#24130A]/90 backdrop-blur-md border border-white/15 p-6 rounded-3xl space-y-5 shadow-2xl">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               {/* Search input */}
               <div className="relative flex-1 max-w-md">
-                <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white" />
+                <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search Dokra, Sabai grass, Warli, Madhubani, or state..."
-                  className="w-full bg-black/30 border border-white/15 pl-11 pr-4 py-2.5 text-xs text-white placeholder:text-white focus:outline-none focus:border-[#FA7A21]/60 rounded-full transition-colors"
+                  placeholder="Search Dokra, Sabai grass, Warli, Madhubani, state, artisan..."
+                  className="w-full bg-black/40 border border-white/15 pl-11 pr-4 py-3 text-xs text-white placeholder:text-stone-400 focus:outline-none focus:border-[#FA7A21] rounded-full transition-all"
                 />
               </div>
 
@@ -364,143 +401,146 @@ function ExploreContent() {
                 <button
                   type="button"
                   onClick={() => setGiOnly((v) => !v)}
-                  className={`px-4 py-2.5 text-xs font-semibold rounded-full border transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-5 py-2.5 text-xs font-semibold rounded-full border transition-all cursor-pointer flex items-center gap-2 ${
                     giOnly
-                      ? 'bg-[#FA7A21] text-white border-[#FA7A21] shadow-md'
-                      : 'bg-white/10 border-white/20 text-white hover:border-[#FA7A21]/60 hover:text-amber-200'
+                      ? 'bg-[#FA7A21] text-white border-[#FA7A21] shadow-lg shadow-orange-500/25'
+                      : 'bg-white/5 border-white/20 text-stone-300 hover:border-[#FA7A21]/60 hover:text-white'
                   }`}
                 >
                   <ShieldCheck size={14} className={giOnly ? 'text-white' : 'text-[#FA7A21]'} />
                   <span>GI Certified Only</span>
                 </button>
 
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium text-white">Sort:</span>
+                <div className="flex items-center gap-2 bg-black/30 border border-white/15 px-3 py-1.5 rounded-full">
+                  <span className="text-xs font-medium text-stone-400">Sort:</span>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as 'featured' | 'price-asc' | 'price-desc' | 'reliability')}
-                    className="bg-black/30 border border-white/15 text-xs px-4 py-2 text-white rounded-full focus:outline-none focus:border-[#FA7A21]/60 cursor-pointer"
+                    className="bg-transparent text-xs text-white focus:outline-none cursor-pointer pr-2"
                   >
-                    <option value="featured">Featured Collection</option>
-                    <option value="reliability">Reliability Score</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
+                    <option value="featured" className="bg-[#1C0E07] text-white">Featured Collection</option>
+                    <option value="reliability" className="bg-[#1C0E07] text-white">Reliability Score</option>
+                    <option value="price-asc" className="bg-[#1C0E07] text-white">Price: Low to High</option>
+                    <option value="price-desc" className="bg-[#1C0E07] text-white">Price: High to Low</option>
                   </select>
                 </div>
               </div>
             </div>
 
             {/* Category Pills */}
-            <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-white/10">
+            <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-white/10">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 text-xs rounded-full transition-all duration-200 cursor-pointer font-medium ${
+                  className={`px-4 py-2 text-xs rounded-full transition-all duration-200 cursor-pointer ${
                     selectedCategory === cat
-                      ? 'bg-[#FA7A21] text-white font-semibold shadow-md'
-                      : 'bg-white/10 border border-white/20 text-white hover:border-[#FA7A21]/60 hover:text-amber-200'
+                      ? 'bg-gradient-to-r from-[#FA7A21] to-orange-500 text-white font-semibold shadow-md shadow-orange-500/30'
+                      : 'bg-white/5 border border-white/10 text-stone-300 hover:border-[#FA7A21]/50 hover:text-white'
                   }`}
                 >
                   {cat}
                 </button>
               ))}
             </div>
-          </ScrollReveal>
+          </div>
 
           {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map((product, index) => (
-              <ScrollReveal key={`${product.id}-${index}`} delay={(index % 3) * 0.08}>
-                <article className="group bg-[#1C0E07] border border-white/10 hover:border-[#FA7A21]/40 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5">
-                  <div>
-                    {/* Photo with hover zoom */}
-                    <div className="relative aspect-[4/3] bg-white overflow-hidden">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        unoptimized
-                      />
-                      {/* Badges */}
-                      <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
-                        {product.justPublished && (
-                          <span className="bg-[#FA7A21] text-white uppercase tracking-wider px-3 py-1 text-[10px] font-bold rounded-full flex items-center gap-1 shadow-lg shadow-orange-500/50">
-                            <Sparkles size={11} className="animate-spin" /> Just Published
-                          </span>
-                        )}
-                        {product.giCertified && (
-                          <span className="bg-black/70 backdrop-blur-sm text-amber-200 uppercase tracking-wider px-3 py-1 text-[10px] font-bold border border-[#FA7A21]/40 rounded-full flex items-center gap-1">
-                            <ShieldCheck size={12} className="text-[#FA7A21]" />
-                            GI Certified
-                          </span>
-                        )}
-                        {product.isEcoFriendly && (
-                          <span className="bg-green-900/80 text-green-300 uppercase tracking-wider px-3 py-1 text-[10px] font-bold rounded-full flex items-center gap-1">
-                            <Leaf size={10} /> Eco
-                          </span>
-                        )}
-                      </div>
-                      <span className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md text-amber-200 text-xs font-semibold px-3 py-1 rounded-full border border-white/15 z-10">
-                        {product.reliabilityScore}% Reliable
-                      </span>
+            {filteredProducts.map((product) => (
+              <article 
+                key={product.id} 
+                className="group bg-[#24130A] border border-white/15 hover:border-[#FA7A21]/60 rounded-3xl overflow-hidden shadow-2xl hover:shadow-[#FA7A21]/10 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5"
+              >
+                <div>
+                  {/* Photo with hover zoom */}
+                  <div className="relative aspect-[4/3] bg-black/40 overflow-hidden">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#24130A] via-transparent to-transparent opacity-80" />
+                    
+                    {/* Badges */}
+                    <div className="absolute top-3.5 left-3.5 flex flex-wrap gap-1.5 z-10">
+                      {product.justPublished && (
+                        <span className="bg-[#FA7A21] text-white uppercase tracking-wider px-3 py-1 text-[10px] font-bold rounded-full flex items-center gap-1 shadow-lg">
+                          <Sparkles size={11} className="animate-spin" /> Just Published
+                        </span>
+                      )}
+                      {product.giCertified && (
+                        <span className="bg-[#1C0E07]/90 backdrop-blur-md text-amber-300 uppercase tracking-wider px-3 py-1 text-[10px] font-bold border border-[#FA7A21]/40 rounded-full flex items-center gap-1 shadow-md">
+                          <ShieldCheck size={12} className="text-[#FA7A21]" />
+                          GI Certified
+                        </span>
+                      )}
+                      {product.isEcoFriendly && (
+                        <span className="bg-emerald-950/90 text-emerald-300 uppercase tracking-wider px-2.5 py-1 text-[10px] font-bold rounded-full flex items-center gap-1 border border-emerald-500/30">
+                          <Leaf size={10} /> Eco
+                        </span>
+                      )}
                     </div>
+                    
+                    <span className="absolute bottom-3.5 right-3.5 bg-[#1C0E07]/90 backdrop-blur-md text-amber-300 text-xs font-semibold px-3 py-1 rounded-full border border-white/15 z-10">
+                      {product.reliabilityScore}% Reliable
+                    </span>
+                  </div>
 
-                    {/* Body */}
-                    <div className="p-6 sm:p-7 space-y-3">
-                      <div className="flex items-center justify-between text-xs text-white font-light">
-                        <span>{product.region}, {product.state}</span>
-                        <span>Lead: {product.leadTime}</span>
-                      </div>
-                      <h2 className="font-serif text-xl font-normal text-white group-hover:text-amber-200 transition-colors leading-snug">
-                        {product.name}
-                      </h2>
-                      <p className="text-xs text-white">
-                        By <span className="font-semibold text-white">{product.artisan}</span>
+                  {/* Body */}
+                  <div className="p-6 sm:p-7 space-y-3">
+                    <div className="flex items-center justify-between text-xs text-stone-400 font-light">
+                      <span>{product.region}, {product.state}</span>
+                      <span className="text-amber-200/80 font-medium">Lead: {product.leadTime}</span>
+                    </div>
+                    <h2 className="font-serif text-xl font-medium text-white group-hover:text-amber-200 transition-colors leading-snug">
+                      {product.name}
+                    </h2>
+                    <p className="text-xs text-stone-300">
+                      By <span className="font-semibold text-white">{product.artisan}</span>
+                    </p>
+                    <p className="text-xs text-stone-400 line-clamp-1 italic font-light">
+                      {product.material}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Pricing & Actions Footer */}
+                <div className="p-6 sm:p-7 pt-0 border-t border-white/10 mt-2 pt-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400">Retail Unit</p>
+                      <p className="font-serif text-2xl text-white font-light mt-0.5">
+                        ₹{product.retailPrice.toLocaleString('en-IN')}
                       </p>
-                      <p className="text-xs text-white line-clamp-1 italic font-light">
-                        {product.material}
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] uppercase font-bold tracking-wider text-[#FA7A21]">MOQ: {product.wholesaleMoq}+ units</p>
+                      <p className="font-serif text-lg text-[#FA7A21] font-semibold mt-0.5">
+                        ₹{product.wholesalePrice.toLocaleString('en-IN')} / unit
                       </p>
                     </div>
                   </div>
 
-                  {/* Pricing & Actions Footer */}
-                  <div className="p-6 sm:p-7 pt-0 border-t border-white/10 mt-2 pt-4 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-[9px] uppercase font-bold tracking-wider text-white">Single Unit</p>
-                        <p className="font-serif text-2xl text-white font-light">
-                          ₹{product.retailPrice.toLocaleString('en-IN')}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[9px] uppercase font-bold tracking-wider text-[#FA7A21]">Wholesale MOQ: {product.wholesaleMoq}</p>
-                        <p className="font-serif text-lg text-[#FA7A21] font-semibold">
-                          ₹{product.wholesalePrice.toLocaleString('en-IN')} / unit
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2.5 pt-1">
-                      <button
-                        onClick={() => setQuoteModalProduct(product)}
-                        className="py-3 px-4 bg-white/10 border border-white/20 text-white hover:border-[#FA7A21]/60 hover:text-amber-200 text-xs font-semibold rounded-full transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                      >
-                        <Building2 size={13} /> B2B Quote
-                      </button>
-                      <button
-                        onClick={() => handleOrderDirect(product)}
-                        className="py-3 px-4 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full transition-all flex items-center justify-center gap-1 shadow-md hover:shadow-orange-500/25 cursor-pointer"
-                      >
-                        <span>Order Direct</span>
-                        <ArrowUpRight size={13} />
-                      </button>
-                    </div>
+                  <div className="grid grid-cols-2 gap-2.5 pt-1">
+                    <button
+                      onClick={() => setQuoteModalProduct(product)}
+                      className="py-3 px-4 bg-white/5 border border-white/20 text-white hover:border-[#FA7A21]/60 hover:text-amber-200 text-xs font-semibold rounded-full transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <Building2 size={13} /> B2B Quote
+                    </button>
+                    <button
+                      onClick={() => handleOrderDirect(product)}
+                      className="py-3 px-4 bg-gradient-to-r from-[#FA7A21] to-orange-500 hover:from-[#e06917] hover:to-orange-600 text-white text-xs font-semibold rounded-full transition-all flex items-center justify-center gap-1 shadow-md hover:shadow-orange-500/25 cursor-pointer hover:scale-[1.02]"
+                    >
+                      <span>Order Direct</span>
+                      <ArrowUpRight size={13} />
+                    </button>
                   </div>
-                </article>
-              </ScrollReveal>
+                </div>
+              </article>
             ))}
           </div>
         </div>
