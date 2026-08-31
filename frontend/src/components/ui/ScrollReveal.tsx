@@ -1,7 +1,7 @@
 'use client';
 
 import { type ReactNode, useEffect, useState } from 'react';
-import { type HTMLMotionProps, motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 type ScrollRevealProps = {
   children: ReactNode;
@@ -9,10 +9,6 @@ type ScrollRevealProps = {
   delay?: number;
 };
 
-/**
- * Shared, one-time viewport entrance used outside the homepage.
- * It deliberately only animates opacity and transform so it cannot shift layout.
- */
 export function ScrollReveal({ children, className, delay = 0 }: ScrollRevealProps) {
   const prefersReducedMotion = useReducedMotion();
   const [canAnimate, setCanAnimate] = useState(false);
@@ -21,19 +17,20 @@ export function ScrollReveal({ children, className, delay = 0 }: ScrollRevealPro
     setCanAnimate(true);
   }, []);
 
-  // Never server-render content in its hidden state. This keeps every page
-  // usable if JavaScript is delayed, disabled, or blocked by a strict CSP.
   if (!canAnimate || prefersReducedMotion) {
     return <div className={className}>{children}</div>;
   }
 
-  const motionProps: HTMLMotionProps<'div'> = {
-    className,
-    initial: { opacity: 0, y: 60 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.2 },
-    transition: { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] },
-  };
-
-  return <motion.div {...motionProps}>{children}</motion.div>;
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    <motion.div
+      {...({ className } as any)}
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
 }
