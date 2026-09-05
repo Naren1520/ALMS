@@ -19,6 +19,6 @@ export const appConfig = registerAs('app', (): AppConfig => ({
   appName: process.env['APP_NAME'] ?? 'ALMS',
   frontendUrl: process.env['FRONTEND_URL'] ?? 'http://localhost:3000',
   encryptionKey: process.env['ENCRYPTION_KEY'] ?? '',
-  aiServiceUrl: process.env['AI_SERVICE_URL'] ?? 'http://localhost:8000',
+  aiServiceUrl: process.env['AI_SERVICE_URL'] ?? 'http://127.0.0.1:8000',
   aiServiceToken: process.env['AI_SERVICE_TOKEN'] ?? '',
 }));

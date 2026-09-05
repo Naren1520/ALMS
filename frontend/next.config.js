@@ -13,7 +13,7 @@ const nextConfig = {
     ],
   },
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8080';
     return [
       {
         // Proxy backend routes — Next.js App Router internal API routes (e.g. /api/analyse-craft)

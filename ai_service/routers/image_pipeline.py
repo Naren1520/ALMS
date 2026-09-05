@@ -47,6 +47,12 @@ class ImageEnhanceResponse(BaseModel):
 
 
 def _clean_base64(raw: str) -> bytes:
+    raw = raw.strip()
+    if raw.startswith("http://") or raw.startswith("https://"):
+        import urllib.request
+        req = urllib.request.Request(raw, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return resp.read()
     if "," in raw:
         raw = raw.split(",", 1)[1]
     return base64.b64decode(raw)
@@ -125,18 +131,15 @@ async def enhance_image(request: ImageEnhanceRequest):
     if any(k in preset_key for k in ["jewelry", "dokra", "brass", "wood"]):
         img_rgb = img_rgb.filter(ImageFilter.SHARPEN)
 
-    # 7. Standard 1200×1200 White Studio Framing (ONDC/E-commerce specification)
+    # 7. Standard 1200×1200 Clean Studio Framing (ONDC/E-commerce specification)
     target_dim = 1200
-    canvas = Image.new("RGB", (target_dim, target_dim), (252, 252, 252))
-
-    # Fit product with 8% studio margin
-    max_w = int(target_dim * 0.88)
-    max_h = int(target_dim * 0.88)
-    img_rgb.thumbnail((max_w, max_h), Image.LANCZOS)
-
-    offset_x = (target_dim - img_rgb.width) // 2
-    offset_y = (target_dim - img_rgb.height) // 2
-    canvas.paste(img_rgb, (offset_x, offset_y))
+    scale = max(target_dim / img_rgb.width, target_dim / img_rgb.height)
+    new_w = int(img_rgb.width * scale)
+    new_h = int(img_rgb.height * scale)
+    img_scaled = img_rgb.resize((new_w, new_h), Image.LANCZOS)
+    crop_x = (new_w - target_dim) // 2
+    crop_y = (new_h - target_dim) // 2
+    canvas = img_scaled.crop((crop_x, crop_y, crop_x + target_dim, crop_y + target_dim))
 
     # 8. Export as WebP
     output = io.BytesIO()
