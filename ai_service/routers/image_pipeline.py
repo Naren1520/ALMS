@@ -12,7 +12,6 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from PIL import Image, ImageFilter
-import cv2
 import numpy as np
 from config import settings
 
@@ -109,10 +108,10 @@ def _get_rembg_session():
     return _rembg_session
 
 
-def apply_subject_focus(img: Image.Image, blur_strength: int = 25) -> Image.Image:
+def apply_subject_focus(img: Image.Image, blur_radius: int = 15) -> Image.Image:
     """
     Keeps the artisan craft product tack-sharp while smoothly blurring the background (studio bokeh).
-    Uses the lightweight (4.5MB) u2netp matte session. If unavailable, returns img cleanly.
+    Uses the lightweight (4.5MB) u2netp matte session with native Pillow C compositing.
     """
     try:
         session = _get_rembg_session()
@@ -120,20 +119,15 @@ def apply_subject_focus(img: Image.Image, blur_strength: int = 25) -> Image.Imag
             return img
 
         from rembg import remove
-        # 1. Soft alpha matte of the foreground subject
-        mask_img = remove(img, session=session, only_mask=True)
-        mask = np.array(mask_img).astype(np.float32) / 255.0
-        mask = cv2.GaussianBlur(mask, (9, 9), 0)
+        # 1. Soft alpha matte of the foreground subject (L mode = 8-bit grayscale matte)
+        mask_img = remove(img, session=session, only_mask=True).convert("L")
+        feathered_mask = mask_img.filter(ImageFilter.GaussianBlur(radius=3))
 
-        # 2. Gaussian blur background frame
-        arr = np.array(img.convert("RGB")).astype(np.float32)
-        blurred = cv2.GaussianBlur(arr, (0, 0), sigmaX=blur_strength)
+        # 2. Gaussian blur background frame using native Pillow GaussianBlur
+        blurred_bg = img.filter(ImageFilter.GaussianBlur(radius=blur_radius))
 
-        # 3. Composite sharp craft over soft bokeh background
-        mask_3ch = np.stack([mask] * 3, axis=-1)
-        composite = arr * mask_3ch + blurred * (1.0 - mask_3ch)
-
-        return Image.fromarray(np.clip(composite, 0, 255).astype(np.uint8))
+        # 3. Native Pillow alpha compositing (sharp craft over soft bokeh background)
+        return Image.composite(img.convert("RGB"), blurred_bg.convert("RGB"), feathered_mask)
     except Exception:
         return img
 
@@ -244,13 +238,11 @@ async def enhance_image(request: ImageEnhanceRequest):
     canvas = apply_clean_grade(img)
     orig_w, orig_h = canvas.size
 
-    # 4. Clean Edge-Preserving Denoising (Fast bilateral filter wipes sensor grain while keeping edges razor-sharp)
-    arr = np.array(canvas)
-    arr = cv2.bilateralFilter(arr, d=5, sigmaColor=25, sigmaSpace=25)
-    canvas = Image.fromarray(arr)
+    # 4. Clean Edge-Preserving Denoising (Pillow native MedianFilter wipes sensor noise while keeping product edges razor-sharp)
+    canvas = canvas.filter(ImageFilter.MedianFilter(size=3))
 
     # 5. Subject Focus: Keep product pin-sharp, smoothly blur distracting background (studio bokeh)
-    canvas = apply_subject_focus(canvas, blur_strength=25)
+    canvas = apply_subject_focus(canvas, blur_radius=15)
 
     # 6. Clean HD Output Sharpening (Concentrates sharpness on the foreground product)
     canvas = canvas.filter(ImageFilter.UnsharpMask(radius=1.5, percent=130, threshold=3))
