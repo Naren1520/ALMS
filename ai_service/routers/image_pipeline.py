@@ -210,14 +210,11 @@ async def enhance_image(request: ImageEnhanceRequest):
     img_rgb = ImageEnhance.Contrast(img_rgb).enhance(contrast)
     img_rgb = ImageEnhance.Color(img_rgb).enhance(saturation)
 
-    # 5. Crisp Detail Enhancement & Unsharp Masking (tight radius=1.6 avoids blur while popping edges)
-    img_rgb = img_rgb.filter(ImageFilter.UnsharpMask(radius=1.6, percent=int(sharpness * 100), threshold=1))
+    # 5. Pre-scale edge definition for low-res sources
+    if min(img_rgb.width, img_rgb.height) < 700:
+        img_rgb = img_rgb.filter(ImageFilter.UnsharpMask(radius=1.2, percent=130, threshold=1))
 
-    # 6. Craft presets
-    if any(k in preset_key for k in ["jewelry", "dokra", "brass", "wood"]):
-        img_rgb = img_rgb.filter(ImageFilter.SHARPEN)
-
-    # 7. Standard 1200×1200 Clean Studio Framing (ONDC/E-commerce specification)
+    # 6. Standard 1200×1200 Studio Framing (Rescale to target dimensions FIRST)
     target_dim = 1200
     scale = max(target_dim / img_rgb.width, target_dim / img_rgb.height)
     new_w = int(img_rgb.width * scale)
@@ -226,6 +223,17 @@ async def enhance_image(request: ImageEnhanceRequest):
     crop_x = (new_w - target_dim) // 2
     crop_y = (new_h - target_dim) // 2
     canvas = img_scaled.crop((crop_x, crop_y, crop_x + target_dim, crop_y + target_dim))
+
+    # 7. Multi-Frequency Output Sharpening (Applied AFTER scaling directly at final 1200×1200 canvas)
+    # Pass 1: Macro Edge Definition (Radius 3.0, lifts haze and sharpens structural silhouettes)
+    canvas = canvas.filter(ImageFilter.UnsharpMask(radius=3.0, percent=int(sharpness * 50), threshold=2))
+
+    # Pass 2: Micro-Texture Clarity (Radius 1.0, pops fine filigree, engravings, and fabric weaves)
+    canvas = canvas.filter(ImageFilter.UnsharpMask(radius=1.0, percent=int(sharpness * 85), threshold=0))
+
+    # Pass 3: Craft presets (Jewelry/metal/wood macro sharpening)
+    if any(k in preset_key for k in ["jewelry", "dokra", "brass", "wood"]):
+        canvas = canvas.filter(ImageFilter.SHARPEN)
 
     # 8. Export as WebP (Single high-speed pass, <25ms)
     output = io.BytesIO()
