@@ -106,38 +106,20 @@ async function processCanvasStudioShot(src: string): Promise<{
           return;
         }
 
-        // 1. Center and scale craft photo cleanly into 1200x1200 master studio canvas
-        const scale = Math.max(targetDim / origW, targetDim / origH);
-        const fitW = Math.round(origW * scale);
-        const fitH = Math.round(origH * scale);
-        const posX = Math.round((targetDim - fitW) / 2);
-        const posY = Math.round((targetDim - fitH) / 2);
+        // 1. Preserve exact original dimensions and aspect ratio
+        canvas.width = origW;
+        canvas.height = origH;
 
-        // 2. Draw image with GPU-accelerated 3200K warm studio lighting via CSS filter
+        // 2. Draw image with subtle color grading via filter
         ctx.save();
-        ctx.filter = 'contrast(1.10) brightness(1.06) saturate(1.15) sepia(0.06)';
-        ctx.drawImage(img, posX, posY, fitW, fitH);
+        ctx.filter = 'contrast(1.04) brightness(1.02) saturate(1.02)';
+        ctx.drawImage(img, 0, 0, origW, origH);
         ctx.restore();
-
-        // 3. Subtle luxury studio lighting vignette (highlights subject in center, gently softens outer perimeter)
-        const lightGrad = ctx.createRadialGradient(
-          targetDim / 2,
-          targetDim * 0.46,
-          80,
-          targetDim / 2,
-          targetDim / 2,
-          targetDim * 0.72,
-        );
-        lightGrad.addColorStop(0, 'rgba(255, 248, 235, 0.07)');
-        lightGrad.addColorStop(0.65, 'rgba(0, 0, 0, 0)');
-        lightGrad.addColorStop(1, 'rgba(18, 12, 8, 0.24)');
-        ctx.fillStyle = lightGrad;
-        ctx.fillRect(0, 0, targetDim, targetDim);
 
         const dataUrl = canvas.toDataURL('image/webp', 0.94);
         resolve({
           dataUrl,
-          originalDimensions: `${origW}×${origH}px`,
+          originalDimensions: `${origW}×${origH}px (Original Aspect Ratio Preserved)`,
           dominantPalette: ['#B8860B', '#8B4513', '#CD853F', '#D4AF37'],
         });
       } catch (err) {
@@ -905,22 +887,22 @@ export default function CreateProductPage() {
                   </div>
                 </div>
 
-                {/* Studio Preview Box */}
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-black/40 shadow-xl flex flex-col justify-between">
+                {/* Studio Preview Box (Maintains exact aspect ratio without cropping) */}
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-black/60 shadow-xl flex flex-col justify-between">
                   <Image
                     src={showEnhanced && enhancedImageUrl ? enhancedImageUrl : imagePreviewUrl}
                     alt="Craft Preview"
                     fill
-                    className={`object-cover transition-all duration-700 ${
+                    className={`object-contain transition-all duration-700 ${
                       showEnhanced 
-                        ? 'contrast-105 brightness-105 filter drop-shadow-2xl' 
-                        : 'contrast-85 brightness-95 saturate-90'
+                        ? 'contrast-102 brightness-102 filter drop-shadow-2xl' 
+                        : 'contrast-95 brightness-98'
                     }`}
                     unoptimized
                   />
                   {/* Visual Studio Light Overlay when enhanced */}
                   {showEnhanced && (
-                    <div className="absolute inset-0 bg-radial from-amber-500/10 via-transparent to-black/60 pointer-events-none" />
+                    <div className="absolute inset-0 bg-radial from-amber-500/5 via-transparent to-black/40 pointer-events-none" />
                   )}
 
                   {/* Top Badge */}
@@ -928,7 +910,7 @@ export default function CreateProductPage() {
                     <div className="bg-black/80 backdrop-blur-md text-amber-200 text-[10px] font-semibold px-3 py-1.5 rounded-full border border-white/15 flex items-center gap-1.5 shadow-lg">
                       <Sparkles size={11} className="text-[#FA7A21] animate-pulse" />
                       {showEnhanced 
-                        ? (enhancedImageUrl ? '✨ AI Studio Shot (Cleaned 1200×1200)' : 'AI Studio Shot (Enhanced)') 
+                        ? (enhancedImageUrl ? '✨ AI Studio Shot (Aspect Ratio Preserved)' : 'AI Studio Shot (Enhanced)') 
                         : 'Raw Smartphone Shot'}
                     </div>
                     <span className="text-[10px] font-semibold bg-[#FA7A21]/90 text-white px-2.5 py-1 rounded-full border border-white/20">

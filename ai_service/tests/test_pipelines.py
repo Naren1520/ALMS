@@ -145,7 +145,7 @@ def test_image_enhancement_endpoint():
     response = client.post("/pipeline/image/enhance", json=payload)
     assert response.status_code == 200
     data = response.json()
-    assert data["width"] == 1200
-    assert data["height"] == 1200
+    assert data["width"] == 100
+    assert data["height"] == 100
     assert data["format"] == "webp"
     assert len(data["enhanced_base64"]) > 0

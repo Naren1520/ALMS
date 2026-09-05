@@ -94,6 +94,51 @@ def apply_clean_grade(img: Image.Image) -> Image.Image:
     return Image.fromarray(arr.astype(np.uint8))
 
 
+_rembg_session = None
+
+
+def _get_rembg_session():
+    """Lazily initializes the lightweight u2netp session once across application requests."""
+    global _rembg_session
+    if _rembg_session is None:
+        try:
+            from rembg import new_session
+            _rembg_session = new_session("u2netp")
+        except Exception:
+            pass
+    return _rembg_session
+
+
+def apply_subject_focus(img: Image.Image, blur_strength: int = 25) -> Image.Image:
+    """
+    Keeps the artisan craft product tack-sharp while smoothly blurring the background (studio bokeh).
+    Uses the lightweight (4.5MB) u2netp matte session. If unavailable, returns img cleanly.
+    """
+    try:
+        session = _get_rembg_session()
+        if session is None:
+            return img
+
+        from rembg import remove
+        # 1. Soft alpha matte of the foreground subject
+        mask_img = remove(img, session=session, only_mask=True)
+        mask = np.array(mask_img).astype(np.float32) / 255.0
+        mask = cv2.GaussianBlur(mask, (9, 9), 0)
+
+        # 2. Gaussian blur background frame
+        arr = np.array(img.convert("RGB")).astype(np.float32)
+        blurred = cv2.GaussianBlur(arr, (0, 0), sigmaX=blur_strength)
+
+        # 3. Composite sharp craft over soft bokeh background
+        mask_3ch = np.stack([mask] * 3, axis=-1)
+        composite = arr * mask_3ch + blurred * (1.0 - mask_3ch)
+
+        return Image.fromarray(np.clip(composite, 0, 255).astype(np.uint8))
+    except Exception:
+        return img
+
+
+
 def _get_gemini_diagnostics(img: Image.Image, category: Optional[str] = None) -> dict:
     """
     Calls Gemini Flash 3.6 purely for qualitative appraisal displayed in the UI:
@@ -196,29 +241,23 @@ async def enhance_image(request: ImageEnhanceRequest):
     resolution_score = diagnostics.get("resolution_score", "1200×1200px Studio Standard")
 
     # 3. Deterministic Clean Color Science Grading (Zero LLM multiplier guessing)
-    img_clean = apply_clean_grade(img)
+    canvas = apply_clean_grade(img)
+    orig_w, orig_h = canvas.size
 
-    # 4. Standard 1200×1200 Studio Framing (Rescale to target dimensions)
-    target_dim = 1200
-    scale = max(target_dim / img_clean.width, target_dim / img_clean.height)
-    new_w = int(img_clean.width * scale)
-    new_h = int(img_clean.height * scale)
-    img_scaled = img_clean.resize((new_w, new_h), Image.LANCZOS)
-    crop_x = (new_w - target_dim) // 2
-    crop_y = (new_h - target_dim) // 2
-    canvas = img_scaled.crop((crop_x, crop_y, crop_x + target_dim, crop_y + target_dim))
-
-    # 5. Clean Edge-Preserving Denoising (Fast bilateral filter wipes sensor grain while keeping edges razor-sharp)
+    # 4. Clean Edge-Preserving Denoising (Fast bilateral filter wipes sensor grain while keeping edges razor-sharp)
     arr = np.array(canvas)
     arr = cv2.bilateralFilter(arr, d=5, sigmaColor=25, sigmaSpace=25)
     canvas = Image.fromarray(arr)
 
-    # 6. Clean HD Output Sharpening (Conservative, non-haloing clarity tuned for denoised image)
+    # 5. Subject Focus: Keep product pin-sharp, smoothly blur distracting background (studio bokeh)
+    canvas = apply_subject_focus(canvas, blur_strength=25)
+
+    # 6. Clean HD Output Sharpening (Concentrates sharpness on the foreground product)
     canvas = canvas.filter(ImageFilter.UnsharpMask(radius=1.5, percent=130, threshold=3))
 
-    # 7. Export as WebP (Single high-speed pass, <25ms)
+    # 7. Export as WebP (Preserves exact original dimensions and aspect ratio)
     output = io.BytesIO()
-    canvas.save(output, format="WEBP", quality=84, method=4)
+    canvas.save(output, format="WEBP", quality=86, method=4)
     enhanced_bytes = output.getvalue()
     enhanced_base64 = "data:image/webp;base64," + base64.b64encode(enhanced_bytes).decode("utf-8")
     elapsed_ms = (time.time() - start_time) * 1000
@@ -226,12 +265,12 @@ async def enhance_image(request: ImageEnhanceRequest):
     return ImageEnhanceResponse(
         original_key=request.original_key or "craft_image",
         enhanced_base64=enhanced_base64,
-        width=target_dim,
-        height=target_dim,
+        width=orig_w,
+        height=orig_h,
         size_bytes=len(enhanced_bytes),
         format="webp",
         processing_time_ms=round(elapsed_ms, 2),
-        resolution_score=resolution_score,
+        resolution_score=f"{orig_w}×{orig_h}px (Original Aspect Ratio Preserved)",
         edge_sharpness_score=edge_sharpness,
         lighting_quality=lighting_quality,
         dominant_colors=palette,
