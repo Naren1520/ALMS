@@ -92,8 +92,18 @@ class CatalogOutput(BaseModel):
 class CatalogRequest(BaseModel):
     product_id: Optional[str] = None
     image_keys: list[str] = Field(default_factory=list)
+    image_base64: Optional[str] = None
+    image_url: Optional[str] = None
+    craft_title: Optional[str] = None
+    material: Optional[str] = None
+    region: Optional[str] = None
+    artisan_name: Optional[str] = None
     voice_base64: Optional[str] = None
     voice_mimetype: Optional[str] = None
     text_input: Optional[str] = None
     artisan_language: str = "en"
     category_hint: Optional[str] = None
+    material_cost: Optional[float] = None
+    labour_hours: Optional[float] = None
+    hourly_wage: Optional[float] = None
+    overhead: Optional[float] = None

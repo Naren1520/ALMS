@@ -16,6 +16,8 @@ const nextConfig = {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
     return [
       {
+        // Proxy backend routes — Next.js App Router internal API routes (e.g. /api/analyse-craft)
+        // take priority over this rewrite automatically, so no exclusion needed.
         source: '/api/:path*',
         destination: `${backendUrl}/api/:path*`,
       },
