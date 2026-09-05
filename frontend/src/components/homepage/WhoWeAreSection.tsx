@@ -87,8 +87,8 @@ export default function WhoWeAreSection() {
         </div>
       </div>
 
-      {/* Folk Art Banner on bottom matching Screenshot 3 */}
-      <FolkArtBanner height={85} />
+      {/* Folk Art Banner on bottom matching background cut */}
+      <FolkArtBanner height={85} variant="border-1" />
     </section>
   );
 }

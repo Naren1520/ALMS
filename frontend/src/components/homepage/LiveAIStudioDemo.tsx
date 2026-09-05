@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Camera, Mic, Calculator, CheckCircle2, Sparkles, Volume2, ArrowRight, ShieldCheck, AlertTriangle, RefreshCw, Code2 } from 'lucide-react';
 
 interface CraftPreset {
@@ -38,8 +39,8 @@ const PRESETS: CraftPreset[] = [
     name: 'Bastar Handwoven Bamboo Storage Basket',
     region: 'Bastar, Chhattisgarh',
     category: 'Home & Utility',
-    rawImage: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=70&auto=format&fit=crop',
-    enhancedImage: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=90&auto=format&fit=crop',
+    rawImage: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=70&auto=format&fit=crop',
+    enhancedImage: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=95&auto=format&fit=crop',
     audioLanguage: 'Kannada / Gondi Dialect',
     audioTranscript: '“ನಮ್ಮ ಕಾಡಿನ ಬಿದಿರಿನಿಂದ ಕೈಯಿಂದ ನೇಯ್ದ ಬುಟ್ಟಿ ಇದು. ಇದನ್ನು ಮಾಡಲು ಮೂರು ದಿನ ಬೇಕಾಗುತ್ತದೆ. ಧಾನ್ಯ ಮತ್ತು ಬಟ್ಟೆ ಇಡಲು ಇದು ತುಂಬಾ ಗಟ್ಟಿಯಾಗಿದೆ...” (This is a basket handwoven from forest bamboo. Takes 3 days to craft. Very sturdy for storing grain and textiles.)',
     extractedAttributes: {
@@ -65,8 +66,8 @@ const PRESETS: CraftPreset[] = [
     name: 'Tree of Life Madhubani Silk Scroll',
     region: 'Mithila, Bihar',
     category: 'Traditional Paintings',
-    rawImage: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=70&auto=format&fit=crop',
-    enhancedImage: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=90&auto=format&fit=crop',
+    rawImage: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&q=70&auto=format&fit=crop',
+    enhancedImage: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&q=95&auto=format&fit=crop',
     audioLanguage: 'Maithili / Hindi',
     audioTranscript: '“ई मिथिलाक पारंपरिक कोहबर पेंटिंग छी। प्राकृतिक फूल आर पात के रंग सं बनाओल गेल अछि। बनाबै मे सात दिन लागल...” (This is traditional Mithila painting made using natural floral and mineral colors. Took 7 full days...)',
     extractedAttributes: {
@@ -92,8 +93,8 @@ const PRESETS: CraftPreset[] = [
     name: 'Cobalt Floral Blue Pottery Urn',
     region: 'Jaipur, Rajasthan',
     category: 'Artisanal Ceramics',
-    rawImage: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=70&auto=format&fit=crop',
-    enhancedImage: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=90&auto=format&fit=crop',
+    rawImage: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&q=70&auto=format&fit=crop',
+    enhancedImage: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&q=95&auto=format&fit=crop',
     audioLanguage: 'Rajasthani / Hindi',
     audioTranscript: '“यो जयपुर को खास ब्लू पॉटरी को फूलदान छे। ईमे क्ले को इस्तेमाल कोनी होवे, क्वार्ट्ज और कांच स्यूं बण्यो है...” (This is Jaipur special blue pottery vase. No clay is used; made from quartz and glass...)',
     extractedAttributes: {
@@ -119,8 +120,8 @@ const PRESETS: CraftPreset[] = [
     name: 'Hand-Spun Kani Pashmina Shawl',
     region: 'Srinagar, Kashmir',
     category: 'Luxury Handloom',
-    rawImage: 'https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=800&q=70&auto=format&fit=crop',
-    enhancedImage: 'https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=800&q=90&auto=format&fit=crop',
+    rawImage: 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=800&q=70&auto=format&fit=crop',
+    enhancedImage: 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=800&q=95&auto=format&fit=crop',
     audioLanguage: 'Kashmiri / Urdu',
     audioTranscript: '“یہ اصلی لداخی چنگتھانگی پشمینہ اون ہے۔ اس کان شال پر لکڑی کی کانیاں استعمال کرکے ۳ مہینے کا کام کیا گیا ہے...” (This is genuine Ladakhi Changthangi cashmere wool. Crafted over 3 months using wooden needles...)',
     extractedAttributes: {
@@ -284,6 +285,29 @@ export default function LiveAIStudioDemo() {
                     <Sparkles size={11} /> AI Enhanced &bull; 0.8s
                   </div>
                 )}
+              </div>
+
+              {/* Action Banner to full AI Studio Analyzer */}
+              <div className="md:col-span-2 p-5 bg-gradient-to-r from-amber-950/80 via-[#2B1810] to-orange-950/80 border-2 border-[#FA7A21] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+                <div className="space-y-1 text-center sm:text-left">
+                  <div className="flex items-center justify-center sm:justify-start gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#FA7A21] animate-ping" />
+                    <p className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                      Live AI Craft &amp; Market Valuation Studio
+                    </p>
+                  </div>
+                  <p className="text-xs text-white">
+                    Upload your own custom smartphone photo, extract GI metadata, and compute defensible B2C/B2B fair-wage price floors.
+                  </p>
+                </div>
+                <Link
+                  href="/artisan/create-product"
+                  className="px-6 py-3 bg-gradient-to-r from-[#FA7A21] via-orange-500 to-amber-500 hover:from-[#e06917] hover:to-orange-600 text-white font-bold text-xs rounded-full shadow-lg shadow-orange-500/30 transition-all flex items-center gap-2 shrink-0 transform hover:-translate-y-0.5"
+                >
+                  <Sparkles size={15} />
+                  <span>🧠 Open Full AI Studio &amp; Upload Craft</span>
+                  <ArrowRight size={15} />
+                </Link>
               </div>
             </div>
           )}

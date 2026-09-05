@@ -17,11 +17,7 @@ const registerSchema = z
     email: z.string().email('Must be a valid email address'),
     password: z
       .string()
-      .min(12, 'At least 12 characters')
-      .regex(/[A-Z]/, 'Must contain an uppercase letter')
-      .regex(/[a-z]/, 'Must contain a lowercase letter')
-      .regex(/\d/, 'Must contain a digit')
-      .regex(/[^A-Za-z0-9]/, 'Must contain a special character'),
+      .min(1, 'Password is required'),
     confirmPassword: z.string(),
     role: z.enum(['ARTISAN', 'BUYER', 'CONSUMER']),
   })
@@ -56,6 +52,7 @@ function RegisterFormComponent() {
   const onSubmit = async (data: RegisterForm) => {
     setServerError(null);
     try {
+      // 1. Register Account
       const res = await fetch('/api/v1/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,31 +60,40 @@ function RegisterFormComponent() {
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.message ?? 'Registration failed');
-      setSuccess(true);
+
+      // 2. Auto-login immediately
+      try {
+        const loginRes = await fetch('/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email: data.email, password: data.password }),
+        });
+        const loginBody = await loginRes.json();
+        if (loginRes.ok && loginBody.accessToken) {
+          localStorage.setItem('access_token', loginBody.accessToken);
+          if (loginBody.user) {
+            localStorage.setItem('alms_user', JSON.stringify(loginBody.user));
+          }
+          let destination = '/artisan/create-product';
+          if (data.role === 'BUYER') {
+            destination = '/b2b/rfq';
+          } else if (data.role === 'CONSUMER') {
+            destination = '/explore';
+          }
+          window.location.href = destination;
+          return;
+        }
+      } catch {
+        // If auto-login fails, redirect to login page
+      }
+
+      // Fallback: Redirect to login page
+      window.location.href = '/login';
     } catch (err: unknown) {
       setServerError(err instanceof Error ? err.message : 'Something went wrong during registration.');
     }
   };
-
-  if (success) {
-    return (
-      <div className="w-full max-w-md bg-[#1C0E07] border border-white/15 p-8 sm:p-10 rounded-2xl shadow-2xl text-center space-y-4">
-        <div className="w-16 h-16 rounded-full bg-[#FA7A21]/10 border border-[#FA7A21]/30 flex items-center justify-center mx-auto mb-4 text-[#FA7A21]">
-          <MailCheck size={32} />
-        </div>
-        <h1 className="font-serif text-3xl font-normal text-white">Check Your Email</h1>
-        <p className="text-stone-400 text-sm leading-relaxed font-light">
-          We&apos;ve sent an activation link to your email address. Please verify to access your ALMS portal.
-        </p>
-        <div className="pt-2">
-          <Link href="/login" className="w-full py-3.5 px-6 bg-[#FA7A21] hover:bg-[#e06917] text-white font-semibold text-xs rounded-full shadow-md transition-all inline-flex items-center justify-center gap-2">
-            <span>Proceed to Sign In</span>
-            <ArrowRight size={14} />
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full max-w-lg bg-[#1C0E07] border border-white/15 p-8 sm:p-10 md:p-12 rounded-2xl shadow-2xl relative text-white">
@@ -124,7 +130,32 @@ function RegisterFormComponent() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+      {/* MOCK LOGIN HELPERS */}
+      <div className="mb-6 p-4 bg-[#FA7A21]/10 border border-[#FA7A21]/20 rounded-xl space-y-2">
+        <p className="text-[10px] text-amber-200 uppercase tracking-widest font-semibold mb-2">Dev Helpers: Auto-fill Seeded Accounts</p>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => { setValue('role', 'ARTISAN'); setValue('email', 'artisan.bastar@alms.in'); setValue('password', 'Password123!'); setValue('confirmPassword', 'Password123!'); }} className="px-3 py-1.5 bg-black/40 border border-white/10 hover:border-[#FA7A21]/50 text-white text-[11px] rounded-lg transition-all">
+            Artisan
+          </button>
+          <button type="button" onClick={() => { setValue('role', 'BUYER'); setValue('email', 'procurement@fabindia.com'); setValue('password', 'Password123!'); setValue('confirmPassword', 'Password123!'); }} className="px-3 py-1.5 bg-black/40 border border-white/10 hover:border-[#FA7A21]/50 text-white text-[11px] rounded-lg transition-all">
+            B2B Buyer
+          </button>
+          <button type="button" onClick={() => { setValue('role', 'CONSUMER'); setValue('email', 'consumer@alms.in'); setValue('password', 'Password123!'); setValue('confirmPassword', 'Password123!'); }} className="px-3 py-1.5 bg-black/40 border border-white/10 hover:border-[#FA7A21]/50 text-white text-[11px] rounded-lg transition-all">
+            Consumer
+          </button>
+        </div>
+      </div>
+
+      <form
+        action="#"
+        method="POST"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(onSubmit)(e);
+        }}
+        noValidate
+        className="space-y-5"
+      >
         {/* Role Selector Cards */}
         <div>
           <label className="block text-xs uppercase tracking-wider font-semibold text-stone-100 mb-2">

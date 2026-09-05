@@ -9,7 +9,7 @@ import { ArrowRight } from 'lucide-react';
 export default function FinalCTASection() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const bgRef      = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function FinalCTASection() {
       {/* Full-bleed background image */}
       <div ref={bgRef} className="absolute inset-0 z-0 scale-110">
         <Image
-          src="https://images.unsplash.com/photo-1504198266287-1659872e6590?w=2000&q=85&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=2000&q=85&auto=format&fit=crop"
           alt=""
           fill
           className="object-cover object-center"
@@ -89,7 +89,7 @@ export default function FinalCTASection() {
             </em>
           </h2>
 
-          <p className="text-stone-200 leading-relaxed max-w-lg mx-auto font-sans font-light text-base sm:text-lg">
+          <p className="text-stone-200 leading-relaxed text-white  max-w-lg mx-auto font-sans font-light text-base sm:text-lg">
             Join 12,000+ artisans already empowered on ALMS.
             Start with just a smartphone photo &mdash; no e-commerce knowledge required.
           </p>
@@ -110,7 +110,7 @@ export default function FinalCTASection() {
             </Link>
           </div>
 
-          <p className="text-stone-300 text-xs font-light">
+          <p className="text-stone-300 text-xs font-light text-white">
             Free to register &bull; Zero listing fees &bull; Powered by Ministry of Social Justice &amp; Empowerment (Govt. of India)
           </p>
         </div>

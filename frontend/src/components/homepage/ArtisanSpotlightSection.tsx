@@ -10,7 +10,7 @@ const ARTISANS = [
     name: 'Meera Devi',
     craft: 'Madhubani Painting',
     region: 'Mithila, Bihar',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80&auto=format&fit=crop',
+    image: '/images/artisan_meera_devi.jpg',
     quote: 'ALMS helped me sell to buyers in Germany without learning English.',
     tag: 'GI Certified',
   },
@@ -18,7 +18,7 @@ const ARTISANS = [
     name: 'Rajan Sutar',
     craft: 'Dhokra Casting',
     region: 'Bastar, Chhattisgarh',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&auto=format&fit=crop',
+    image: '/images/artisan_rajan_sutar.jpg',
     quote: 'The AI wrote my entire catalog while I was in the workshop.',
     tag: 'Top Seller',
   },
@@ -26,7 +26,7 @@ const ARTISANS = [
     name: 'Fatima Begum',
     craft: 'Chikankari Embroidery',
     region: 'Lucknow, UP',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80&auto=format&fit=crop',
+    image: '/images/artisan_fatima_begum.jpg',
     quote: 'My trust score helped me get bulk orders from three companies.',
     tag: 'UNESCO Heritage',
   },
@@ -34,29 +34,6 @@ const ARTISANS = [
 
 export default function ArtisanSpotlightSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const cardsRef   = useRef<(HTMLElement | null)[]>([]);
-  const prefersReduced = useReducedMotion();
-
-  useEffect(() => {
-    if (prefersReduced) return;
-    let ctx: any;
-    (async () => {
-      const { gsap } = await import('gsap');
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      gsap.registerPlugin(ScrollTrigger);
-      ctx = gsap.context(() => {
-        gsap.from(cardsRef.current.filter(Boolean), {
-          opacity: 0,
-          y: 48,
-          stagger: 0.15,
-          duration: 0.9,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' },
-        });
-      });
-    })();
-    return () => ctx?.revert();
-  }, [prefersReduced]);
 
   return (
     <section
@@ -86,10 +63,9 @@ export default function ArtisanSpotlightSection() {
 
         {/* Cards matching Screenshot 1 */}
         <div className="grid md:grid-cols-3 gap-8">
-          {ARTISANS.map((artisan, i) => (
+          {ARTISANS.map((artisan) => (
             <article
               key={artisan.name}
-              ref={(el) => { cardsRef.current[i] = el; }}
               className="group bg-[#1C0E07] overflow-hidden shadow-2xl hover:border-white/40 border border-white/15 border-t-4 border-t-[#FA7A21] transition-all duration-300 rounded-3xl flex flex-col justify-between"
             >
               <div>

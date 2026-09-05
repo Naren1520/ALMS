@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import FolkArtBanner from '@/components/homepage/FolkArtBanner';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, Sparkles, ArrowRight, ShieldCheck, Search } from 'lucide-react';
+import { MapPin, Sparkles, ArrowRight, ShieldCheck, Search, Database } from 'lucide-react';
 
 interface RegionData {
   regionCode: string;
@@ -21,91 +22,91 @@ const REGION_DETAILS: Record<string, RegionData> = {
     regionCode: 'Jammu & Kashmir',
     artisanCount: 4200,
     crafts: ['Pashmina Weaving', 'Paper Mache', 'Walnut Wood Carving', 'Kani Shawls'],
-    sampleImages: ['https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Centuries of Persian-influenced artisan guilds preserving pure cashmere wool spinning and intricate hand-knotted floral carpets along the Jhelum valley.',
   },
   RJ: {
     regionCode: 'Rajasthan',
     artisanCount: 18400,
     crafts: ['Blue Pottery', 'Bandhani Tie-Dye', 'Block Printing', 'Meenakari Jewellery', 'Kathputli Puppets'],
-    sampleImages: ['https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'The royal atelier traditions of Jaipur and Jodhpur, celebrated for vibrant natural dye alchemy, quartz-based glaze pottery, and miniature court paintings.',
   },
   BR: {
     regionCode: 'Bihar',
     artisanCount: 9100,
     crafts: ['Madhubani Painting', 'Sikki Grass Craft', 'Manjusha Art', 'Bhagalpuri Silk'],
-    sampleImages: ['https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Ancient ritual wall and cloth murals originating from Mithila, painted with fingers, twigs, and natural mineral pigments depicting sacred nature motifs.',
   },
   UP: {
     regionCode: 'Uttar Pradesh',
     artisanCount: 24500,
     crafts: ['Chikankari Embroidery', 'Varanasi Zari Brocade', 'Moradabad Brassware', 'Firozabad Glasswork'],
-    sampleImages: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Awadhi royal embroidery requiring decades of needlework mastery and handloom silk weaving along the sacred ghats of Varanasi.',
   },
   CG: {
     regionCode: 'Chhattisgarh',
     artisanCount: 6800,
     crafts: ['Dhokra Metal Casting', 'Bastar Wrought Iron', 'Kosa Silk', 'Terracotta'],
-    sampleImages: ['https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: '4,000-year-old lost-wax bell metal casting practiced by tribal metalsmiths in Bastar, echoing the ancient Dancing Girl of Mohenjo-daro.',
   },
   MH: {
     regionCode: 'Maharashtra',
     artisanCount: 11200,
     crafts: ['Warli Tribal Art', 'Paithani Sarees', 'Kolhapuri Chappals', 'Sawantwadi Lacquerware'],
-    sampleImages: ['https://images.unsplash.com/photo-1504198266287-1659872e6590?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Indigenous agrarian geometric line art celebrating harvest gods, paired with gold-bordered Peshwa handloom silk traditions.',
   },
   GJ: {
     regionCode: 'Gujarat',
     artisanCount: 15600,
     crafts: ['Rogan Art', 'Kutch Embroidery', 'Ajrakh Block Print', 'Patan Patola'],
-    sampleImages: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Castor oil paste painting by the sole surviving Khatri family master line, and double-ikat geometric silk heirlooms from Patan.',
   },
   WB: {
     regionCode: 'West Bengal',
     artisanCount: 14300,
     crafts: ['Kantha Embroidery', 'Terracotta Bankura Horse', 'Dhaka Jamdani', 'Dokra'],
-    sampleImages: ['https://images.unsplash.com/photo-1604423975750-e1e9a729ef8e?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Running-stitch storytelling textiles and terracotta kiln architecture rooted in the rural artisan heartlands of Shantiniketan and Bishnupur.',
   },
   TN: {
     regionCode: 'Tamil Nadu',
     artisanCount: 19800,
     crafts: ['Tanjore Gold Paintings', 'Kanchipuram Silks', 'Swamimalai Bronze Idols', 'Pattamadai Mats'],
-    sampleImages: ['https://images.unsplash.com/photo-1547612345-7f6e9f2bd6f6?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Chola dynasty lost-wax bronze sculptures and temple silk tapestries enriched with 22-karat gold foil inlay and unboiled silk weaves.',
   },
   KA: {
     regionCode: 'Karnataka',
     artisanCount: 13700,
     crafts: ['Channapatna Wooden Toys', 'Mysore Sandalwood Carving', 'Bidriware', 'Ilkal Sarees'],
-    sampleImages: ['https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Eco-friendly natural lacquered ivory-wood toy crafts patronized since Tipu Sultan, and silver inlay on blackened zinc-copper Bidriware alloys.',
   },
   KL: {
     regionCode: 'Kerala',
     artisanCount: 8900,
     crafts: ['Aranmula Metal Mirror', 'Coir Craft', 'Kathakali Mask Carving', 'Nettur Petti Boxes'],
-    sampleImages: ['https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Front-surface reflective metallurgy alloys whose exact metallurgical formula remains a sacred family secret passed down through temple artisans.',
   },
   OD: {
     regionCode: 'Odisha',
     artisanCount: 12100,
     crafts: ['Pattachitra Palm Leaf Art', 'Silver Filigree (Tarakasi)', 'Sambalpuri Ikat', 'Applique Pipli'],
-    sampleImages: ['https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Intricate palm-leaf engravings honoring Lord Jagannath, and featherlight silver gossamer wires spun into celestial filigree jewellery.',
   },
   AS: {
     regionCode: 'Assam',
     artisanCount: 7600,
     crafts: ['Muga Golden Silk', 'Bamboo & Cane Craft', 'Bell Metal Craft', 'Majuli Mask Making'],
-    sampleImages: ['https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=600&q=80&auto=format&fit=crop'],
+    sampleImages: ['https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80&auto=format&fit=crop'],
     culturalDescription: 'Wild natural shimmering golden silk endemic solely to the Brahmaputra valley and sacred bamboo theatre masks crafted on Majuli Island.',
   },
 };
@@ -146,16 +147,44 @@ const INDIA_STATES = [
 export default function CraftAtlasPage() {
   const [selectedRegion, setSelectedRegion] = useState<string>('RJ');
   const [searchFilter, setSearchFilter] = useState('');
+  const [liveCounts, setLiveCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    async function loadLiveRegionStats() {
+      try {
+        const res = await fetch('/api/v1/craft-atlas/regions');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            const map: Record<string, number> = {};
+            data.forEach((r: any) => {
+              if (r.state) map[r.state] = Number(r.artisan_count) || 0;
+            });
+            setLiveCounts(map);
+          }
+        }
+      } catch (err) {
+        console.warn('Using offline atlas cache');
+      }
+    }
+    loadLiveRegionStats();
+  }, []);
 
   const handleRegionSelect = useCallback((code: string) => {
     setSelectedRegion(code);
     window.history.replaceState(null, '', `#state=${code}`);
   }, []);
 
-  const activeData: RegionData =
-    REGION_DETAILS[selectedRegion] ?? {
-      regionCode: INDIA_STATES.find((s) => s.code === selectedRegion)?.name ?? selectedRegion,
-      artisanCount: 3400,
+  const stateName = INDIA_STATES.find((s) => s.code === selectedRegion)?.name ?? selectedRegion;
+  const baseData = REGION_DETAILS[selectedRegion];
+  const activeData: RegionData = baseData
+    ? {
+      ...baseData,
+      artisanCount: liveCounts[baseData.regionCode] ?? baseData.artisanCount,
+    }
+    : {
+      regionCode: stateName,
+      artisanCount: liveCounts[stateName] ?? 3400,
       crafts: ['Traditional Handloom', 'Pottery', 'Folk Paintings', 'Wood Carving'],
       sampleImages: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop'],
       culturalDescription: 'Heritage artisan clusters preserving ancestral craft methodologies passed down over multiple generations.',
@@ -189,6 +218,11 @@ export default function CraftAtlasPage() {
             </p>
           </ScrollReveal>
 
+          {/* Heritage Folk Art Ribbon Divider */}
+          <div className="mb-10">
+            <FolkArtBanner height={75} variant="border-4" alt="Indian heritage tapestry border" />
+          </div>
+
           {/* Main Grid */}
           <ScrollReveal className="grid lg:grid-cols-12 gap-8 items-start" delay={0.1}>
             {/* Left: Map & Region Selector (7 cols) */}
@@ -217,11 +251,10 @@ export default function CraftAtlasPage() {
                   <button
                     key={state.code}
                     onClick={() => handleRegionSelect(state.code)}
-                    className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 cursor-pointer font-medium ${
-                      selectedRegion === state.code
+                    className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 cursor-pointer font-medium ${selectedRegion === state.code
                         ? 'bg-[#FA7A21] text-white font-semibold shadow-xs'
                         : 'bg-white/10 border border-white/20 text-stone-100 hover:border-[#FA7A21]/60 hover:text-amber-200'
-                    }`}
+                      }`}
                   >
                     {state.name}
                   </button>
@@ -357,15 +390,15 @@ export default function CraftAtlasPage() {
                 {/* CTAs */}
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <Link
-                    href={`/explore?region=${selectedRegion}`}
-                    className="flex-1 py-3 px-6 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full text-center shadow-md hover:shadow-orange-500/25 transition-all flex items-center justify-center gap-2"
+                    href={`/explore?state=${encodeURIComponent(activeData.regionCode)}`}
+                    className="flex-1 py-3 px-6 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full text-center shadow-md hover:shadow-orange-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <span>View Products</span>
+                    <span>Explore {activeData.regionCode} Crafts</span>
                     <ArrowRight size={13} />
                   </Link>
                   <Link
-                    href={`/artisans?region=${selectedRegion}`}
-                    className="flex-1 py-3 px-6 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold rounded-full text-center transition-all flex items-center justify-center gap-2"
+                    href={`/artisans?state=${encodeURIComponent(activeData.regionCode)}`}
+                    className="flex-1 py-3 px-6 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold rounded-full text-center transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>Meet Artisans</span>
                   </Link>
@@ -375,6 +408,10 @@ export default function CraftAtlasPage() {
           </ScrollReveal>
         </div>
       </main>
+
+      {/* Bottom Heritage Ribbon */}
+      <FolkArtBanner height={65} variant="border-2" alt="Indian folk art tapestry ribbon" />
+
       <Footer />
     </>
   );

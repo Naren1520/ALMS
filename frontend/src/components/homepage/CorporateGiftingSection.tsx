@@ -19,7 +19,7 @@ const GIFT_CATEGORIES = [
     id: 'dokra',
     title: 'Dokra Lost-Wax Brass Artifacts',
     desc: 'Ancient 4,000-year-old non-ferrous tribal bell metal casting. Handcrafted mementos, pen holders, and ceremonial tribal figurines.',
-    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80&auto=format&fit=crop',
     tag: 'Bastar Tribal Metalwork',
     minOrder: '25 units',
     priceRange: '₹850 – ₹2,400',
@@ -28,7 +28,7 @@ const GIFT_CATEGORIES = [
     id: 'basketry',
     title: 'Sabai Grass & Natural Fiber Planters',
     desc: 'Braided by women artisans using natural river reeds, wild golden grass, and bamboo. Sturdy, biodegradable, and washable.',
-    image: 'https://images.unsplash.com/photo-1584589167171-541ce45f1eea?w=800&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80&auto=format&fit=crop',
     tag: 'Eco-Friendly Basketry',
     minOrder: '50 units',
     priceRange: '₹450 – ₹950',
@@ -37,7 +37,7 @@ const GIFT_CATEGORIES = [
     id: 'wallplates',
     title: 'Handpainted Tribal Wall Plates & Decor',
     desc: 'Ceramic & wooden wall art featuring authentic Warli, Gond, and Madhubani folk stories created with natural mineral pigments.',
-    image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&q=80&auto=format&fit=crop',
     tag: 'Folk Wall Decor',
     minOrder: '20 units',
     priceRange: '₹750 – ₹1,800',
@@ -158,8 +158,8 @@ export default function CorporateGiftingSection() {
         </div>
       </div>
 
-      {/* Full-width Folk Art Banner on Bottom Matching Screenshot 1 */}
-      <FolkArtBanner height={90} />
+      {/* Full-width Folk Art Banner on Bottom Matching background cut */}
+      <FolkArtBanner height={90} variant="border-3" />
     </section>
   );
 }

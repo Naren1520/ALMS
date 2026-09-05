@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import FolkArtBanner from '@/components/homepage/FolkArtBanner';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, ShieldCheck, Award, ArrowRight, MapPin, Sparkles } from 'lucide-react';
+import { Search, ShieldCheck, Award, ArrowRight, MapPin, Sparkles, Building2 } from 'lucide-react';
 
 interface ArtisanProfile {
   id: string;
@@ -35,7 +37,7 @@ const ARTISANS: ArtisanProfile[] = [
     ordersFulfilled: 148,
     heritageHonor: 'National Award Winner 2018',
     bio: 'Preserving natural pigment extraction from aparajita flowers and soot, creating ritual ceremonial murals for temple sanctums and private collectors worldwide.',
-    image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=800&q=80&auto=format&fit=crop&crop=face',
+    image: '/images/artisan_meera_devi.jpg',
     giCertified: true,
   },
   {
@@ -49,7 +51,7 @@ const ARTISANS: ArtisanProfile[] = [
     ordersFulfilled: 215,
     heritageHonor: 'UNESCO Seal of Excellence',
     bio: 'Sixth-generation bell-metal tribal caster maintaining pure beeswax and river clay molding methods dating back four millennia to the Indus Valley Civilization.',
-    image: 'https://images.unsplash.com/photo-1547612345-7f6e9f2bd6f6?w=800&q=80&auto=format&fit=crop&crop=face',
+    image: '/images/artisan_rajan_sutar.jpg',
     giCertified: true,
   },
   {
@@ -63,7 +65,7 @@ const ARTISANS: ArtisanProfile[] = [
     ordersFulfilled: 340,
     heritageHonor: 'State Master Craftsperson',
     bio: 'Leading a collective of 120 women artisans mastering all 32 traditional stitches including Tepchi, Bakhiya, and Murri on pure organza and mulmul cottons.',
-    image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&q=80&auto=format&fit=crop&crop=face',
+    image: '/images/artisan_fatima_begum.jpg',
     giCertified: true,
   },
   {
@@ -77,7 +79,7 @@ const ARTISANS: ArtisanProfile[] = [
     ordersFulfilled: 88,
     heritageHonor: 'Padma Shri Nominee',
     bio: 'Master of the coded "Tujis" needle technique, spending up to two full years on a single intricately patterned heirloom Jamawar shawl.',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&auto=format&fit=crop&crop=face',
+    image: '/images/artisan_ghulam_rasool.jpg',
     giCertified: true,
   },
   {
@@ -91,7 +93,7 @@ const ARTISANS: ArtisanProfile[] = [
     ordersFulfilled: 512,
     heritageHonor: 'Geographical Indication Custodian',
     bio: 'Forming vessels purely from ground quartz, fuller earth, and natural copper oxide glazes without using conventional clay or potter wheel throwing.',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&q=80&auto=format&fit=crop&crop=face',
+    image: '/images/artisan_trust_profile.jpg',
     giCertified: true,
   },
   {
@@ -105,17 +107,23 @@ const ARTISANS: ArtisanProfile[] = [
     ordersFulfilled: 190,
     heritageHonor: 'Padma Shri Awardee',
     bio: 'Master in inlaying pure silver wires into zinc-copper alloy matrices blackened with special historic Bidar fort soil compounds.',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&q=80&auto=format&fit=crop&crop=face',
+    image: '/images/bidriware_silver_craft.jpg',
     giCertified: true,
   },
 ];
 
 const STATES = ['All States', 'Bihar', 'Chhattisgarh', 'Uttar Pradesh', 'Jammu & Kashmir', 'Rajasthan', 'Karnataka'];
 
-export default function ArtisansPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedState, setSelectedState] = useState('All States');
+function ArtisansContent() {
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('state') || searchParams.get('q') || '');
+  const [selectedState, setSelectedState] = useState(searchParams.get('state') || 'All States');
   const [giOnly, setGiOnly] = useState(false);
+
+  useEffect(() => {
+    const stateParam = searchParams.get('state');
+    if (stateParam) setSelectedState(stateParam);
+  }, [searchParams]);
 
   const filteredArtisans = useMemo(() => {
     return ARTISANS.filter((a) => {
@@ -136,39 +144,48 @@ export default function ArtisansPage() {
 
       {/* Dark Hero Banner */}
       <section
-        className="relative min-h-[45vh] flex items-center overflow-hidden pt-20"
-        style={{ background: 'linear-gradient(135deg, #1A0D06 0%, #2B1810 60%, #1A0D06 100%)' }}
+        className="relative min-h-[50vh] flex items-center overflow-hidden pt-20"
+        style={{ background: '#140A04' }}
       >
-        <div className="absolute inset-0 opacity-15"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 15% 50%, #FA7A21 0%, transparent 50%), radial-gradient(circle at 85% 20%, #B8965A 0%, transparent 40%)',
-          }}
-        />
+        {/* Background Artisan Image with Enhanced Visibility & Opacity */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/explore_hero_bg.jpg"
+            alt="Artisans Heritage Background"
+            fill
+            priority
+            className="object-cover object-center opacity-55 scale-100"
+          />
+          {/* Subtle warm gradient scrim to guarantee text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#140A04]/90 via-[#140A04]/60 to-[#140A04]/80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#140A04] via-transparent to-[#140A04]/40" />
+        </div>
+
         <div className="container relative z-10 py-16 md:py-20">
           <div className="max-w-3xl space-y-5">
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-xs text-amber-200">
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-black/40 backdrop-blur-md border border-white/20 rounded-full text-xs text-amber-200">
               <Sparkles size={14} className="text-[#FA7A21]" />
               <span className="font-sans font-medium tracking-wide">Living National Treasures &bull; MoSJE Verified Artisan Registry</span>
             </div>
             <h1
-              className="font-serif text-white font-normal"
+              className="font-serif text-white font-normal drop-shadow-md"
               style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)', lineHeight: 1.08, letterSpacing: '-0.015em' }}
             >
               Meet the Masters<br />
               <em className="font-light text-amber-200" style={{ fontStyle: 'italic' }}>Behind India&apos;s Heritage.</em>
             </h1>
-            <p className="text-white font-sans text-base font-light max-w-2xl leading-relaxed">
+            <p className="text-stone-100 font-sans text-base font-light max-w-2xl leading-relaxed drop-shadow">
               Every artisan on ALMS undergoes physical cluster validation, GI verification, and direct digital linkage — connecting ancient techniques to modern patrons.
             </p>
             {/* Metrics */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-white/15">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-white/20">
               {[
                 { n: '48+', l: 'Craft Clusters' },
                 { n: '100%', l: 'GI Authentic' },
                 { n: '0%', l: 'Middlemen Cut' },
                 { n: '96.5%', l: 'Avg. Reliability' },
               ].map(({ n, l }) => (
-                <div key={l}>
+                <div key={l} className="bg-black/30 backdrop-blur-sm p-3 rounded-xl border border-white/10">
                   <p className="font-serif text-amber-200 text-xl sm:text-2xl font-light">{n}</p>
                   <p className="text-white text-[11px] font-sans mt-0.5">{l}</p>
                 </div>
@@ -178,11 +195,25 @@ export default function ArtisansPage() {
         </div>
       </section>
 
-      <main className="bg-[#2B1810] text-white font-sans pb-0 min-h-screen">
-        <div className="container max-w-7xl py-14">
+      {/* Heritage Folk Art Ribbon Divider */}
+      <FolkArtBanner height={75} variant="border-1" alt="Indian heritage tapestry border" />
+
+      <main className="relative bg-[#1A0D06] text-white font-sans pb-0 min-h-screen overflow-hidden">
+        {/* Clearly Visible Heritage Background with Opacity */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <Image
+            src="/images/truly_tribal_hero.jpg"
+            alt="Artisanal Texture Background"
+            fill
+            className="object-cover object-center opacity-30 fixed"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1A0D06]/90 via-[#1A0D06]/75 to-[#120703]/95" />
+        </div>
+
+        <div className="container max-w-7xl py-14 relative z-10">
 
           {/* Search & Filter Controls */}
-          <ScrollReveal className="mb-12 p-5 bg-[#1C0E07] border border-white/10 rounded-2xl space-y-4" delay={0.1}>
+          <ScrollReveal className="mb-12 p-5 bg-[#1C0E07]/90 backdrop-blur-md border border-white/15 rounded-2xl space-y-4 shadow-2xl" delay={0.1}>
             <div className="flex flex-col sm:flex-row items-center gap-3">
               <div className="relative flex-1 w-full">
                 <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
@@ -191,7 +222,7 @@ export default function ArtisansPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by artisan name, craft (Madhubani, Dokra, Pashmina), or state..."
-                  className="w-full bg-black/30 border border-white/15 pl-11 pr-4 py-3 text-xs text-white placeholder:text-stone-400 focus:outline-none focus:border-[#FA7A21]/60 rounded-full transition-colors"
+                  className="w-full bg-black/40 border border-white/20 pl-11 pr-4 py-3 text-xs text-white placeholder:text-stone-400 focus:outline-none focus:border-[#FA7A21]/60 rounded-full transition-colors"
                 />
               </div>
               <button
@@ -216,7 +247,7 @@ export default function ArtisansPage() {
                   onClick={() => setSelectedState(st)}
                   className={`px-3 py-1.5 text-xs rounded-full transition-all cursor-pointer font-medium ${
                     selectedState === st
-                      ? 'bg-[#FA7A21] text-white font-semibold'
+                      ? 'bg-[#FA7A21] text-white font-semibold shadow-sm'
                       : 'bg-white/10 border border-white/20 text-stone-100 hover:border-[#FA7A21]/60 hover:text-amber-200'
                   }`}
                 >
@@ -230,7 +261,7 @@ export default function ArtisansPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredArtisans.map((artisan, index) => (
               <ScrollReveal key={artisan.id} delay={(index % 3) * 0.08}>
-                <article className="group bg-[#1C0E07] border border-white/10 hover:border-[#FA7A21]/40 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5">
+                <article className="group bg-[#1C0E07]/95 backdrop-blur-md border border-white/15 hover:border-[#FA7A21]/50 rounded-2xl overflow-hidden shadow-2xl hover:shadow-orange-950/40 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5">
                   <div>
                     {/* Portrait Photo with Badge */}
                     <div className="relative h-72 bg-stone-900 overflow-hidden">
@@ -292,14 +323,20 @@ export default function ArtisansPage() {
                     </div>
                   </div>
 
-                  {/* Card Action Button */}
-                  <div className="p-6 sm:p-7 pt-0">
+                  {/* Card Action Buttons */}
+                  <div className="p-6 sm:p-7 pt-0 flex flex-col sm:flex-row gap-2">
                     <Link
-                      href={`/explore?artisan=${encodeURIComponent(artisan.name)}`}
-                      className="w-full py-3 px-6 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-orange-500/25"
+                      href={`/explore?q=${encodeURIComponent(artisan.craft)}`}
+                      className="flex-1 py-2.5 px-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold rounded-full text-center transition-all flex items-center justify-center gap-1.5"
                     >
-                      <span>Explore Master Catalogue</span>
-                      <ArrowRight size={13} />
+                      <span>Catalogue</span>
+                    </Link>
+                    <Link
+                      href={`/b2b/rfq?craft=${encodeURIComponent(artisan.craft)}&artisan=${encodeURIComponent(artisan.name)}`}
+                      className="flex-1 py-2.5 px-4 bg-[#FA7A21] hover:bg-[#e06917] text-white text-xs font-semibold rounded-full text-center transition-all flex items-center justify-center gap-1.5 shadow-md hover:shadow-orange-500/25"
+                    >
+                      <span>B2B RFQ</span>
+                      <ArrowRight size={12} />
                     </Link>
                   </div>
                 </article>
@@ -308,7 +345,19 @@ export default function ArtisansPage() {
           </div>
         </div>
       </main>
+
+      {/* Bottom Heritage Ribbon */}
+      <FolkArtBanner height={65} variant="border-3" alt="Indian folk art tapestry ribbon" />
+
       <Footer />
     </>
+  );
+}
+
+export default function ArtisansPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#24130A] text-white flex items-center justify-center">Loading artisans...</div>}>
+      <ArtisansContent />
+    </Suspense>
   );
 }

@@ -279,4 +279,115 @@ export class ProductService {
   async findByArtisan(artisanId: string) {
     return this.productRepo.find({ where: { artisanId } });
   }
+
+  async findAllPublished() {
+    const products = await this.dataSource.query(`
+      SELECT 
+        p.id,
+        p.title,
+        p.description_en,
+        p.description_hi,
+        p.category,
+        p.subcategory,
+        p.material,
+        p.craft_technique,
+        p.care_instructions,
+        p.dimensions,
+        p.retail_price,
+        p.wholesale_price,
+        p.moq,
+        p.status,
+        p.inventory_qty,
+        p.lead_time_days,
+        p.gi_eligible,
+        p.created_at,
+        ap.state,
+        ap.district,
+        ap.primary_craft,
+        ap.verified AS artisan_verified,
+        COALESCE(ts.score, 95) AS trust_score,
+        COALESCE(
+          (SELECT json_agg(json_build_object('orig', pm.r2_key_orig, 'enh', pm.r2_key_enh))
+           FROM product_media pm
+           WHERE pm.product_id = p.id AND pm.is_active = true),
+          '[]'::json
+        ) AS media
+      FROM products p
+      LEFT JOIN artisan_profiles ap ON ap.id = p.artisan_id
+      LEFT JOIN trust_scores ts ON ts.user_id = p.artisan_id
+      WHERE p.status = 'PUBLISHED'
+      ORDER BY p.created_at DESC
+    `);
+    return products;
+  }
+
+  async publishDirectProduct(data: {
+    artisanId?: string;
+    title: string;
+    descriptionEn?: string;
+    descriptionHi?: string;
+    category?: string;
+    material?: string;
+    craftTechnique?: string;
+    retailPrice: number;
+    wholesalePrice: number;
+    moq?: number;
+    inventoryQty?: number;
+    leadTimeDays?: number;
+    giEligible?: boolean;
+    imageUrl?: string;
+    state?: string;
+    district?: string;
+  }) {
+    let artisanId = data.artisanId;
+    if (!artisanId) {
+      const firstArtisan = await this.dataSource.query(
+        `SELECT id, state, district, primary_craft FROM artisan_profiles LIMIT 1`
+      );
+      if (firstArtisan && firstArtisan.length > 0) {
+        artisanId = firstArtisan[0].id;
+      }
+    }
+
+    const inserted = await this.dataSource.query(
+      `
+      INSERT INTO products (
+        artisan_id, title, description_en, description_hi, category, material, craft_technique,
+        retail_price, wholesale_price, moq, inventory_qty, lead_time_days, gi_eligible, status
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 'PUBLISHED'
+      ) RETURNING id, title, category, retail_price, wholesale_price, created_at
+    `,
+      [
+        artisanId,
+        data.title || 'Handcrafted Dokra Brass Art',
+        data.descriptionEn || data.title || 'Authentic artisan handcrafted masterpiece.',
+        data.descriptionHi || 'पारंपरिक हस्तनिर्मित उत्कृष्ट कृति।',
+        data.category || 'Dokra & Brass',
+        data.material || 'Natural Brass & Bronze',
+        data.craftTechnique || 'Lost Wax Casting',
+        data.retailPrice || 1800,
+        data.wholesalePrice || 1200,
+        data.moq || 10,
+        data.inventoryQty || 25,
+        data.leadTimeDays || 12,
+        data.giEligible !== undefined ? data.giEligible : true,
+      ],
+    );
+
+    const newProd = inserted[0];
+
+    if (data.imageUrl) {
+      await this.dataSource.query(
+        `
+        INSERT INTO product_media (product_id, r2_key_orig, r2_key_enh, is_active, sort_order)
+        VALUES ($1, $2, $3, true, 0)
+      `,
+        [newProd.id, data.imageUrl, data.imageUrl],
+      );
+    }
+
+    return newProd;
+  }
 }
+

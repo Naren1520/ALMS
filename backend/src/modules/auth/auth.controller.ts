@@ -32,12 +32,20 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(
-    @Body() _dto: LoginDto,
-    @Req() req: Request & { user: UserEntity },
+    @Body() dto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
+    const user = await this.authService.validateLocalUser(dto.email, dto.password);
+    if (!user) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        statusCode: 401,
+        error: 'UNAUTHORIZED',
+        message: 'Invalid email or password',
+      });
+    }
+
     const { accessToken, refreshToken, message } = await this.authService.loginAndIssueTokens(
-      req.user,
+      user,
     );
 
     res.cookie('refresh_token', refreshToken, {
@@ -48,7 +56,16 @@ export class AuthController {
       path: '/api/v1/auth/refresh',
     });
 
-    return { accessToken, message };
+    return {
+      accessToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      },
+      message,
+    };
   }
 
   /** POST /auth/refresh — Req 1.8 */

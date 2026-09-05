@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
+const isDev = process.env.NODE_ENV !== 'production';
+
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false, // Disabled to prevent double-invocation issues in dev
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -14,6 +16,8 @@ const nextConfig = {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
     return [
       {
+        // Proxy backend routes — Next.js App Router internal API routes (e.g. /api/analyse-craft)
+        // take priority over this rewrite automatically, so no exclusion needed.
         source: '/api/:path*',
         destination: `${backendUrl}/api/:path*`,
       },
@@ -24,21 +28,9 @@ const nextConfig = {
       {
         source: '/(.*)',
         headers: [
-          {
-            key: 'Content-Security-Policy',
-            value:
-              "default-src 'self'; " +
-              "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-              "style-src 'self' 'unsafe-inline'; " +
-              "img-src 'self' data: blob: https:; " +
-              "font-src 'self' https:; " +
-              "connect-src 'self' http://localhost:8080 http://localhost:8000 wss: https:; " +
-              "object-src 'none'; " +
-              "base-uri 'self';",
-          },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'X-Frame-Options',        value: 'DENY' },
-          { key: 'Referrer-Policy',        value: 'strict-origin-when-cross-origin' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
         ],
       },
     ];

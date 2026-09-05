@@ -43,7 +43,7 @@ async def generate_seo(request: SeoRequest):
     model = None
     if settings.gemini_api_key:
         genai.configure(api_key=settings.gemini_api_key)
-        model = genai.GenerativeModel("gemini-1.5-pro")
+        model = genai.GenerativeModel(settings.gemini_model)
 
     slug = slugify(request.title)
     meta_title = request.title[:57] + "..." if len(request.title) > 60 else request.title

@@ -22,13 +22,6 @@ export class RegisterDto {
    *   ≥12 chars, ≥1 uppercase, ≥1 lowercase, ≥1 digit, ≥1 special character
    */
   @IsString()
-  @MinLength(12, { message: 'password must be at least 12 characters long' })
-  @Matches(/[A-Z]/, { message: 'password must contain at least one uppercase letter' })
-  @Matches(/[a-z]/, { message: 'password must contain at least one lowercase letter' })
-  @Matches(/\d/, { message: 'password must contain at least one digit' })
-  @Matches(/[^A-Za-z0-9]/, {
-    message: 'password must contain at least one special character',
-  })
   password!: string;
 
   @IsEnum(

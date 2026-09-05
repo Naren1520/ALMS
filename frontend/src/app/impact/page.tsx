@@ -2,6 +2,7 @@
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import FolkArtBanner from '@/components/homepage/FolkArtBanner';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { ShieldCheck, TrendingUp, MapPin, Sparkles, Building2 } from 'lucide-react';
 import Link from 'next/link';
@@ -61,6 +62,9 @@ export default function ImpactPage() {
           </div>
         </div>
       </section>
+
+      {/* Heritage Folk Art Ribbon Divider */}
+      <FolkArtBanner height={75} variant="border-2" alt="Indian heritage tapestry border" />
 
       <main className="bg-[#2B1810] text-white font-sans pb-0 min-h-screen">
         <div className="container max-w-6xl py-14 space-y-10">
@@ -192,6 +196,10 @@ export default function ImpactPage() {
           </ScrollReveal>
         </div>
       </main>
+
+      {/* Bottom Heritage Ribbon */}
+      <FolkArtBanner height={65} variant="border-4" alt="Indian folk art tapestry ribbon" />
+
       <Footer />
     </>
   );

@@ -54,7 +54,7 @@ async def check_content(request: ModerationRequest):
     if settings.gemini_api_key:
         try:
             genai.configure(api_key=settings.gemini_api_key)
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel(settings.gemini_model)
             prompt = f"""
 Moderate this {request.content_type} content for an artisan marketplace.
 Content: "{request.content}"

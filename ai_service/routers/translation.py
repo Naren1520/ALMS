@@ -37,7 +37,7 @@ async def translate_text(request: TranslationRequest):
     if settings.gemini_api_key:
         try:
             genai.configure(api_key=settings.gemini_api_key)
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel(settings.gemini_model)
             prompt = f"Translate to {request.target_language}. Return ONLY the translation:\n{request.text}"
             resp = model.generate_content(prompt)
             translated = resp.text.strip()

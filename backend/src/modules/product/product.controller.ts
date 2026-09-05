@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body, Controller, Delete, Get, Param, Patch, Post, Put,
   UploadedFiles, UseGuards, UseInterceptors,
 } from '@nestjs/common';
@@ -18,23 +19,75 @@ export class ProductController {
     private readonly aiClient: AiServiceClient,
   ) {}
 
+  /** POST /products/enhance-image — dedicated studio photography enhancement endpoint */
+  @Post('enhance-image')
+  async enhanceImage(
+    @Body() body: { imageBase64?: string; category?: string; craftTitle?: string },
+  ) {
+    if (!body.imageBase64) {
+      throw new BadRequestException('imageBase64 is required');
+    }
+    const result = await this.aiClient.enhanceImage({
+      imageBase64: body.imageBase64,
+      productId: 'studio-preview',
+      category: body.category,
+      originalKey: body.craftTitle ? body.craftTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_') : 'studio_craft',
+    });
+    return result;
+  }
+
   /** POST /products/preview-ai — instant live AI studio generation */
   @Post('preview-ai')
   async previewAi(
-    @Body() body: { textInput?: string; voiceBase64?: string; categoryHint?: string; materialCost?: number; labourHours?: number; hourlyWage?: number; overhead?: number },
+    @Body() body: {
+      textInput?: string;
+      voiceBase64?: string;
+      categoryHint?: string;
+      category?: string;
+      craftTitle?: string;
+      material?: string;
+      region?: string;
+      artisanName?: string;
+      imageBase64?: string;
+      imageUrl?: string;
+      dialect?: string;
+      language?: string;
+      materialCost?: number;
+      labourHours?: number;
+      hourlyWage?: number;
+      overhead?: number;
+    },
   ) {
+    const category = body.category || body.categoryHint || 'Dokra & Brass';
+    const region = body.region || 'Bastar, Chhattisgarh';
+    const material = body.material || 'Natural Indigenous Bell Metal & Brass';
+    const craftTitle = body.craftTitle || 'Handcrafted Heritage Art';
+
     const catalog = await this.aiClient.generateCatalog({
+      craftTitle,
+      category,
+      categoryHint: category,
+      material,
+      region,
+      artisanName: body.artisanName,
       textInput: body.textInput,
       voiceBase64: body.voiceBase64,
-      categoryHint: body.categoryHint,
+      imageBase64: body.imageBase64,
+      imageUrl: body.imageUrl,
+      language: body.language || body.dialect,
+      materialCost: body.materialCost,
+      labourHours: body.labourHours,
+      hourlyWage: body.hourlyWage,
+      overhead: body.overhead,
     });
 
-    const baseCost = (body.materialCost ?? 200) + (body.labourHours ?? 10) * (body.hourlyWage ?? 50) + (body.overhead ?? 50);
+    const baseCost = (body.materialCost ?? 350) + (body.labourHours ?? 14) * (body.hourlyWage ?? 55) + (body.overhead ?? 80);
 
     const pricing = await this.aiClient.recommendPricing({
       category: catalog.category,
       material: catalog.material,
       technique: catalog.technique,
+      artisanDistrict: region,
       baseCost,
     });
 
@@ -46,11 +99,61 @@ export class ProductController {
       material: catalog.material,
     });
 
+    const district = region.split(',')[0].trim();
+    const calculatedRetail = pricing.retail_price_suggested || Math.round(baseCost * 1.55);
+    const calculatedWholesale = pricing.wholesale_price_suggested || Math.round(baseCost * 1.25);
+    const tier50 = Math.round(baseCost * 1.18);
+    const tier100 = Math.round(baseCost * 1.12);
+
+    const marketIntelligence = await this.aiClient.analyzeMarket({
+      craftTitle,
+      category,
+      categoryHint: category,
+      material,
+      region,
+      artisanName: body.artisanName,
+      textInput: body.textInput,
+      voiceBase64: body.voiceBase64,
+      imageBase64: body.imageBase64,
+      imageUrl: body.imageUrl,
+      language: body.language || body.dialect,
+      materialCost: body.materialCost,
+      labourHours: body.labourHours,
+      hourlyWage: body.hourlyWage,
+      overhead: body.overhead,
+    });
+
     return {
       catalog,
       pricing,
       seo,
+      marketIntelligence,
     };
+  }
+
+  /** POST /products/publish-direct — publish directly into Supabase database */
+  @Post('publish-direct')
+  publishDirect(
+    @Body() body: {
+      artisanId?: string;
+      title: string;
+      descriptionEn?: string;
+      descriptionHi?: string;
+      category?: string;
+      material?: string;
+      craftTechnique?: string;
+      retailPrice: number;
+      wholesalePrice: number;
+      moq?: number;
+      inventoryQty?: number;
+      leadTimeDays?: number;
+      giEligible?: boolean;
+      imageUrl?: string;
+      state?: string;
+      district?: string;
+    },
+  ) {
+    return this.productService.publishDirectProduct(body);
   }
 
   /** POST /products — create product and enqueue AI pipeline */
@@ -74,6 +177,12 @@ export class ProductController {
       undefined,
       textInput,
     );
+  }
+
+  /** GET /products — list all published products with artisan info & media */
+  @Get()
+  getAllProducts() {
+    return this.productService.findAllPublished();
   }
 
   /** GET /products/:id */

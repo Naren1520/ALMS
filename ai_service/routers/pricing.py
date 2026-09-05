@@ -13,7 +13,7 @@ router = APIRouter()
 def get_gemini():
     if settings.gemini_api_key:
         genai.configure(api_key=settings.gemini_api_key)
-        return genai.GenerativeModel("gemini-1.5-pro")
+        return genai.GenerativeModel(settings.gemini_model)
     return None
 
 
