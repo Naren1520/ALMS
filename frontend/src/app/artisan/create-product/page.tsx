@@ -999,7 +999,7 @@ export default function CreateProductPage() {
 
                   <button
                     type="button"
-                    onClick={() => enhanceImageStudio(imagePreviewUrl || enhancedImageUrl)}
+                    onClick={() => enhanceImageStudio(imagePreviewUrl || enhancedImageUrl || undefined)}
                     disabled={isEnhancingImage}
                     className="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-[#FA7A21] to-amber-500 hover:from-[#e06917] hover:to-amber-600 text-white font-semibold text-xs rounded-xl shadow-lg hover:shadow-orange-500/25 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 transition-all transform hover:-translate-y-0.5"
                   >

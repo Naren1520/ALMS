@@ -61,7 +61,7 @@ export default function HomePageSections() {
       {/* 14. Final Action Call to Action */}
       <FinalCTASection />
 
-      {/* Floating Orange Chat & Support Widget */}
+      {/* Floating Orange Chat & Support Widget is active globally via Providers */}
 
     </main>
   );
