@@ -17,13 +17,13 @@ from config import settings
 router = APIRouter()
 
 CRAFT_PRESETS = {
-    "textile": {"warmth": 1.03, "contrast": 1.10, "saturation": 1.10},
-    "pottery": {"warmth": 1.05, "contrast": 1.12, "saturation": 1.08},
-    "jewelry": {"warmth": 1.02, "contrast": 1.15, "saturation": 1.05},
-    "dokra": {"warmth": 1.06, "contrast": 1.14, "saturation": 1.10},
-    "brass": {"warmth": 1.06, "contrast": 1.14, "saturation": 1.10},
-    "woodcraft": {"warmth": 1.04, "contrast": 1.12, "saturation": 1.08},
-    "default": {"warmth": 1.04, "contrast": 1.12, "saturation": 1.08},
+    "textile": {"warmth": 1.03, "contrast": 1.14, "saturation": 1.10, "sharpness": 1.55},
+    "pottery": {"warmth": 1.04, "contrast": 1.16, "saturation": 1.08, "sharpness": 1.65},
+    "jewelry": {"warmth": 1.02, "contrast": 1.20, "saturation": 1.06, "sharpness": 1.85},
+    "dokra": {"warmth": 1.05, "contrast": 1.20, "saturation": 1.10, "sharpness": 1.80},
+    "brass": {"warmth": 1.05, "contrast": 1.20, "saturation": 1.10, "sharpness": 1.80},
+    "woodcraft": {"warmth": 1.04, "contrast": 1.16, "saturation": 1.08, "sharpness": 1.70},
+    "default": {"warmth": 1.04, "contrast": 1.16, "saturation": 1.08, "sharpness": 1.65},
 }
 
 MAX_PROCESS_SECONDS = 30
@@ -79,7 +79,7 @@ def _extract_palette(img: Image.Image, count: int = 4) -> list[str]:
 def _get_gemini_refinement_params(img: Image.Image, category: Optional[str] = None) -> dict:
     """
     Calls Gemini Flash 3.6 in the cloud using an ultra-lightweight (300x300, ~15KB) preview.
-    Executes with strict 1.5s timeout so image regeneration is near-instantaneous.
+    Executes with strict 1.8s timeout so image regeneration is near-instantaneous.
     """
     if not settings.gemini_api_key:
         return {}
@@ -94,10 +94,20 @@ def _get_gemini_refinement_params(img: Image.Image, category: Optional[str] = No
 
         category_hint = category or "Handcrafted Artisan Product"
         prompt = (
-            f"Analyze this image of '{category_hint}'. Recommend studio photography color adjustments. "
-            "Return ONLY JSON: {\"brightness\": 1.06, \"contrast\": 1.14, \"saturation\": 1.08, "
-            "\"warmth_red\": 1.05, \"sharpness\": 1.35, \"lighting_quality\": \"3200K Warm Key Highlight\", "
-            "\"edge_sharpness_score\": \"99.2% Detail Clarity\", \"resolution_score\": \"1200×1200px Studio Standard\"}"
+            f"You are a professional e-commerce product photo retoucher. Analyze this image of '{category_hint}' "
+            "and recommend AGGRESSIVE studio-quality enhancement parameters so the final image looks clean, sharp, "
+            "and HD — suitable for a premium marketplace catalog. Prioritize noise reduction, edge clarity, and "
+            "crisp detail over subtlety. Base every value on what THIS specific image actually needs — do not "
+            "default to generic or example numbers. "
+            "Return ONLY JSON with these exact keys: "
+            "{\"brightness\": <1.00-1.15, correct underexposure only>, "
+            "\"contrast\": <1.05-1.25, push higher if image looks flat>, "
+            "\"saturation\": <1.00-1.15, vivid but natural — avoid oversaturation artifacts>, "
+            "\"warmth_red\": <0.98-1.08, neutral-to-warm white balance correction>, "
+            "\"sharpness\": <1.40-2.00, favor the higher end unless the source is already tack-sharp — this is the primary HD-clarity lever>, "
+            "\"lighting_quality\": \"<your assessment of ideal studio lighting, e.g. '3200K Warm Key Highlight'>\", "
+            "\"edge_sharpness_score\": \"<your actual assessed clarity %, e.g. '98.7% Detail Clarity'>\", "
+            "\"resolution_score\": \"1200×1200px Studio Standard\"}"
         )
 
         payload = json.dumps({
@@ -124,10 +134,14 @@ def _get_gemini_refinement_params(img: Image.Image, category: Optional[str] = No
                         "x-goog-api-key": settings.gemini_api_key,
                     }
                 )
-                with urllib.request.urlopen(req, timeout=1.5) as resp:
+                with urllib.request.urlopen(req, timeout=1.8) as resp:
                     data = json.loads(resp.read().decode("utf-8"))
-                    text = data["candidates"][0]["content"]["parts"][0]["text"]
-                    return json.loads(text)
+                    text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    if "```" in text:
+                        text = text.split("```")[1]
+                        if text.startswith("json"):
+                            text = text[4:]
+                    return json.loads(text.strip())
             except Exception:
                 continue
     except Exception:
@@ -166,11 +180,18 @@ async def enhance_image(request: ImageEnhanceRequest):
     preset = CRAFT_PRESETS.get(preset_key, CRAFT_PRESETS["default"])
     ai_params = _get_gemini_refinement_params(img, request.category)
 
-    brightness = float(ai_params.get("brightness", 1.06))
-    contrast = float(ai_params.get("contrast", preset.get("contrast", 1.12)))
-    saturation = float(ai_params.get("saturation", preset.get("saturation", 1.08)))
-    warmth_r = float(ai_params.get("warmth_red", preset.get("warmth", 1.05)))
-    sharpness = float(ai_params.get("sharpness", 1.35))
+    def _safe_float(val, default, min_val, max_val):
+        try:
+            v = float(val)
+            return max(min_val, min(v, max_val))
+        except (ValueError, TypeError):
+            return default
+
+    brightness = _safe_float(ai_params.get("brightness"), 1.06, 0.95, 1.25)
+    contrast = _safe_float(ai_params.get("contrast"), preset.get("contrast", 1.16), 1.00, 1.35)
+    saturation = _safe_float(ai_params.get("saturation"), preset.get("saturation", 1.08), 0.95, 1.25)
+    warmth_r = _safe_float(ai_params.get("warmth_red"), preset.get("warmth", 1.04), 0.95, 1.12)
+    sharpness = _safe_float(ai_params.get("sharpness"), preset.get("sharpness", 1.65), 1.30, 2.20)
 
     lighting_quality = ai_params.get("lighting_quality", "3200K Warm Key Highlight (Studio Levelled)")
     edge_sharpness = ai_params.get("edge_sharpness_score", "99.4% Contrast Precision")
@@ -189,9 +210,8 @@ async def enhance_image(request: ImageEnhanceRequest):
     img_rgb = ImageEnhance.Contrast(img_rgb).enhance(contrast)
     img_rgb = ImageEnhance.Color(img_rgb).enhance(saturation)
 
-    # 5. Median noise reduction + Unsharp masking
-    img_rgb = img_rgb.filter(ImageFilter.MedianFilter(size=3))
-    img_rgb = img_rgb.filter(ImageFilter.UnsharpMask(radius=2, percent=int(sharpness * 100), threshold=2))
+    # 5. Crisp Detail Enhancement & Unsharp Masking (tight radius=1.6 avoids blur while popping edges)
+    img_rgb = img_rgb.filter(ImageFilter.UnsharpMask(radius=1.6, percent=int(sharpness * 100), threshold=1))
 
     # 6. Craft presets
     if any(k in preset_key for k in ["jewelry", "dokra", "brass", "wood"]):
