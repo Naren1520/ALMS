@@ -251,10 +251,10 @@ export default function CreateProductPage() {
         dominantPalette: ['#B8860B', '#CD5C5C', '#2F4F4F', '#D4AF37'],
       };
 
-      // Try server endpoint (Python AI service with rembg background removal)
+      // Try server endpoint (Python AI service studio refinement)
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3500);
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
         const res = await fetch('/api/v1/products/enhance-image', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1017,17 +1017,17 @@ export default function CreateProductPage() {
 
                   <button
                     type="button"
-                    onClick={() => runCompleteStudioPipeline(enhancedImageUrl || imagePreviewUrl)}
-                    disabled={isEnhancingImage || isAnalyzing}
+                    onClick={() => enhanceImageStudio(imagePreviewUrl || enhancedImageUrl)}
+                    disabled={isEnhancingImage}
                     className="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-[#FA7A21] to-amber-500 hover:from-[#e06917] hover:to-amber-600 text-white font-semibold text-xs rounded-xl shadow-lg hover:shadow-orange-500/25 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 transition-all transform hover:-translate-y-0.5"
                   >
-                    <Sparkles size={14} className={isEnhancingImage || isAnalyzing ? "animate-spin text-white" : "text-amber-100"} />
+                    <Sparkles size={14} className={isEnhancingImage ? "animate-spin text-white" : "text-amber-100"} />
                     <span>
-                      {isEnhancingImage || isAnalyzing
-                        ? 'Regenerating Studio & Market Intelligence...' 
+                      {isEnhancingImage
+                        ? 'Refining Studio Photo...' 
                         : enhancedImageUrl 
-                          ? '✨ Re-Generate Studio Photo & Market Intelligence' 
-                          : '✨ Process Studio Photography & Market Intelligence'}
+                          ? '✨ Re-Process Studio Photography' 
+                          : '✨ Process Studio Photography'}
                     </span>
                   </button>
                 </div>
