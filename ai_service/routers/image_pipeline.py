@@ -1,7 +1,7 @@
 """
 Image refinement pipeline (Req 5.1–5.8).
-Cloud-powered image refinement using Gemini Flash 3.6 + in-memory studio calibration.
-Zero local neural network downloads, 0 MB disk footprint.
+Deterministic color science grading + edge-preserving bilateral denoise + non-haloing HD sharpening.
+Gemini Flash 3.6 used solely for qualitative diagnostics. Zero local model downloads.
 """
 import base64
 import io
@@ -11,23 +11,12 @@ import urllib.request
 from typing import Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
-from PIL import Image, ImageEnhance, ImageFilter
+from PIL import Image, ImageFilter
 import cv2
 import numpy as np
 from config import settings
 
 router = APIRouter()
-
-# Near-neutral craft presets focused on natural color fidelity and subtle clarity
-CRAFT_PRESETS = {
-    "textile": {"warmth": 1.01, "contrast": 1.04, "saturation": 1.02, "sharpness": 1.50},
-    "pottery": {"warmth": 1.01, "contrast": 1.05, "saturation": 1.02, "sharpness": 1.55},
-    "jewelry": {"warmth": 1.00, "contrast": 1.06, "saturation": 1.01, "sharpness": 1.70},
-    "dokra": {"warmth": 1.01, "contrast": 1.06, "saturation": 1.02, "sharpness": 1.65},
-    "brass": {"warmth": 1.01, "contrast": 1.06, "saturation": 1.02, "sharpness": 1.65},
-    "woodcraft": {"warmth": 1.01, "contrast": 1.05, "saturation": 1.02, "sharpness": 1.55},
-    "default": {"warmth": 1.01, "contrast": 1.05, "saturation": 1.02, "sharpness": 1.55},
-}
 
 MAX_PROCESS_SECONDS = 30
 
@@ -79,16 +68,42 @@ def _extract_palette(img: Image.Image, count: int = 4) -> list[str]:
     return ["#b8860b", "#cd5c5c", "#2f4f4f", "#f5f5dc"]
 
 
-def _get_gemini_refinement_params(img: Image.Image, category: Optional[str] = None) -> dict:
+def apply_clean_grade(img: Image.Image) -> Image.Image:
     """
-    Calls Gemini Flash 3.6 in the cloud using an ultra-lightweight (300x300, ~15KB) preview.
-    Requests natural, non-stylized color fidelity with focus on noise reduction and crisp clarity.
+    Deterministic photographic color correction (color science, not LLM guessing):
+    1. Subtle gray-world auto white balance (removes color casts without tinting).
+    2. Levels percentile stretch (sets true black & white points, removes haze).
+    3. Gentle S-curve contrast (smooth tone mapping without saturation/clipping artifacts).
+    """
+    arr = np.asarray(img.convert("RGB")).astype(np.float32)
+
+    # 1. Auto white balance (gray-world) — subtle gains [0.92, 1.08]
+    avg = arr.reshape(-1, 3).mean(axis=0)
+    gains = np.clip(avg.mean() / (avg + 1e-6), 0.92, 1.08)
+    arr = arr * gains
+
+    # 2. Levels stretch — true black/white points (fast subsampled percentile)
+    low, high = np.percentile(arr[::4, ::4], [0.5, 99.5])
+    arr = np.clip((arr - low) * (255.0 / (high - low + 1e-6)), 0, 255)
+
+    # 3. Gentle S-curve for contrast — cleaner than a blanket multiply
+    x = arr / 255.0
+    x = x + 0.15 * (x - x**2) * (2 * x - 1)
+    arr = np.clip(x * 255.0, 0, 255)
+
+    return Image.fromarray(arr.astype(np.uint8))
+
+
+def _get_gemini_diagnostics(img: Image.Image, category: Optional[str] = None) -> dict:
+    """
+    Calls Gemini Flash 3.6 purely for qualitative appraisal displayed in the UI:
+    lighting_quality, edge_sharpness_score, resolution_score.
+    Never alters pixel values or guesses color multipliers.
     """
     if not settings.gemini_api_key:
         return {}
 
     try:
-        # Create ultra-compact 300x300 thumbnail for blazing fast cloud transfer (~15KB)
         thumb = img.copy()
         thumb.thumbnail((300, 300), Image.BILINEAR)
         buf = io.BytesIO()
@@ -97,18 +112,11 @@ def _get_gemini_refinement_params(img: Image.Image, category: Optional[str] = No
 
         category_hint = category or "Handcrafted Artisan Product"
         prompt = (
-            f"Analyze this image of '{category_hint}' for a clean, high-clarity e-commerce product photo. "
-            "Do NOT apply a stylized color grade — colors should stay natural and true-to-life, not vivid "
-            "or saturated. Focus enhancement entirely on noise reduction and edge clarity so the image "
-            "looks crisp and HD, not artificially processed. "
+            f"Analyze this image of '{category_hint}' for an e-commerce catalog. "
+            "Provide factual quality diagnostics for the seller dashboard. "
             "Return ONLY JSON: "
-            "{\"brightness\": <0.98-1.06, correct exposure only, no stylization>, "
-            "\"contrast\": <1.00-1.08, keep subtle>, "
-            "\"saturation\": <0.98-1.05, near-neutral, never oversaturate>, "
-            "\"warmth_red\": <0.99-1.02, neutral white balance>, "
-            "\"sharpness\": <1.30-1.90, this is where clarity should come from — push higher here, not in color>, "
-            "\"lighting_quality\": \"<brief factual description>\", "
-            "\"edge_sharpness_score\": \"<assessed clarity %>\", "
+            "{\"lighting_quality\": \"<brief factual lighting description, e.g. 'Diffused Studio Daylight'>\", "
+            "\"edge_sharpness_score\": \"<assessed clarity %, e.g. '98.8% Detail Precision'>\", "
             "\"resolution_score\": \"1200×1200px Studio Standard\"}"
         )
 
@@ -155,9 +163,13 @@ def _get_gemini_refinement_params(img: Image.Image, category: Optional[str] = No
 @router.post("/enhance", response_model=ImageEnhanceResponse)
 async def enhance_image(request: ImageEnhanceRequest):
     """
-    Cloud-powered image refinement pipeline (Req 5.1, 5.2, 5.6, 5.7).
-    Natural color preservation + edge-preserving bilateral denoising + non-haloing HD sharpening.
-    Zero local neural network model downloads.
+    Deterministic studio image refinement pipeline (Req 5.1, 5.2, 5.6, 5.7).
+    Order:
+      1. apply_clean_grade: Deterministic gray-world auto-white-balance + levels stretch + S-curve.
+      2. 1200×1200 Studio scale & center-framing.
+      3. cv2.bilateralFilter: Edge-preserving sensor grain / noise reduction.
+      4. UnsharpMask(radius=1.5, percent=130, threshold=3): Clean, non-haloing HD crispness.
+      5. Gemini Flash: Qualitative audit reporting for UI.
     """
     start_time = time.time()
 
@@ -177,69 +189,34 @@ async def enhance_image(request: ImageEnhanceRequest):
 
     palette = _extract_palette(img)
 
-    # 2. Query Gemini Flash in the cloud for smart color grading & refinement parameters
-    preset_key = request.category.lower() if request.category else "default"
-    preset = CRAFT_PRESETS.get(preset_key, CRAFT_PRESETS["default"])
-    ai_params = _get_gemini_refinement_params(img, request.category)
+    # 2. Get qualitative diagnostics from Gemini Flash (for UI metrics display only)
+    diagnostics = _get_gemini_diagnostics(img, request.category)
+    lighting_quality = diagnostics.get("lighting_quality", "Studio Daylight Balanced (Clean Neutral)")
+    edge_sharpness = diagnostics.get("edge_sharpness_score", "98.9% Natural Detail Precision")
+    resolution_score = diagnostics.get("resolution_score", "1200×1200px Studio Standard")
 
-    def _safe_float(val, default, min_val, max_val):
-        try:
-            v = float(val)
-            return max(min_val, min(v, max_val))
-        except (ValueError, TypeError):
-            return default
+    # 3. Deterministic Clean Color Science Grading (Zero LLM multiplier guessing)
+    img_clean = apply_clean_grade(img)
 
-    # Decoupled color parameters: subtle, natural, true-to-life (no plastic oversaturation)
-    brightness = _safe_float(ai_params.get("brightness"), 1.02, 0.98, 1.08)
-    contrast = _safe_float(ai_params.get("contrast"), preset.get("contrast", 1.05), 0.98, 1.10)
-    saturation = _safe_float(ai_params.get("saturation"), preset.get("saturation", 1.02), 0.98, 1.06)
-    warmth_r = _safe_float(ai_params.get("warmth_red"), preset.get("warmth", 1.01), 0.98, 1.04)
-    sharpness = _safe_float(ai_params.get("sharpness"), preset.get("sharpness", 1.55), 1.25, 2.00)
-
-    lighting_quality = ai_params.get("lighting_quality", "Studio Daylight Balanced (Clean Neutral)")
-    edge_sharpness = ai_params.get("edge_sharpness_score", "98.9% Natural Detail Precision")
-    resolution_score = ai_params.get("resolution_score", "1200×1200px Studio Standard")
-
-    # 3. Natural White Balance & Lighting Correction
-    img_rgb = img.convert("RGB")
-    r, g, b = img_rgb.split()
-    r = r.point(lambda i: min(255, int(i * warmth_r)))
-    g = g.point(lambda i: min(255, int(i * 1.01)))
-    b = b.point(lambda i: max(0, int(i * 0.99)))
-    img_rgb = Image.merge("RGB", (r, g, b))
-
-    # 4. Subtle exposure & contrast correction (keeps natural textures, avoids over-processing)
-    img_rgb = ImageEnhance.Brightness(img_rgb).enhance(brightness)
-    img_rgb = ImageEnhance.Contrast(img_rgb).enhance(contrast)
-    img_rgb = ImageEnhance.Color(img_rgb).enhance(saturation)
-
-    # 5. Pre-scale edge definition for low-res sources
-    if min(img_rgb.width, img_rgb.height) < 700:
-        img_rgb = img_rgb.filter(ImageFilter.UnsharpMask(radius=1.2, percent=120, threshold=1))
-
-    # 6. Standard 1200×1200 Clean Studio Framing (Rescale to target dimensions FIRST)
+    # 4. Standard 1200×1200 Studio Framing (Rescale to target dimensions)
     target_dim = 1200
-    scale = max(target_dim / img_rgb.width, target_dim / img_rgb.height)
-    new_w = int(img_rgb.width * scale)
-    new_h = int(img_rgb.height * scale)
-    img_scaled = img_rgb.resize((new_w, new_h), Image.LANCZOS)
+    scale = max(target_dim / img_clean.width, target_dim / img_clean.height)
+    new_w = int(img_clean.width * scale)
+    new_h = int(img_clean.height * scale)
+    img_scaled = img_clean.resize((new_w, new_h), Image.LANCZOS)
     crop_x = (new_w - target_dim) // 2
     crop_y = (new_h - target_dim) // 2
     canvas = img_scaled.crop((crop_x, crop_y, crop_x + target_dim, crop_y + target_dim))
 
-    # 7. Clean Edge-Preserving Denoising (Removes sensor noise/camera grain without blurring edges)
+    # 5. Clean Edge-Preserving Denoising (Fast bilateral filter wipes sensor grain while keeping edges razor-sharp)
     arr = np.array(canvas)
     arr = cv2.bilateralFilter(arr, d=5, sigmaColor=25, sigmaSpace=25)
     canvas = Image.fromarray(arr)
 
-    # 8. Clean HD Output Sharpening (Conservative, non-haloing clarity tuned for denoised image)
-    canvas = canvas.filter(ImageFilter.UnsharpMask(radius=1.5, percent=int(sharpness * 90), threshold=2))
+    # 6. Clean HD Output Sharpening (Conservative, non-haloing clarity tuned for denoised image)
+    canvas = canvas.filter(ImageFilter.UnsharpMask(radius=1.5, percent=130, threshold=3))
 
-    # Craft preset macro definition
-    if any(k in preset_key for k in ["jewelry", "dokra", "brass", "wood"]):
-        canvas = canvas.filter(ImageFilter.SHARPEN)
-
-    # 9. Export as WebP (Single high-speed pass, <25ms)
+    # 7. Export as WebP (Single high-speed pass, <25ms)
     output = io.BytesIO()
     canvas.save(output, format="WEBP", quality=84, method=4)
     enhanced_bytes = output.getvalue()
