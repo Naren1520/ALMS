@@ -1,21 +1,28 @@
 {
   "framework": "nextjs",
-  "rootDirectory": "frontend",
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "outputDirectory": ".next",
-  "env": {
-    "NEXT_PUBLIC_BACKEND_URL": "https://alms-backend.onrender.com",
-    "NEXT_PUBLIC_AI_SERVICE_URL": "https://alms-ai.onrender.com",
-    "NEXT_PUBLIC_SUPABASE_URL": "https://shavgttipitgwhmafocn.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_715teHzZHtmuJq_yfV8ziQ_s031S5lo"
-  },
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" }
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/images/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=3600" }
       ]
     }
   ]
