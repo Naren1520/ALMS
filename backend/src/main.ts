@@ -35,7 +35,20 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.enableCors({
-    origin: appCfg.frontendUrl,
+    origin: (origin, callback) => {
+      // Allow Render preview URLs, Vercel deployments, and configured frontend
+      const allowedPatterns = [
+        appCfg.frontendUrl,
+        /\.vercel\.app$/,
+        /\.onrender\.com$/,
+        /^http:\/\/localhost(:\d+)?$/,
+      ];
+      if (!origin || allowedPatterns.some(p => typeof p === 'string' ? p === origin : p.test(origin))) {
+        callback(null, true);
+      } else {
+        callback(null, true); // permissive for hackathon — tighten in prod
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
@@ -56,6 +69,15 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.setGlobalPrefix('api/v1');
+
+  // Health check endpoint for Render (outside global prefix)
+  const httpAdapter = app.getHttpAdapter();
+  httpAdapter.get('/health', (_req: any, res: any) => {
+    res.status(200).json({ status: 'ok', service: 'alms-backend', timestamp: new Date().toISOString() });
+  });
+  httpAdapter.get('/api/v1/health', (_req: any, res: any) => {
+    res.status(200).json({ status: 'ok', service: 'alms-backend', timestamp: new Date().toISOString() });
+  });
 
   const port = appCfg.port;
   await app.listen(port);

@@ -51,7 +51,7 @@ export default function LoginPage() {
       } else if (body.user?.role === 'CONSUMER') {
         destination = '/explore';
       } else if (body.user?.role === 'ADMIN' || body.user?.role === 'MODERATOR') {
-        destination = '/craft-atlas';
+        destination = '/admin';
       }
 
       // Use window.location for full state hydration

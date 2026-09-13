@@ -14,5 +14,6 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY package.json nest-cli.json ./
 
-EXPOSE 3001
+# Render injects PORT at runtime; NestJS reads it from env
+EXPOSE 10000
 CMD ["node", "dist/main"]

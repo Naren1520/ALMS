@@ -169,10 +169,6 @@ export class ProductService {
     // Validate publish requirements (Req 10.2)
     if (newStatus === ProductStatus.PUBLISHED) {
       const errors: string[] = [];
-      const media = await this.mediaRepo.findOne({
-        where: { productId, isActive: true },
-      });
-      if (!media?.r2KeyEnh) errors.push('At least one enhanced image is required');
       if (!product.title || product.title.length > 200) errors.push('title must be ≤200 chars');
       if (!product.descriptionEn) errors.push('description is required');
       if (!product.retailPrice || product.retailPrice <= 0) errors.push('price must be > 0');

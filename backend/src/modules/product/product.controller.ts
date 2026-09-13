@@ -8,6 +8,7 @@ import { ProductService } from './product.service';
 import { AiServiceClient } from '../../common/services/ai-service.client';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { OptionalJwtGuard } from '../auth/guards/optional-jwt.guard';
 import { Roles, CurrentUser } from '../../common/decorators';
 import { UserRole, ProductStatus } from '../../common/enums';
 import { JwtPayload } from '../../common/interfaces';
@@ -133,7 +134,9 @@ export class ProductController {
 
   /** POST /products/publish-direct — publish directly into Supabase database */
   @Post('publish-direct')
+  @UseGuards(OptionalJwtGuard)
   publishDirect(
+    @CurrentUser() currentUser: JwtPayload | null,
     @Body() body: {
       artisanId?: string;
       title: string;
@@ -153,7 +156,10 @@ export class ProductController {
       district?: string;
     },
   ) {
-    return this.productService.publishDirectProduct(body);
+    return this.productService.publishDirectProduct({
+      ...body,
+      artisanId: body.artisanId ?? currentUser?.sub,
+    });
   }
 
   /** POST /products — create product and enqueue AI pipeline */

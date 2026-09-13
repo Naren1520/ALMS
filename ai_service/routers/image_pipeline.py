@@ -172,7 +172,7 @@ def _get_gemini_diagnostics(img: Image.Image, category: Optional[str] = None) ->
             }
         }).encode("utf-8")
 
-        for model in ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.5-flash"]:
+        for model in ["gemini-3.6-flash", "gemini-3.5-flash"]:
             try:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
                 req = urllib.request.Request(

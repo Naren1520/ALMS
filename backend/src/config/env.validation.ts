@@ -38,12 +38,17 @@ export const envValidationSchema = Joi.object({
     otherwise: Joi.string().length(64).required(),
   }),
 
-  // R2 Storage
+  // R2 Storage (kept for backward compat, not required)
   R2_ACCOUNT_ID:        Joi.string().allow('').optional(),
   R2_ACCESS_KEY_ID:     Joi.string().allow('').optional(),
   R2_SECRET_ACCESS_KEY: Joi.string().allow('').optional(),
   R2_BUCKET_NAME:       Joi.string().default('alms-assets'),
   R2_ENDPOINT:          Joi.string().allow('').optional(),
+
+  // Supabase Storage
+  SUPABASE_URL:              Joi.string().allow('').optional(),
+  SUPABASE_SERVICE_ROLE_KEY: Joi.string().allow('').optional(),
+  SUPABASE_STORAGE_BUCKET:   Joi.string().default('alms-assets'),
 
   // Email
   SMTP_HOST:     Joi.string().allow('').optional(),

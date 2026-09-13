@@ -1,0 +1,84 @@
+services:
+  # ─── NestJS Backend (Docker) ──────────────────────────────────────────────────
+  - type: web
+    name: alms-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: APP_NAME
+        value: ALMS
+      - key: FRONTEND_URL
+        sync: false        # e.g. https://your-app.vercel.app
+      - key: DATABASE_HOST
+        value: aws-0-ap-northeast-2.pooler.supabase.com
+      - key: DATABASE_PORT
+        value: 5432
+      - key: DATABASE_NAME
+        value: postgres
+      - key: DATABASE_USER
+        sync: false        # postgres.shavgttipitgwhmafocn
+      - key: DATABASE_PASSWORD
+        sync: false        # Sih2026almsproject
+      - key: DATABASE_SSL
+        value: "true"
+      - key: REDIS_HOST
+        value: tough-hookworm-189933.upstash.io
+      - key: REDIS_PORT
+        value: 6379
+      - key: REDIS_PASSWORD
+        sync: false        # gQAAAAAAAuXtAAIg...
+      - key: JWT_PRIVATE_KEY
+        sync: false        # Full PEM string with literal \n
+      - key: JWT_PUBLIC_KEY
+        sync: false        # Full PEM string with literal \n
+      - key: JWT_ACCESS_TOKEN_TTL
+        value: 900
+      - key: JWT_REFRESH_TOKEN_TTL
+        value: 604800
+      - key: ENCRYPTION_KEY
+        value: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      - key: AI_SERVICE_URL
+        sync: false        # https://alms-ai.onrender.com
+      - key: AI_SERVICE_TOKEN
+        value: dev-token
+      - key: GEMINI_API_KEY
+        sync: false        # Set in Render dashboard → Environment
+      - key: SUPABASE_URL
+        value: https://shavgttipitgwhmafocn.supabase.co
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false        # From Supabase dashboard → Settings → API → service_role key
+      - key: SUPABASE_STORAGE_BUCKET
+        value: alms-assets
+      - key: R2_BUCKET_NAME
+        value: alms-assets
+      - key: EMAIL_FROM
+        value: noreply@alms.in
+
+  #  FastAPI AI Service (Docker) 
+  - type: web
+    name: alms-ai
+    runtime: docker
+    rootDir: ai_service
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: AI_SERVICE_TOKEN
+        value: dev-token
+      - key: GEMINI_API_KEY
+        sync: false        # Set in Render dashboard → Environment
+      - key: DATABASE_URL
+        sync: false        # postgresql://postgres.shavgttipitgwhmafocn:Sih2026almsproject@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres
+      - key: REDIS_URL
+        sync: false        # rediss://default:gQAAAAAAAuXt...@tough-hookworm-189933.upstash.io:6379
+      - key: BACKEND_URL
+        sync: false        # https://alms-backend.onrender.com
+      - key: R2_BUCKET_NAME
+        value: alms-assets

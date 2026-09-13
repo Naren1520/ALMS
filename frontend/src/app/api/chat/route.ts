@@ -5,8 +5,8 @@ const GEMINI_API_KEY =
   process.env.NEXT_PUBLIC_GEMINI_API_KEY ||
   '';
 
-const GEMINI_PRIMARY = 'gemini-2.5-flash';
-const GEMINI_FALLBACK = 'gemini-1.5-flash';
+const GEMINI_PRIMARY = 'gemini-3.6-flash';
+const GEMINI_FALLBACK = 'gemini-3.5-flash';
 
 const geminiUrl = (model: string, key = GEMINI_API_KEY) =>
   `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;

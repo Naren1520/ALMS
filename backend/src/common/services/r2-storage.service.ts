@@ -1,57 +1,53 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-  DeleteObjectCommand,
-} from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { SupabaseStorageService } from './supabase-storage.service';
 
 /**
- * Cloudflare R2 storage service using S3-compatible SDK.
- * Handles upload, signed URL generation, and deletion (Req 2.8, 5.3, 26.3).
+ * R2StorageService — now backed by Supabase Storage.
+ * Kept as a named alias so existing injection across ProductService,
+ * ProductProcessor, etc. continues to work without refactoring.
  */
 @Injectable()
 export class R2StorageService {
   private readonly logger = new Logger(R2StorageService.name);
-  private readonly client: S3Client;
-  private readonly bucket: string;
+  private readonly delegate: SupabaseStorageService;
 
   constructor(private readonly configService: ConfigService) {
-    const accountId = configService.get<string>('R2_ACCOUNT_ID') ?? '';
-    const accessKeyId = configService.get<string>('R2_ACCESS_KEY_ID') ?? '';
-    const secretAccessKey = configService.get<string>('R2_SECRET_ACCESS_KEY') ?? '';
-    const endpoint = configService.get<string>('R2_ENDPOINT')
-      ?? `https://${accountId}.r2.cloudflarestorage.com`;
-
-    this.bucket = configService.get<string>('R2_BUCKET_NAME') ?? 'alms-assets';
-
-    this.client = new S3Client({
-      region: 'auto',
-      endpoint,
-      credentials: { accessKeyId, secretAccessKey },
-    });
+    this.delegate = new SupabaseStorageService(configService);
   }
 
+  /** Upload buffer to Supabase Storage. Returns the storage key. */
   async upload(key: string, body: Buffer, contentType: string): Promise<void> {
-    await this.client.send(
-      new PutObjectCommand({
-        Bucket: this.bucket,
-        Key: key,
-        Body: body,
-        ContentType: contentType,
-      }),
-    );
+    if (!this.delegate.isConfigured()) {
+      this.logger.warn(`Storage not configured — skipping upload for key: ${key}`);
+      return;
+    }
+    await this.delegate.upload(key, body, contentType);
   }
 
-  /** Generate a time-limited signed URL (Req 26.3) */
+  /** Get a time-limited signed URL (or public URL) for the asset. */
   async getSignedUrl(key: string, expiresInSeconds: number): Promise<string> {
-    const command = new GetObjectCommand({ Bucket: this.bucket, Key: key });
-    return getSignedUrl(this.client, command, { expiresIn: expiresInSeconds });
+    if (!this.delegate.isConfigured()) {
+      // Return key as-is — for imageUrl strings stored directly in the DB
+      return key.startsWith('http') ? key : '';
+    }
+    return this.delegate.getSignedUrl(key, expiresInSeconds);
   }
 
+  /** Get the public URL directly. */
+  getPublicUrl(key: string): string {
+    if (!this.delegate.isConfigured()) {
+      return key.startsWith('http') ? key : '';
+    }
+    return this.delegate.getPublicUrl(key);
+  }
+
+  /** Delete an asset. */
   async delete(key: string): Promise<void> {
-    await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: key }));
+    if (!this.delegate.isConfigured()) {
+      this.logger.warn(`Storage not configured — skipping delete for key: ${key}`);
+      return;
+    }
+    await this.delegate.delete(key);
   }
 }

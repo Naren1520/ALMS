@@ -1,33 +1,22 @@
 {
-  "services": {
-    "frontend": {
-      "root": "frontend",
-      "framework": "nextjs",
-      "buildCommand": "npm run build",
-      "installCommand": "npm install"
-    },
-    "backend": {
-      "root": "backend",
-      "entrypoint": "src/main.ts",
-      "buildCommand": "npm run build",
-      "installCommand": "npm install"
-    }
+  "framework": "nextjs",
+  "rootDirectory": "frontend",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_PUBLIC_BACKEND_URL": "https://alms-backend.onrender.com",
+    "NEXT_PUBLIC_AI_SERVICE_URL": "https://alms-ai.onrender.com",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://shavgttipitgwhmafocn.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_715teHzZHtmuJq_yfV8ziQ_s031S5lo"
   },
-  "rewrites": [
-    {
-      "source": "/api/v1/(.*)",
-      "destination": {
-        "type": "service",
-        "service": "backend",
-        "path": "/api/v1/{1}"
-      }
-    },
+  "headers": [
     {
       "source": "/(.*)",
-      "destination": {
-        "type": "service",
-        "service": "frontend"
-      }
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
     }
   ]
 }

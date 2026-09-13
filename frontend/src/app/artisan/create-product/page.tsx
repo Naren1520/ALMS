@@ -584,7 +584,10 @@ export default function CreateProductPage() {
       try {
         const dbRes = await fetch('/api/v1/products/publish-direct', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...(localStorage.getItem('access_token') ? { Authorization: `Bearer ${localStorage.getItem('access_token')}` } : {}),
+          },
           body: JSON.stringify({
             title: finalTitle,
             descriptionEn: descEn,

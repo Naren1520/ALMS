@@ -186,10 +186,10 @@ export default function ImpactPage() {
                   <span>Institutional Sourcing</span>
                 </Link>
                 <Link
-                  href="/docs"
+                  href="/explore"
                   className="px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-medium text-xs rounded-full border border-white/20 backdrop-blur-md transition-all flex items-center gap-2"
                 >
-                  <span>API Documentation</span>
+                  <span>Explore Marketplace</span>
                 </Link>
               </div>
             </div>

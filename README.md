@@ -242,5 +242,5 @@ cd frontend && npx tsc --noEmit
 Developed for **Smart India Hackathon 2026** under **Problem Statement ID 26090** for the **Ministry of Social Justice and Empowerment (MoSJE)**.
 
 <div align="center">
-  <sub>Built with ❤️ for Indian Artisans by Team AlgoVectors · 2026</sub>
+  <sub>Built for Indian Artisans by Team AlgoVectors · 2026</sub>
 </div>

@@ -6,13 +6,13 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Globe, Menu, X, Sparkles, User, Briefcase, ShoppingBag } from 'lucide-react';
 
-export type UserRoleType = 'ARTISAN' | 'BUYER' | 'CONSUMER' | 'DEFAULT';
+export type UserRoleType = 'ARTISAN' | 'BUYER' | 'CONSUMER' | 'ADMIN' | 'DEFAULT';
 
 const ROLE_NAV_LINKS: Record<UserRoleType, Array<{ label: string; href: string }>> = {
   ARTISAN: [
     { label: 'Home', href: '/' },
     { label: 'AI Studio', href: '/artisan/create-product' },
-    { label: 'My Products', href: '/explore' },
+    { label: 'My Products', href: '/artisan/my-products' },
     { label: 'B2B RFQ Quotes', href: '/b2b/rfq' },
     { label: 'Impact & Trust', href: '/impact' },
   ],
@@ -30,6 +30,13 @@ const ROLE_NAV_LINKS: Record<UserRoleType, Array<{ label: string; href: string }
     { label: 'Craft Atlas', href: '/craft-atlas' },
     { label: 'Master Artisans', href: '/artisans' },
     { label: 'Heritage Stories', href: '/impact' },
+  ],
+  ADMIN: [
+    { label: 'Home', href: '/' },
+    { label: 'Admin Panel', href: '/admin' },
+    { label: 'Moderation', href: '/admin' },
+    { label: 'All Products', href: '/explore' },
+    { label: 'Impact', href: '/impact' },
   ],
   DEFAULT: [
     { label: 'Home', href: '/' },
@@ -84,8 +91,8 @@ export default function Navbar() {
   const activeRole: UserRoleType = (() => {
     if (!mounted || !user?.role) return 'DEFAULT';
     const clean = String(user.role).trim().toUpperCase();
-    if (clean === 'ARTISAN' || clean === 'BUYER' || clean === 'CONSUMER') {
-      return clean as UserRoleType;
+    if (clean === 'ARTISAN' || clean === 'BUYER' || clean === 'CONSUMER' || clean === 'ADMIN' || clean === 'MODERATOR') {
+      return (clean === 'MODERATOR' ? 'ADMIN' : clean) as UserRoleType;
     }
     return 'DEFAULT';
   })();
@@ -240,6 +247,14 @@ export default function Navbar() {
             >
               <Briefcase size={13} />
               <span>Post Bulk RFQ</span>
+            </Link>
+          ) : activeRole === 'ADMIN' ? (
+            <Link
+              href="/admin"
+              className="px-5 py-2 text-xs font-semibold bg-purple-700 text-white hover:bg-purple-800 transition-all duration-200 rounded-full shadow-md flex items-center gap-1.5 transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <User size={13} />
+              <span>Admin Panel</span>
             </Link>
           ) : (
             <Link

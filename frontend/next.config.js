@@ -1,28 +1,37 @@
 /** @type {import('next').NextConfig} */
-const isDev = process.env.NODE_ENV !== 'production';
 
 const nextConfig = {
   reactStrictMode: false, // Disabled to prevent double-invocation issues in dev
+
   images: {
     unoptimized: true,
     remotePatterns: [
-      { protocol: 'https', hostname: '*.r2.cloudflarestorage.com' },
-      { protocol: 'https', hostname: 'pub-*.r2.dev' },
+      { protocol: 'https', hostname: '**.supabase.co' },
+      { protocol: 'https', hostname: '**.supabase.in' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'plus.unsplash.com' },
     ],
   },
+
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8080';
+    // In production (Vercel/Render), NEXT_PUBLIC_BACKEND_URL points to the Render backend.
+    // In dev, it defaults to localhost:8080.
+    const backendUrl =
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      process.env.BACKEND_URL ||
+      'http://127.0.0.1:8080';
+
     return [
       {
-        // Proxy backend routes — Next.js App Router internal API routes (e.g. /api/analyse-craft)
-        // take priority over this rewrite automatically, so no exclusion needed.
+        // All /api/* calls are proxied to NestJS backend.
+        // Next.js App Router internal routes (e.g. /api/analyse-craft, /api/chat)
+        // take priority automatically — no exclusion needed.
         source: '/api/:path*',
         destination: `${backendUrl}/api/:path*`,
       },
     ];
   },
+
   async headers() {
     return [
       {
