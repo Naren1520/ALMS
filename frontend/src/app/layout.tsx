@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers/Providers';
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
       <body className="bg-ivory text-charcoal font-sans antialiased">
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
