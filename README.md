@@ -1,4 +1,4 @@
-# ALMS — Artisan Linkage and Market System
+# ALMS : Artisan Linkage and Market System
 
 > **Smart India Hackathon 2026 · Problem Statement ID 26090**  
 > **Ministry of Social Justice and Empowerment (MoSJE)** · Department of Social Justice and Empowerment  
